@@ -9,6 +9,13 @@
 
 <body>
 	<h1>Hello World!</h1>
+
+	<footer>
+		<nav>{% if contact[conf.URL_KEY][conf.LEGAL_KEY] %}
+			<a href="{{ contact[conf.URL_KEY][conf.LEGAL_KEY] }}">Legal Notice</a>{% endif %}{% if contact[conf.URL_KEY][conf.PRIVACY_KEY] %}
+			<a href="{{ contact[conf.URL_KEY][conf.PRIVACY_KEY] }}">Privacy Policy</a>{% endif %}
+		</nav>
+	</footer>
 </body>
 
 </html>

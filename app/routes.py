@@ -6,7 +6,7 @@ and for rendering content.
 # Imports
 from flask import Blueprint, render_template
 
-from . import paths
+from . import config, const, paths
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -20,7 +20,9 @@ pages = Blueprint(_BLUEPRINT_NAME, __name__,
 
 _CONTEXT = {
     # Values to be passed to all templates
-    'static': _STATIC_ENDPOINT
+    'static': _STATIC_ENDPOINT,
+    'conf': const.conf,
+    'contact': config.get_contact_details(),
 }
 
 @pages.route('/index')
