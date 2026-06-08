@@ -10,6 +10,7 @@ from typing import final
 class app(ABC):
     """Information about this app."""
     NAME = 'Python Web App Template'
+    VERSION = environ.get('DOCKER_IMAGE_VERSION', '')
 
 @final
 class directories(ABC):

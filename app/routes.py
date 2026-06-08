@@ -24,10 +24,12 @@ _CONTEXT = {
     'appname': const.app.NAME,
     'conf': const.conf,
     'contact': config.get_contact_details(),
+    'version': const.app.VERSION
 }
 
 @pages.route('/index')
 @pages.route('/')
 def index():
     return render_template('index.html.j2', **_CONTEXT)
+
 
