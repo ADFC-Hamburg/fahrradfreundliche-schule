@@ -31,5 +31,3 @@ _CONTEXT = {
 @pages.route('/')
 def index():
     return render_template('index.html.j2', **_CONTEXT)
-
-
