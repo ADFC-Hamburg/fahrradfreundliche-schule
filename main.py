@@ -11,6 +11,7 @@ from app import routes
 
 # Create Flask app
 flaskapp = Flask(__name__, static_folder=None)
+flaskapp.config.from_prefixed_env('FLASK')
 flaskapp.register_blueprint(routes.pages)
 
 # Start app on script execution
