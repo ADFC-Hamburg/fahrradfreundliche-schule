@@ -7,6 +7,11 @@ from os import environ
 from typing import final
 
 @final
+class app(ABC):
+    """Information about this app."""
+    NAME = 'Python Web App Template'
+
+@final
 class directories(ABC):
     STATIC = 'static'
     TEMPLATES = 'templates'
@@ -29,3 +34,7 @@ class conf(ABC):
             PRIVACY_KEY: '',
         },
     }
+
+    SECTIONS = (
+        (CONTACT_KEY, CONTACT_DEFAULT),
+    )

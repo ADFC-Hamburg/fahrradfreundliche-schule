@@ -21,6 +21,7 @@ pages = Blueprint(_BLUEPRINT_NAME, __name__,
 _CONTEXT = {
     # Values to be passed to all templates
     'static': _STATIC_ENDPOINT,
+    'appname': const.app.NAME,
     'conf': const.conf,
     'contact': config.get_contact_details(),
 }
@@ -29,3 +30,4 @@ _CONTEXT = {
 @pages.route('/')
 def index():
     return render_template('index.html.j2', **_CONTEXT)
+

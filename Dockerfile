@@ -20,6 +20,8 @@ COPY app/ "${workdir}/app/"
 COPY main.py "${workdir}/"
 COPY templates/ "${workdir}/templates/"
 COPY static/ "${workdir}/static/"
+COPY --chmod=+x tools/generate_config.py "${workdir}/tools/"
+COPY tools/templates/ "${workdir}/tools/templates/"
 
 # Setup non-root user to run the app (security best practice)
 ARG UID=10001
