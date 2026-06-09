@@ -12,3 +12,7 @@ itsdangerous
 MarkupSafe
 Werkzeug
 packaging
+
+# Form creation and validation
+Flask-WTF
+WTForms

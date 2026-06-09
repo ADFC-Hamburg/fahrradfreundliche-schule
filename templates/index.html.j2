@@ -11,6 +11,14 @@
 <body>
 	<h1>Hello World!</h1>
 
+	<form method="post" action="/" enctype="multipart/form-data">
+		{{ form.csrf_token }}
+		<div>{% for field in form.get_inputfields() %}
+			<p>{{ field.label }} {{ field() }}</p>{% endfor %}
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
 	<footer>
 		<nav>{% if contact[conf.URL_KEY][conf.LEGAL_KEY] %}
 			<a href="{{ contact[conf.URL_KEY][conf.LEGAL_KEY] }}">Legal Notice</a>{% endif %}{% if contact[conf.URL_KEY][conf.PRIVACY_KEY] %}

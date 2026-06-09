@@ -6,7 +6,7 @@ and for rendering content.
 # Imports
 from flask import Blueprint, render_template
 
-from . import config, const, paths
+from . import config, const, forms, paths
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -27,7 +27,11 @@ _CONTEXT = {
     'version': const.app.VERSION
 }
 
-@pages.route('/index')
-@pages.route('/')
+@pages.route('/index', methods=['GET','POST'])
+@pages.route('/', methods=['GET','POST'])
 def index():
-    return render_template('index.html.j2', **_CONTEXT)
+    webform = forms.ApplicationForm()
+    return render_template(
+        'index.html.j2', **_CONTEXT,
+        form = webform,
+    )

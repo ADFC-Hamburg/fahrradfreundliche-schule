@@ -39,3 +39,17 @@ class conf(ABC):
     SECTIONS = (
         (CONTACT_KEY, CONTACT_DEFAULT),
     )
+
+@final
+class form(ABC):
+    INPUTFIELDS_LABELS = {
+        'firstname': 'Vorname',
+        'lastname': 'Nachname',
+        'email': 'E-Mail-Adresse',
+        'school': 'Schule',
+        'phone': 'Telefonnummer',
+        'address': 'Straße und Hausnummer',
+        'zipcode': 'Postleitzahl',
+        'city': 'Ort',
+        'headcount': 'Anzahl Schülerinnen, Schüler und Lehrkräfte (Gesamt)',
+    }
