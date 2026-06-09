@@ -31,7 +31,9 @@ def format_settings(settings: tuple[tuple[tuple[str, ...], any], ...]) -> tuple[
     output = list()
     for key, value in settings:
         key = '.'.join(key)
-        if isinstance(value,(int,float)):
+        if isinstance(value,bool):
+            value = 'true' if value else 'false'
+        elif isinstance(value,(int,float)):
             value = str(value)
         else:
             value = '"' + str(value).replace('\\','\\\\').replace('"','\\"') + '"'
