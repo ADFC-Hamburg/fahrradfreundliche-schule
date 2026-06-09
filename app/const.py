@@ -26,10 +26,10 @@ class env(ABC):
 @final
 class conf(ABC):
     """Keys and default values for the config file."""
-    CONTACT_KEY = 'contact'
-    URL_KEY = 'url'
-    LEGAL_KEY = 'legal'
-    PRIVACY_KEY = 'privacy'
+    CONTACT_KEY = 'Kontaktdaten'
+    URL_KEY = 'Web'
+    LEGAL_KEY = 'Impressum'
+    PRIVACY_KEY = 'Datenschutz'
     CONTACT_DEFAULT = {
         URL_KEY: {
             LEGAL_KEY: '',
