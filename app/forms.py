@@ -35,7 +35,13 @@ class ApplicationForm(FlaskForm):
         const.form.INPUTFIELDS_LABELS['phone'],
         validators=[
             validators.InputRequired(),
+            validators.Regexp(
+                regex=const.form.PHONE_REGEX,
+            ),
         ],
+        render_kw={
+            'pattern': const.form.PHONE_PATTERN,
+        },
     )
     address = StringField(
         const.form.INPUTFIELDS_LABELS['address'],
@@ -47,7 +53,17 @@ class ApplicationForm(FlaskForm):
         const.form.INPUTFIELDS_LABELS['zipcode'],
         validators=[
             validators.InputRequired(),
+            validators.Length(
+                min=const.form.ZIP_DIGITS,
+                max=const.form.ZIP_DIGITS,
+            ),
+            validators.Regexp(
+                regex=const.form.ZIP_REGEX,
+            ),
         ],
+        render_kw={
+            'pattern': const.form.ZIP_PATTERN,
+        },
     )
     city = StringField(
         const.form.INPUTFIELDS_LABELS['city'],
@@ -59,6 +75,10 @@ class ApplicationForm(FlaskForm):
         const.form.INPUTFIELDS_LABELS['headcount'],
         validators=[
             validators.InputRequired(),
+            validators.NumberRange(
+                min=0,
+                max=const.form.HEADCOUNT_MAX,
+            ),
         ],
     )
     #endregion

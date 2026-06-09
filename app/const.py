@@ -4,6 +4,7 @@ Provides constants used across this app.
 
 from abc import ABC
 from os import environ
+from re import compile as compile_regex
 from typing import final
 
 @final
@@ -53,3 +54,9 @@ class form(ABC):
         'city': 'Ort',
         'headcount': 'Anzahl Schülerinnen, Schüler und Lehrkräfte (Gesamt)',
     }
+    HEADCOUNT_MAX = 9999
+    PHONE_PATTERN = '(\\+\\d)?[ \\d\\-\\/]+\\d'
+    PHONE_REGEX = compile_regex('^'+PHONE_PATTERN+'$')
+    ZIP_DIGITS = 5
+    ZIP_PATTERN = '\\d+'
+    ZIP_REGEX = compile_regex('^'+ZIP_PATTERN+'$')
