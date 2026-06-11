@@ -16,10 +16,11 @@
 		<div>{% for field in form.get_inputfields() %}
 			<p>{{ field.label }} {{ field() }}</p>{% endfor %}
 		</div>
-		<div>{% for field in form.get_questionfields() %}
+		<div>{% for field, upload in form.get_questionfields() %}
 			<div>
 				{{ field.label }}
 				{{ field() }}
+				{{ upload() }}
 			</div>{% endfor %}
 		</div>
 		<input type="submit" value="Submit">

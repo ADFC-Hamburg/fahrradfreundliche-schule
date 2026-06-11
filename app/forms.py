@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Field, IntegerField, RadioField, StringField
+from wtforms import Field, FileField, IntegerField, RadioField, StringField
 import wtforms.validators as validators
 
 from . import const
@@ -120,6 +120,25 @@ class ApplicationForm(FlaskForm):
     )
     #endregion
 
+    #region Input fields for file uploads
+    upload_campaign_organizing = FileField(
+    )
+    upload_campaign_participation = FileField(
+    )
+    upload_compass = FileField(
+    )
+    upload_coordinator = FileField(
+    )
+    upload_lessons = FileField(
+    )
+    upload_parking = FileField(
+    )
+    upload_repairs = FileField(
+    )
+    upload_routemap = FileField(
+    )
+    #endregion
+
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
         """Return input fields for personal and school information."""
@@ -127,16 +146,17 @@ class ApplicationForm(FlaskForm):
                 self.school,self.phone,self.address,
                 self.zipcode,self.city,self.headcount)
 
-    def get_questionfields(self) -> tuple[Field, ...]:
-        """Return ordered input fields for questionnaire."""
+    def get_questionfields(self) -> tuple[tuple[Field, FileField], ...]:
+        """Return ordered input fields for questionnaire
+        and corresponding input fields for file uploads."""
         return (
-            self.coordinator,
-            self.compass,
-            self.routemap,
-            self.parking,
-            self.repairs,
-            self.campaign_organizing,
-            self.campaign_participation,
-            self.lessons,
+            (self.coordinator, self.upload_coordinator),
+            (self.compass, self.upload_compass),
+            (self.routemap, self.upload_routemap),
+            (self.parking, self.upload_parking),
+            (self.repairs, self.upload_repairs),
+            (self.campaign_organizing, self.upload_campaign_organizing),
+            (self.campaign_participation, self.upload_campaign_participation),
+            (self.lessons, self.upload_lessons),
         )
     #endregion
