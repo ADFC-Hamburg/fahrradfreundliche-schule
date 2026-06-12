@@ -121,21 +121,21 @@ class ApplicationForm(FlaskForm):
     #endregion
 
     #region Input fields for file uploads
-    upload_campaign_organizing = FileField(
+    file_campaign_organizing = FileField(
     )
-    upload_campaign_participation = FileField(
+    file_campaign_participation = FileField(
     )
-    upload_compass = FileField(
+    file_compass = FileField(
     )
-    upload_coordinator = FileField(
+    file_coordinator = FileField(
     )
-    upload_lessons = FileField(
+    file_lessons = FileField(
     )
-    upload_parking = FileField(
+    file_parking = FileField(
     )
-    upload_repairs = FileField(
+    file_repairs = FileField(
     )
-    upload_routemap = FileField(
+    file_routemap = FileField(
     )
     #endregion
 
@@ -150,13 +150,13 @@ class ApplicationForm(FlaskForm):
         """Return ordered input fields for questionnaire
         and corresponding input fields for file uploads."""
         return (
-            (self.coordinator, self.upload_coordinator),
-            (self.compass, self.upload_compass),
-            (self.routemap, self.upload_routemap),
-            (self.parking, self.upload_parking),
-            (self.repairs, self.upload_repairs),
-            (self.campaign_organizing, self.upload_campaign_organizing),
-            (self.campaign_participation, self.upload_campaign_participation),
-            (self.lessons, self.upload_lessons),
+            (self.coordinator, self.file_coordinator),
+            (self.compass, self.file_compass),
+            (self.routemap, self.file_routemap),
+            (self.parking, self.file_parking),
+            (self.repairs, self.file_repairs),
+            (self.campaign_organizing, self.file_campaign_organizing),
+            (self.campaign_participation, self.file_campaign_participation),
+            (self.lessons, self.file_lessons),
         )
     #endregion
