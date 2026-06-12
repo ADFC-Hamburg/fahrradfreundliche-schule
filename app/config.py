@@ -19,3 +19,10 @@ def get_contact_details() -> dict:
         return const.conf.CONTACT_DEFAULT | contacts
     except FileNotFoundError:
         return const.conf.CONTACT_DEFAULT
+
+def get_form_config() -> dict:
+    try:
+        config = fetch()[const.conf.FORM_KEY]
+        return const.conf.FORM_DEFAULT | config
+    except FileNotFoundError:
+        return const.conf.FORM_DEFAULT

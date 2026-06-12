@@ -37,8 +37,13 @@ class conf(ABC):
         },
     }
 
+    FORM_KEY = 'Formular'
+    FORM_DEFAULT = {
+    }
+
     SECTIONS = (
         (CONTACT_KEY, CONTACT_DEFAULT),
+        (FORM_KEY, FORM_DEFAULT),
     )
 
 @final
