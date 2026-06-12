@@ -139,6 +139,15 @@ class ApplicationForm(FlaskForm):
     )
     #endregion
 
+    def __init__(self, formconfig: None | dict = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if formconfig:
+            # Apply settings
+            if not self.zipcode.data:
+                self.zipcode.data = formconfig[const.conf.DEFAULT_KEY][const.conf.ZIPCODE_KEY]
+            if not self.city.data:
+                self.city.data = formconfig[const.conf.DEFAULT_KEY][const.conf.CITY_KEY]
+
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
         """Return input fields for personal and school information."""

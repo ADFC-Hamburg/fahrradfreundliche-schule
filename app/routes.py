@@ -30,7 +30,7 @@ _CONTEXT = {
 @pages.route('/index', methods=['GET','POST'])
 @pages.route('/', methods=['GET','POST'])
 def index():
-    webform = forms.ApplicationForm()
+    webform = forms.ApplicationForm(formconfig=config.get_form_config())
     return render_template(
         'index.html.j2', **_CONTEXT,
         form = webform,

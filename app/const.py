@@ -38,7 +38,14 @@ class conf(ABC):
     }
 
     FORM_KEY = 'Formular'
+    DEFAULT_KEY = 'Vorgabe'
+    CITY_KEY = 'Ort'
+    ZIPCODE_KEY = 'Postleitzahl'
     FORM_DEFAULT = {
+        DEFAULT_KEY: {
+            ZIPCODE_KEY: '',
+            CITY_KEY: '',
+        },
     }
 
     SECTIONS = (
