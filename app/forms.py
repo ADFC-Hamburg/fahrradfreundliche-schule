@@ -141,6 +141,19 @@ class ApplicationForm(FlaskForm):
 
     def __init__(self, formconfig: None | dict = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.config = formconfig
+        self.questions = {
+            'campaign_organizing': (self.campaign_organizing, self.file_campaign_organizing),
+            'campaign_participation': (self.campaign_participation, self.file_campaign_participation),
+            'compass': (self.compass, self.file_compass),
+            'coordinator': (self.coordinator, self.file_coordinator),
+            'lessons': (self.lessons, self.file_lessons),
+            'parking': (self.parking, self.file_parking),
+            'repairs': (self.repairs, self.file_repairs),
+            'routemap': (self.routemap, self.file_routemap),
+        }
+
         if formconfig:
             # Apply settings
             if not self.zipcode.data:
@@ -155,17 +168,12 @@ class ApplicationForm(FlaskForm):
                 self.school,self.phone,self.address,
                 self.zipcode,self.city,self.headcount)
 
-    def get_questionfields(self) -> tuple[tuple[Field, FileField], ...]:
+    def get_questionfields(self, formconfig: None | dict = None) -> tuple[tuple[Field, FileField], ...]:
         """Return ordered input fields for questionnaire
         and corresponding input fields for file uploads."""
-        return (
-            (self.coordinator, self.file_coordinator),
-            (self.compass, self.file_compass),
-            (self.routemap, self.file_routemap),
-            (self.parking, self.file_parking),
-            (self.repairs, self.file_repairs),
-            (self.campaign_organizing, self.file_campaign_organizing),
-            (self.campaign_participation, self.file_campaign_participation),
-            (self.lessons, self.file_lessons),
-        )
+        if self.config:
+            order = self.config[const.conf.QUESTIONS_KEY][const.conf.LIST_KEY]
+        else:
+            order = const.form.QUESTIONS_LABELS.keys()
+        return tuple(self.questions[key] for key in order)
     #endregion

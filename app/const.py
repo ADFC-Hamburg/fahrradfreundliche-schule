@@ -41,10 +41,24 @@ class conf(ABC):
     DEFAULT_KEY = 'Vorgabe'
     CITY_KEY = 'Ort'
     ZIPCODE_KEY = 'Postleitzahl'
+    QUESTIONS_KEY = 'Fragen'
+    LIST_KEY = 'Liste'
     FORM_DEFAULT = {
         DEFAULT_KEY: {
             ZIPCODE_KEY: '',
             CITY_KEY: '',
+        },
+        QUESTIONS_KEY: {
+            LIST_KEY: (
+                'coordinator',
+                'compass',
+                'routemap',
+                'parking',
+                'repairs',
+                'campaign_organizing',
+                'campaign_participation',
+                'lessons',
+            ),
         },
     }
 
