@@ -4,6 +4,14 @@ import wtforms.validators as validators
 
 from . import const
 
+class ConditionalInputRequired(validators.InputRequired):
+    """A validator which makes a field required, but skips validation
+    if the field has flags.skip_validation set to True."""
+
+    def __call__(self,form,field):
+        if not field.flags.skip_validation:
+            super().__call__(form, field)
+
 class ApplicationForm(FlaskForm):
 
     #region Input fields for personal and school information
@@ -89,34 +97,58 @@ class ApplicationForm(FlaskForm):
     campaign_organizing = RadioField(
         const.form.QUESTIONS_LABELS['campaign_organizing'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     campaign_participation = RadioField(
         const.form.QUESTIONS_LABELS['campaign_participation'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     compass = RadioField(
         const.form.QUESTIONS_LABELS['compass'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     coordinator = RadioField(
         const.form.QUESTIONS_LABELS['coordinator'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     lessons = RadioField(
         const.form.QUESTIONS_LABELS['lessons'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     parking = RadioField(
         const.form.QUESTIONS_LABELS['parking'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     repairs = RadioField(
         const.form.QUESTIONS_LABELS['repairs'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     routemap = RadioField(
         const.form.QUESTIONS_LABELS['routemap'],
         choices = _YESNOCHOICES,
+        validators=[
+            ConditionalInputRequired(),
+        ],
     )
     #endregion
 
@@ -160,6 +192,11 @@ class ApplicationForm(FlaskForm):
                 self.zipcode.data = formconfig[const.conf.DEFAULT_KEY][const.conf.ZIPCODE_KEY]
             if not self.city.data:
                 self.city.data = formconfig[const.conf.DEFAULT_KEY][const.conf.CITY_KEY]
+            for key, fields in self.questions.items():
+                if key not in formconfig[const.conf.QUESTIONS_KEY][const.conf.LIST_KEY]:
+                    # Do not verify unused fields
+                    fields[0].flags.skip_validation = True
+                    fields[0].validate_choice = False
 
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
