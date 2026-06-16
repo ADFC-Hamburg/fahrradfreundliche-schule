@@ -69,6 +69,8 @@ class conf(ABC):
 
 @final
 class form(ABC):
+    FORM_NAME = 'applications'
+
     INPUTFIELDS_LABELS = {
         'firstname': 'Vorname',
         'lastname': 'Nachname',
@@ -80,6 +82,7 @@ class form(ABC):
         'city': 'Ort',
         'headcount': 'Anzahl Schülerinnen, Schüler und Lehrkräfte (Gesamt)',
     }
+    INPUTFIELDS_WHOLENUM = ('headcount',)
     HEADCOUNT_MAX = 9999
     PHONE_PATTERN = '(\\+\\d)?[ \\d\\-\\/]+\\d'
     PHONE_REGEX = compile_regex('^'+PHONE_PATTERN+'$')
@@ -99,3 +102,4 @@ class form(ABC):
     }
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
+    FILE_PREFIX = 'filename_'
