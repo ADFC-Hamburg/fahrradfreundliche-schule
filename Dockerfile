@@ -23,12 +23,16 @@ COPY app/ "${workdir}/app/"
 COPY main.py "${workdir}/"
 COPY templates/ "${workdir}/templates/"
 COPY static/ "${workdir}/static/"
-COPY --chmod=+x tools/generate_config.py "${workdir}/tools/"
+COPY --chmod=+x tools/generate_config.py tools/initdb.py "${workdir}/tools/"
 COPY tools/templates/ "${workdir}/tools/templates/"
 
 # Setup non-root user to run the app (security best practice)
 ARG UID=10001
 RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/nologin" --no-create-home --uid "${UID}" appuser
+
+# Generate empty directory for variable data
+ENV FAHRRADSCHULE_SAVE_DIR=/var/opt/fahrradschule
+RUN mkdir -m 777 "$FAHRRADSCHULE_SAVE_DIR"
 
 # Expose a port for the web application
 EXPOSE 8000
