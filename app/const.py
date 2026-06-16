@@ -22,6 +22,7 @@ class directories(ABC):
 class env(ABC):
     """Names of environmental variables"""
     CONFIG = 'FAHRRADSCHULE_CONFIG_FILE'
+    SAVEDIR = 'FAHRRADSCHULE_SAVE_DIR'
 
 @final
 class conf(ABC):
@@ -103,3 +104,7 @@ class form(ABC):
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
     FILE_PREFIX = 'filename_'
+
+@final
+class sql(ABC):
+    INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
