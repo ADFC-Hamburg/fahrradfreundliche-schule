@@ -10,7 +10,7 @@ from typing import final
 @final
 class app(ABC):
     """Information about this app."""
-    NAME = 'Python Web App Template'
+    NAME = 'Fahrradfreundliche Schule Bewerbungsformular'
     VERSION = environ.get('DOCKER_IMAGE_VERSION', '')
 
 @final
@@ -21,7 +21,7 @@ class directories(ABC):
 @final
 class env(ABC):
     """Names of environmental variables"""
-    CONFIG = 'DOCKER_CONFIG_FILE'
+    CONFIG = 'FAHRRADSCHULE_CONFIG_FILE'
 
 @final
 class conf(ABC):

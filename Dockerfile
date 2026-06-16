@@ -4,10 +4,10 @@
 FROM python:alpine AS build
 
 # Description of resulting image
-LABEL org.opencontainers.image.description="Web application template"
+LABEL org.opencontainers.image.description="Ein Webserver, über den Schulen sich für eine Auszeichnung als fahrradfreundliche Schule bewerben können."
 
 # Set the working directory within the container
-ARG workdir='/opt/webapp'
+ARG workdir='/opt/fahrradschule'
 WORKDIR "${workdir}"
 
 # Update pip and install Python dependencies
