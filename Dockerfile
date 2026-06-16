@@ -30,6 +30,10 @@ COPY tools/templates/ "${workdir}/tools/templates/"
 ARG UID=10001
 RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/nologin" --no-create-home --uid "${UID}" appuser
 
+# Generate empty directory for configuration files
+ENV FAHRRADSCHULE_CONFIG_DIR=/etc/opt/fahrradschule
+RUN mkdir "$FAHRRADSCHULE_CONFIG_DIR"
+
 # Expose a port for the web application
 EXPOSE 8000
 
