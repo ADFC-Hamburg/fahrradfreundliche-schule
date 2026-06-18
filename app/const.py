@@ -8,6 +8,13 @@ from re import compile as compile_regex
 from typing import final
 
 @final
+class api(ABC):
+    STATUS_KEY = 'status'
+    ID_KEY = 'id'
+    PASS_VALUE = 'ok'
+    FAIL_VALUE = 'error'
+
+@final
 class app(ABC):
     """Information about this app."""
     NAME = 'Fahrradfreundliche Schule Bewerbungsformular'
