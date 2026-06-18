@@ -10,6 +10,7 @@ from typing import final
 @final
 class api(ABC):
     STATUS_KEY = 'status'
+    ERROR_KEY = 'errors'
     ID_KEY = 'id'
     PASS_VALUE = 'ok'
     FAIL_VALUE = 'error'

@@ -63,7 +63,8 @@ def submit_application():
         })
 
     else:
+        # Return status message with validation errors
         return jsonify({
             const.api.STATUS_KEY: const.api.FAIL_VALUE,
-            # TBD: return error messages
+            const.api.ERROR_KEY: forms.bundle_errors(webform.get_fields())
         })

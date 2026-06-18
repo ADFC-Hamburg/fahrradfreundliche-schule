@@ -213,4 +213,22 @@ class ApplicationForm(FlaskForm):
         else:
             order = const.form.QUESTIONS_LABELS.keys()
         return tuple(self.questions[key] for key in order)
+    
+    def get_fields(self) -> tuple[Field, ...]:
+        """Return all fields in this form."""
+        return(
+            self.csrf_token,
+            *self.get_inputfields(),
+            *(field for question in self.questions.values() for field in question),
+        )
     #endregion
+
+
+def bundle_errors(fields: tuple[Field, ...]) -> dict[str, list[str, ...]]:
+    """Returns a dictionary mapping the names of provided fields to
+    a list of errors for that field, skipping fields without errors."""
+    output = {}
+    for field in fields:
+        if field.errors:
+            output[field.short_name] = field.errors
+    return output
