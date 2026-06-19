@@ -11,7 +11,7 @@
 <body>
 	<h1>Hello World!</h1>
 
-	<form method="post" action="/" enctype="multipart/form-data">
+	<form id="application">
 		{{ form.csrf_token }}
 		<div>{% for field in form.get_inputfields() %}
 			<p>{{ field.label }} {{ field() }}</p>{% endfor %}
@@ -32,6 +32,8 @@
 			<a href="{{ contact[conf.URL_KEY][conf.PRIVACY_KEY] }}">Privacy Policy</a>{% endif %}
 		</nav>
 	</footer>
+
+	<script src="{{ url_for(static, filename='js/form.js') }}"></script>
 </body>
 
 </html>
