@@ -6,7 +6,7 @@ and for rendering content.
 # Imports
 from flask import Blueprint, jsonify, render_template
 
-from . import config, const, database, forms, paths
+from . import config, const, database, uploads, forms, paths
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -47,7 +47,10 @@ def submit_application():
         question_filenames = {}
         for key, fields in webform.questions.items():
             question_values[key] = fields[0].data
-        # TBD: verify and store files
+            if fields[1].data:
+                # Save uploaded file; use filename as value
+                filename = uploads.add(fields[1].data)
+                question_filenames[const.form.FILE_PREFIX + key] = filename
 
         # Create database entry
         new_id = database.addapplication(

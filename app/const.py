@@ -25,6 +25,7 @@ class app(ABC):
 class directories(ABC):
     STATIC = 'static'
     TEMPLATES = 'templates'
+    UPLOADS = 'documents'
 
 @final
 class env(ABC):

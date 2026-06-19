@@ -15,3 +15,4 @@ CONFIG = environ.get(const.env.CONFIG, CONFIG_DEFAULT)
 
 SAVE_DIR = environ.get(const.env.SAVEDIR, ROOT)
 DATABASE = path.join (SAVE_DIR, 'database.db')
+UPLOADS = path.join (SAVE_DIR, const.directories.UPLOADS)
