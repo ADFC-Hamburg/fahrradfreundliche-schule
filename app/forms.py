@@ -230,5 +230,5 @@ def bundle_errors(fields: tuple[Field, ...]) -> dict[str, list[str, ...]]:
     output = {}
     for field in fields:
         if field.errors:
-            output[field.short_name] = field.errors
+            output[field.name] = field.errors
     return output
