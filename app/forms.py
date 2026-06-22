@@ -15,35 +15,38 @@ class ConditionalInputRequired(validators.InputRequired):
 class ApplicationForm(FlaskForm):
 
     #region Input fields for personal and school information
+    _FIELD_REQUIRED_VALIDATOR = validators.InputRequired(message=const.form.ERROR_REQUIRED)
+
     firstname = StringField(
         const.form.INPUTFIELDS_LABELS['firstname'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     lastname = StringField(
         const.form.INPUTFIELDS_LABELS['lastname'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     email = StringField(
         const.form.INPUTFIELDS_LABELS['email'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     school = StringField(
         const.form.INPUTFIELDS_LABELS['school'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     phone = StringField(
         const.form.INPUTFIELDS_LABELS['phone'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
             validators.Regexp(
+                message=const.form.ERROR_INVALID,
                 regex=const.form.PHONE_REGEX,
             ),
         ],
@@ -54,18 +57,20 @@ class ApplicationForm(FlaskForm):
     address = StringField(
         const.form.INPUTFIELDS_LABELS['address'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     zipcode = StringField(
         const.form.INPUTFIELDS_LABELS['zipcode'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
             validators.Length(
+                message=const.form.ERROR_LENGTH_ZIPCODE,
                 min=const.form.ZIP_DIGITS,
                 max=const.form.ZIP_DIGITS,
             ),
             validators.Regexp(
+                message=const.form.ERROR_INVALID,
                 regex=const.form.ZIP_REGEX,
             ),
         ],
@@ -76,14 +81,15 @@ class ApplicationForm(FlaskForm):
     city = StringField(
         const.form.INPUTFIELDS_LABELS['city'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
         ],
     )
     headcount = IntegerField(
         const.form.INPUTFIELDS_LABELS['headcount'],
         validators=[
-            validators.InputRequired(),
+            _FIELD_REQUIRED_VALIDATOR,
             validators.NumberRange(
+                message=const.form.ERROR_INVALID,
                 min=0,
                 max=const.form.HEADCOUNT_MAX,
             ),
@@ -93,61 +99,62 @@ class ApplicationForm(FlaskForm):
 
     #region Input fields for yes/no questions
     _YESNOCHOICES = ((1,const.form.CHOICE_YES),(0,const.form.CHOICE_NO))
+    _YESNO_REQUIRED_VALIDATOR = ConditionalInputRequired(message=const.form.ERROR_REQUIRED_YESNO)
 
     campaign_organizing = RadioField(
         const.form.QUESTIONS_LABELS['campaign_organizing'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     campaign_participation = RadioField(
         const.form.QUESTIONS_LABELS['campaign_participation'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     compass = RadioField(
         const.form.QUESTIONS_LABELS['compass'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     coordinator = RadioField(
         const.form.QUESTIONS_LABELS['coordinator'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     lessons = RadioField(
         const.form.QUESTIONS_LABELS['lessons'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     parking = RadioField(
         const.form.QUESTIONS_LABELS['parking'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     repairs = RadioField(
         const.form.QUESTIONS_LABELS['repairs'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     routemap = RadioField(
         const.form.QUESTIONS_LABELS['routemap'],
         choices = _YESNOCHOICES,
         validators=[
-            ConditionalInputRequired(),
+            _YESNO_REQUIRED_VALIDATOR,
         ],
     )
     #endregion

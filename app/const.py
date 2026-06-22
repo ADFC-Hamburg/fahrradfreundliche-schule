@@ -99,3 +99,7 @@ class form(ABC):
     }
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
+    ERROR_INVALID = 'Bitte gib einen gültigen Wert ein.'
+    ERROR_LENGTH_ZIPCODE = 'Bitte gib genau '+str(ZIP_DIGITS)+' Ziffern ein.'
+    ERROR_REQUIRED = 'Bitte fülle dieses Feld aus.'
+    ERROR_REQUIRED_YESNO = 'Bitte wähle '+CHOICE_YES+' oder '+CHOICE_NO+' aus.'
