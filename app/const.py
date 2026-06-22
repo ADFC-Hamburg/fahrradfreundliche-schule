@@ -113,6 +113,7 @@ class form(ABC):
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
     FILE_PREFIX = 'filename_'
+    FILE_CHAR_REMOVE_PATTERN = '[^A-Za-zÄäÖöÜüß0-9_\\-]'
 
 @final
 class sql(ABC):

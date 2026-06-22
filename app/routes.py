@@ -49,7 +49,11 @@ def submit_application():
             question_values[key] = fields[0].data
             if fields[1].data:
                 # Save uploaded file; use filename as value
-                filename = uploads.add(fields[1].data)
+                filename = uploads.add(
+                    fields[1].data,
+                    webform.school.data,
+                    fields[0].short_name,
+                )
                 question_filenames[const.form.FILE_PREFIX + key] = filename
 
         # Create database entry
