@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Field, FileField, IntegerField, RadioField, StringField
+from wtforms import Field, EmailField, FileField, IntegerField, RadioField, StringField
 import wtforms.validators as validators
 
 from . import const
@@ -29,10 +29,13 @@ class ApplicationForm(FlaskForm):
             _FIELD_REQUIRED_VALIDATOR,
         ],
     )
-    email = StringField(
+    email = EmailField(
         const.form.INPUTFIELDS_LABELS['email'],
         validators=[
             _FIELD_REQUIRED_VALIDATOR,
+            validators.Email(
+                message=const.form.ERROR_INVALID,
+            ),
         ],
     )
     school = StringField(
