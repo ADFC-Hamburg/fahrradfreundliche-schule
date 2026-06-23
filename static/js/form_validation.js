@@ -1,6 +1,9 @@
 // ---- CONSTANTS ----
 
+const questionFileMarker = 'file_'
+
 const personalFields = document.getElementById('personaldata').getElementsByTagName('input');
+const questionFields = document.getElementById('questions').getElementsByTagName('input');
 const complianceFields = document.getElementById('compliance').getElementsByTagName('input');
 
 
@@ -73,28 +76,95 @@ function validateCheckbox(target) {
 	}
 }
 
+/**
+ * Überprüft ein Optionsfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateRadio(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte triff eine Auswahl.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft ein Uploadfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateFile(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte lade für jedes Ja einen Beleg hoch.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft alle Felder, die zu einer Frage gehören.
+ * Setzt außerdem das Uploadfeld auf Benötigt oder Optional, abhängig
+ * davon, welches Optionsfeld ausgewählt ist.
+ * 
+ * @param {string} name 
+ */
+function processQuestion(name) {
+	const options = document.querySelectorAll('input[name="'+name+'"]');
+	const file = document.getElementById(questionFileMarker+name);
+	const selected = document.querySelector('input[name="'+name+'"]:checked')
+
+	for (let i = 0; i < options.length; i++) {
+		validateRadio(options[i]);
+	}
+	file.required = (selected && selected.value && selected.value != "0");
+	validateFile(file);
+}
+
 
 // ---- MAIN ----
 
-for (let i = 0; i < personalFields.length; i++) {
-	if (personalFields[i].type == 'text' || personalFields[i].type == 'email') {
-		validateText(personalFields[i]);
-		personalFields[i].addEventListener('change',function(){
-			validateText(this);
-		});
-	} else if (personalFields[i].type == 'number') {
-		validateNumber(personalFields[i]);
-		personalFields[i].addEventListener('change',function(){
-			validateNumber(this);
-		});
+function start() {
+	for (let i = 0; i < personalFields.length; i++) {
+		if (personalFields[i].type == 'text' || personalFields[i].type == 'email') {
+			validateText(personalFields[i]);
+			personalFields[i].addEventListener('change',function(){
+				validateText(this);
+			});
+		} else if (personalFields[i].type == 'number') {
+			validateNumber(personalFields[i]);
+			personalFields[i].addEventListener('change',function(){
+				validateNumber(this);
+			});
+		}
+	}
+
+	for (let i = 0; i < questionFields.length; i++) {
+		if (questionFields[i].type == 'radio') {
+			if (questionFields[i].id.endsWith('-0')) {
+				processQuestion(questionFields[i].name);
+			}
+			questionFields[i].addEventListener('input',function(){
+				processQuestion(this.name);
+			});
+		} else if (questionFields[i].type == 'file') {
+			validateFile(questionFields[i]);
+			questionFields[i].addEventListener('input',function(){
+				validateFile(this);
+			});
+		}
+	}
+
+	for (let i = 0; i < complianceFields.length; i++) {
+		if (complianceFields[i].type == 'checkbox') {
+			validateCheckbox(complianceFields[i]);
+			complianceFields[i].addEventListener('change',function(){
+				validateCheckbox(this);
+			});
+		}
 	}
 }
 
-for (let i = 0; i < complianceFields.length; i++) {
-	if (complianceFields[i].type == 'checkbox') {
-		validateCheckbox(complianceFields[i]);
-		complianceFields[i].addEventListener('change',function(){
-			validateCheckbox(this);
-		});
-	}
-}
+window.addEventListener('pageshow', start);

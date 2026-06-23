@@ -16,7 +16,7 @@
 		<div id="personaldata">{% for field in form.get_inputfields() %}
 			<p>{{ field.label }} {{ field() }}</p>{% endfor %}
 		</div>
-		<div>{% for field, upload in form.get_questionfields() %}
+		<div id="questions">{% for field, upload in form.get_questionfields() %}
 			<div>
 				{{ field.label }}
 				{{ field() }}
