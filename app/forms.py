@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Field, EmailField, FileField, IntegerField, RadioField, StringField
+from wtforms import Field, BooleanField, EmailField, FileField, IntegerField, RadioField, StringField
 import wtforms.validators as validators
 
 from . import const
@@ -178,6 +178,21 @@ class ApplicationForm(FlaskForm):
     file_repairs = FileField(
     )
     file_routemap = FileField(
+    )
+    #endregion
+
+    #region Checkboxes for consent
+    _CONSENT_REQUIRED_VALIDATOR = validators.InputRequired(message=const.form.ERROR_REQUIRED_CONSENT)
+
+    privacy_consent = BooleanField(
+        validators=[
+            _CONSENT_REQUIRED_VALIDATOR,
+        ],
+    )
+    storage_consent = BooleanField(
+        validators=[
+            _CONSENT_REQUIRED_VALIDATOR,
+        ],
     )
     #endregion
 

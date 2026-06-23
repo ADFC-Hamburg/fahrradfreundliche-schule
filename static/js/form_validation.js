@@ -1,6 +1,7 @@
 // ---- CONSTANTS ----
 
 const personalFields = document.getElementById('personaldata').getElementsByTagName('input');
+const complianceFields = document.getElementById('compliance').getElementsByTagName('input');
 
 
 // ---- FUNCTIONS ----
@@ -58,6 +59,20 @@ function validateNumber(target) {
 	}
 }
 
+/**
+ * Überprüft ein Kontrollkästchenfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateCheckbox(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte stimme zu.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
 
 // ---- MAIN ----
 
@@ -71,6 +86,15 @@ for (let i = 0; i < personalFields.length; i++) {
 		validateNumber(personalFields[i]);
 		personalFields[i].addEventListener('change',function(){
 			validateNumber(this);
+		});
+	}
+}
+
+for (let i = 0; i < complianceFields.length; i++) {
+	if (complianceFields[i].type == 'checkbox') {
+		validateCheckbox(complianceFields[i]);
+		complianceFields[i].addEventListener('change',function(){
+			validateCheckbox(this);
 		});
 	}
 }
