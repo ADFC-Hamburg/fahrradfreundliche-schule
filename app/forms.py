@@ -1,5 +1,8 @@
+from collections.abc import Iterable
+
 from flask_wtf import FlaskForm
-from wtforms import Field, FileField, IntegerField, RadioField, StringField
+from flask_wtf.file import FileField, FileRequired
+from wtforms import Field, IntegerField, RadioField, StringField
 import wtforms.validators as validators
 
 from . import const
@@ -10,6 +13,22 @@ class ConditionalInputRequired(validators.InputRequired):
 
     def __call__(self,form,field):
         if not field.flags.skip_validation:
+            super().__call__(form, field)
+
+class FileRequiredIfLinkDataMatch(FileRequired):
+    """Validates that one or multiple files have been uploaded
+    if the data of another field matches a list of desired values.
+
+    The other field is read from the link attribute of the field
+    to be validated."""
+
+    def __init__(self, message=None, target:Iterable = ()):
+        self.message = message
+        self.field_flags = {"required": False}
+        self.target = target
+
+    def __call__(self, form, field):
+        if hasattr(field, 'link') and field.link.data in self.target:
             super().__call__(form, field)
 
 class ApplicationForm(FlaskForm):
@@ -160,21 +179,39 @@ class ApplicationForm(FlaskForm):
     #endregion
 
     #region Input fields for file uploads
+    _FILE_MAYBE_REQUIRED_VALIDATOR = FileRequiredIfLinkDataMatch(
+        message = const.form.ERROR_REQUIRED_FILE,
+        target = (True, 1, '1'),
+    )
+    _FILEFIELD_COMMON_ARGS = {
+        'validators': [
+            _FILE_MAYBE_REQUIRED_VALIDATOR,
+        ],
+    }
+
     file_campaign_organizing = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_campaign_participation = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_compass = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_coordinator = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_lessons = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_parking = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_repairs = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     file_routemap = FileField(
+        **_FILEFIELD_COMMON_ARGS,
     )
     #endregion
 
@@ -192,6 +229,10 @@ class ApplicationForm(FlaskForm):
             'repairs': (self.repairs, self.file_repairs),
             'routemap': (self.routemap, self.file_routemap),
         }
+
+        for fields in self.questions.values():
+            # Link upload to question (for FileRequiredIfLinkDataMatch validator)
+            fields[1].link = fields[0]
 
         if formconfig:
             # Apply settings
