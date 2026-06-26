@@ -31,7 +31,52 @@ class FileRequiredIfLinkDataMatch(FileRequired):
         if hasattr(field, 'link') and field.link.data in self.target:
             super().__call__(form, field)
 
+class MediatypeAllowed():
+    """Validates that the uploaded file(s) is allowed by a given list
+    of media types."""
+
+    def __init__(self, mediatypes:Iterable[str, ...], message=None):
+        self.message = message
+        self.allowed_types = mediatypes
+    
+    def __call__(self, form, field):
+        from magic import from_buffer as magic_from_buffer
+        from werkzeug.datastructures import FileStorage
+
+        field_data = (field.data,) if not isinstance(field.data, list) else field.data
+        if not (
+            all(isinstance(x, FileStorage) and x for x in field_data) and field_data
+        ):
+            return
+        
+        mediatypes = tuple(magic_from_buffer(f.read(), mime=True) for f in field_data)
+        if not all(t in self.allowed_types for t in mediatypes):
+            raise validators.StopValidation(
+                self.message or
+                ('File does not have an approved media type: '
+                + ', '.join(self.allowed_types))
+            )
+
 class ApplicationForm(FlaskForm):
+
+    #region Static methods
+    @staticmethod
+    def format_mediatypes_from_config(formconfig: dict) -> str:
+        """Reads allowed media types from a form configuration and
+        formats the list of allowed media types as a string."""
+        from mimetypes import guess_extension
+
+        mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]
+        extensions = tuple(guess_extension(t)[1:].upper() for t in mediatypes)
+        if not extensions:
+            return ''
+        if len(extensions) == 1:
+            return extensions[0]
+        return const.form.LIST_SEPARATOR_LAST.join((
+            const.form.LIST_SEPARATOR.join(extensions[:-1]),
+            extensions[-1]
+        ))
+    #endregion
 
     #region Input fields for personal and school information
     _FIELD_REQUIRED_VALIDATOR = validators.InputRequired(message=const.form.ERROR_REQUIRED)
@@ -183,9 +228,14 @@ class ApplicationForm(FlaskForm):
         message = const.form.ERROR_REQUIRED_FILE,
         target = (True, 1, '1'),
     )
+    _MEDIATYPE_VALIDATOR = MediatypeAllowed(
+        message = const.form.ERROR_MEDIATYPE % format_mediatypes_from_config(const.conf.FORM_DEFAULT),
+        mediatypes = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
+    )
     _FILEFIELD_COMMON_ARGS = {
         'validators': [
             _FILE_MAYBE_REQUIRED_VALIDATOR,
+            _MEDIATYPE_VALIDATOR,
         ],
         'render_kw': {
             'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
@@ -248,6 +298,9 @@ class ApplicationForm(FlaskForm):
                     # Do not verify unused fields
                     fields[0].flags.skip_validation = True
                     fields[0].validate_choice = False
+
+            self._MEDIATYPE_VALIDATOR.mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]
+            self._MEDIATYPE_VALIDATOR.message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig)
             for fields in self.questions.values():
                 fields[1].render_kw['accept'] = ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
 

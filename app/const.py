@@ -104,8 +104,13 @@ class form(ABC):
     }
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
+
+    LIST_SEPARATOR = ', '
+    LIST_SEPARATOR_LAST = ' oder '
+
     ERROR_INVALID = 'Bitte gib einen gültigen Wert ein.'
     ERROR_LENGTH_ZIPCODE = 'Bitte gib genau '+str(ZIP_DIGITS)+' Ziffern ein.'
+    ERROR_MEDIATYPE = 'Bitte lade eine Datei im Format %s hoch.'
     ERROR_REQUIRED = 'Bitte fülle dieses Feld aus.'
     ERROR_REQUIRED_FILE = 'Bitte lade für jedes '+CHOICE_YES+' eine Datei hoch.'
     ERROR_REQUIRED_YESNO = 'Bitte wähle '+CHOICE_YES+' oder '+CHOICE_NO+' aus.'
