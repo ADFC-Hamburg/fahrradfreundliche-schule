@@ -43,6 +43,8 @@ class conf(ABC):
     ZIPCODE_KEY = 'Postleitzahl'
     QUESTIONS_KEY = 'Fragen'
     LIST_KEY = 'Liste'
+    UPLOADS_KEY = 'Belege'
+    MEDIATYPE_KEY = 'ErlaubteFormate'
     FORM_DEFAULT = {
         DEFAULT_KEY: {
             ZIPCODE_KEY: '',
@@ -60,6 +62,9 @@ class conf(ABC):
                 'lessons',
             ),
         },
+        UPLOADS_KEY: {
+            MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf')
+        }
     }
 
     SECTIONS = (

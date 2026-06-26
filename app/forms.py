@@ -187,6 +187,9 @@ class ApplicationForm(FlaskForm):
         'validators': [
             _FILE_MAYBE_REQUIRED_VALIDATOR,
         ],
+        'render_kw': {
+            'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
+        },
     }
 
     file_campaign_organizing = FileField(
@@ -245,6 +248,8 @@ class ApplicationForm(FlaskForm):
                     # Do not verify unused fields
                     fields[0].flags.skip_validation = True
                     fields[0].validate_choice = False
+            for fields in self.questions.values():
+                fields[1].render_kw['accept'] = ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
 
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
