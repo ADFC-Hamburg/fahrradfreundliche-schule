@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileRequired, FileSize
 from wtforms import Field, IntegerField, RadioField, StringField
 import wtforms.validators as validators
 
@@ -228,6 +228,10 @@ class ApplicationForm(FlaskForm):
         message = const.form.ERROR_REQUIRED_FILE,
         target = (True, 1, '1'),
     )
+    _FILESIZE_VALIDATOR = FileSize(
+        message = const.form.ERROR_FILESIZE % const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
+        max_size = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] * 1024 * 1024
+    )
     _MEDIATYPE_VALIDATOR = MediatypeAllowed(
         message = const.form.ERROR_MEDIATYPE % format_mediatypes_from_config(const.conf.FORM_DEFAULT),
         mediatypes = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
@@ -235,6 +239,7 @@ class ApplicationForm(FlaskForm):
     _FILEFIELD_COMMON_ARGS = {
         'validators': [
             _FILE_MAYBE_REQUIRED_VALIDATOR,
+            _FILESIZE_VALIDATOR,
             _MEDIATYPE_VALIDATOR,
         ],
         'render_kw': {
@@ -299,6 +304,8 @@ class ApplicationForm(FlaskForm):
                     fields[0].flags.skip_validation = True
                     fields[0].validate_choice = False
 
+            self._FILESIZE_VALIDATOR.message = const.form.ERROR_FILESIZE % int(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]),
+            self._FILESIZE_VALIDATOR.max_size = int(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024
             self._MEDIATYPE_VALIDATOR.mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]
             self._MEDIATYPE_VALIDATOR.message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig)
             for fields in self.questions.values():

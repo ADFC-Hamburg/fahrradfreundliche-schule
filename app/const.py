@@ -44,6 +44,7 @@ class conf(ABC):
     QUESTIONS_KEY = 'Fragen'
     LIST_KEY = 'Liste'
     UPLOADS_KEY = 'Belege'
+    FILESIZE_KEY = 'HoechstgroesseInMiB'
     MEDIATYPE_KEY = 'ErlaubteFormate'
     FORM_DEFAULT = {
         DEFAULT_KEY: {
@@ -63,7 +64,8 @@ class conf(ABC):
             ),
         },
         UPLOADS_KEY: {
-            MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf')
+            FILESIZE_KEY: 10,
+            MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf'),
         }
     }
 
@@ -108,6 +110,7 @@ class form(ABC):
     LIST_SEPARATOR = ', '
     LIST_SEPARATOR_LAST = ' oder '
 
+    ERROR_FILESIZE = 'Bitte lade eine Datei hoch, die nicht größer als %i MiB ist.'
     ERROR_INVALID = 'Bitte gib einen gültigen Wert ein.'
     ERROR_LENGTH_ZIPCODE = 'Bitte gib genau '+str(ZIP_DIGITS)+' Ziffern ein.'
     ERROR_MEDIATYPE = 'Bitte lade eine Datei im Format %s hoch.'
