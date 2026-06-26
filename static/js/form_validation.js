@@ -18,17 +18,17 @@ const complianceFields = document.getElementById('compliance').getElementsByTagN
 function validateText(target) {
 	target.value = target.value.trim()
 	if (target.validity.valueMissing) {
-		target.setCustomValidity('Bitte fülle dieses Feld aus.');
+		target.setCustomValidity('Bitte füllen Sie dieses Feld aus.');
 	} else if (target.type == 'email' && target.validity.typeMismatch) {
-		target.setCustomValidity('Bitte gib eine Email-Adresse ein.');
+		target.setCustomValidity('Bitte geben Sie eine Email-Adresse ein.');
 	} else if (target.validity.patternMismatch) {
-		target.setCustomValidity('Bitte gib einen gültigen Wert ein.');
+		target.setCustomValidity('Bitte geben Sie einen gültigen Wert ein.');
 	} else if (target.minLength > -1 && (target.maxLength == target.minLength) && (target.value.length != target.minLength)) {
-		target.setCustomValidity('Bitte gib genau '+target.minLength+' Zeichen ein.');
+		target.setCustomValidity('Bitte geben Sie genau '+target.minLength+' Zeichen ein.');
 	} else if (target.minLength > -1 && target.value.length < target.minLength) {
-		target.setCustomValidity('Bitte gib mindestens '+target.minLength+' Zeichen ein.');
+		target.setCustomValidity('Bitte geben Sie mindestens '+target.minLength+' Zeichen ein.');
 	} else if (target.maxLength > -1 && target.value.length > target.maxLength) {
-		target.setCustomValidity('Bitte gib höchstens '+target.maxLength+' Zeichen ein.');
+		target.setCustomValidity('Bitte geben Sie höchstens '+target.maxLength+' Zeichen ein.');
 	} else {
 		target.setCustomValidity('');
 	}
@@ -42,20 +42,20 @@ function validateText(target) {
  */
 function validateNumber(target) {
 	if (target.validity.valueMissing || target.validity.badInput) {
-		target.setCustomValidity('Bitte gib hier eine Zahl ein.');
+		target.setCustomValidity('Bitte geben Sie hier eine Zahl ein.');
 	} else if (target.validity.rangeUnderflow) {
 		if (target.min == 0) {
-			target.setCustomValidity('Bitte gib hier eine Zahl ein, die nicht negativ ist.');
+			target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht negativ ist.');
 		} else {
-			target.setCustomValidity('Bitte gib hier eine Zahl ein, die nicht kleiner als '+target.min+' ist.');
+			target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht kleiner als '+target.min+' ist.');
 		}
 	} else 	if (target.validity.rangeOverflow) {
-		target.setCustomValidity('Bitte gib hier eine Zahl ein, die nicht größer als '+target.max+' ist.');
+		target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht größer als '+target.max+' ist.');
 	} else if (target.validity.stepMismatch) {
 		if (!target.step || target.step == 1) {
-			target.setCustomValidity('Bitte gib hier nur ganze Zahlen ein.');
+			target.setCustomValidity('Bitte geben Sie hier nur ganze Zahlen ein.');
 		} else {
-			target.setCustomValidity('Bitte gib hier nur durch '+target.step+' teilbahre Zahlen ein.');
+			target.setCustomValidity('Bitte geben Sie hier nur durch '+target.step+' teilbahre Zahlen ein.');
 		}
 	} else {
 		target.setCustomValidity('');
@@ -70,7 +70,7 @@ function validateNumber(target) {
  */
 function validateCheckbox(target) {
 	if (target.validity.valueMissing) {
-		target.setCustomValidity('Bitte stimme zu.');
+		target.setCustomValidity('Bitte willigen Sie ein.');
 	} else {
 		target.setCustomValidity('');
 	}
@@ -84,7 +84,7 @@ function validateCheckbox(target) {
  */
 function validateRadio(target) {
 	if (target.validity.valueMissing) {
-		target.setCustomValidity('Bitte triff eine Auswahl.');
+		target.setCustomValidity('Bitte treffen Sie eine Auswahl.');
 	} else {
 		target.setCustomValidity('');
 	}
@@ -98,7 +98,7 @@ function validateRadio(target) {
  */
 function validateFile(target) {
 	if (target.validity.valueMissing) {
-		target.setCustomValidity('Bitte lade für jedes Ja einen Beleg hoch.');
+		target.setCustomValidity('Bitte laden Sie für jedes Ja einen Beleg hoch.');
 	} else {
 		target.setCustomValidity('');
 	}
