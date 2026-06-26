@@ -103,62 +103,44 @@ class ApplicationForm(FlaskForm):
     #region Input fields for yes/no questions
     _YESNOCHOICES = ((1,const.form.CHOICE_YES),(0,const.form.CHOICE_NO))
     _YESNO_REQUIRED_VALIDATOR = ConditionalInputRequired(message=const.form.ERROR_REQUIRED_YESNO)
+    _YESNO_COMMON_ARGS = {
+        'choices': _YESNOCHOICES,
+        'validators': [
+            _YESNO_REQUIRED_VALIDATOR,
+        ],
+    }
 
     campaign_organizing = RadioField(
         const.form.QUESTIONS_LABELS['campaign_organizing'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     campaign_participation = RadioField(
         const.form.QUESTIONS_LABELS['campaign_participation'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     compass = RadioField(
         const.form.QUESTIONS_LABELS['compass'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     coordinator = RadioField(
         const.form.QUESTIONS_LABELS['coordinator'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     lessons = RadioField(
         const.form.QUESTIONS_LABELS['lessons'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     parking = RadioField(
         const.form.QUESTIONS_LABELS['parking'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     repairs = RadioField(
         const.form.QUESTIONS_LABELS['repairs'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     routemap = RadioField(
         const.form.QUESTIONS_LABELS['routemap'],
-        choices = _YESNOCHOICES,
-        validators=[
-            _YESNO_REQUIRED_VALIDATOR,
-        ],
+        **_YESNO_COMMON_ARGS,
     )
     #endregion
 
