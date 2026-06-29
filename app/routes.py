@@ -23,15 +23,18 @@ _CONTEXT = {
     'static': _STATIC_ENDPOINT,
     'appname': const.app.NAME,
     'conf': const.conf,
-    'contact': config.get_contact_details(),
     'version': const.app.VERSION
 }
 
 @pages.route('/index', methods=['GET','POST'])
 @pages.route('/', methods=['GET','POST'])
 def index():
-    webform = forms.ApplicationForm(formconfig=config.get_form_config())
+    settings = config.fetch()
+    webform = forms.ApplicationForm(
+        formconfig=settings[const.conf.FORM_KEY],
+    )
     return render_template(
         'index.html.j2', **_CONTEXT,
         form = webform,
+        contact = settings[const.conf.CONTACT_KEY],
     )
