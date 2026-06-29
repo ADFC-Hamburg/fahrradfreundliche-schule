@@ -6,23 +6,49 @@ import tomllib
 
 from . import const
 
-def fetch() -> configparser.ConfigParser:
+
+DEFAULT_CONFIG = {key: defaults for key, defaults in const.conf.SECTIONS}
+
+
+def _deepmerge_without_addition(dst: dict, src: dict) -> dict:
+    """
+    Replaces values in a destination dictionary
+    with values from the source dictionary.
+    Subdictionaries are likewise merged rather than replaced.
+
+    This function only replaces values; no new keys are added.
+    """
+    for key in dst:
+        if key not in src:
+            continue
+        if dst[key] is src[key]:
+            continue
+        if isinstance(dst[key], dict):
+            dst[key] = _deepmerge_without_addition(dst[key], src[key])
+        else:
+            dst[key] = src[key]
+    return dst
+
+def fetch() -> dict:
+    """
+    Loads and parses the config file,
+    substituting default values for missing keys.
+
+    Returns the default config if the config file is unavailable.
+    """
+
     from .paths import CONFIG
 
-    with open(CONFIG, "rb") as f:
-        config = tomllib.load(f)
-    return config
+    try:
+        with open(CONFIG, "rb") as f:
+            config = tomllib.load(f)
+    except (FileNotFoundError, IsADirectoryError, PermissionError):
+        return DEFAULT_CONFIG
+
+    return _deepmerge_without_addition(DEFAULT_CONFIG, config)
 
 def get_contact_details() -> dict:
-    try:
-        contacts = fetch()[const.conf.CONTACT_KEY]
-        return const.conf.CONTACT_DEFAULT | contacts
-    except FileNotFoundError:
-        return const.conf.CONTACT_DEFAULT
+    return fetch()[const.conf.CONTACT_KEY]
 
 def get_form_config() -> dict:
-    try:
-        config = fetch()[const.conf.FORM_KEY]
-        return const.conf.FORM_DEFAULT | config
-    except FileNotFoundError:
-        return const.conf.FORM_DEFAULT
+    return fetch()[const.conf.FORM_KEY]
