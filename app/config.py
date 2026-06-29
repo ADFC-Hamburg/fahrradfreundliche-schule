@@ -9,6 +9,9 @@ from . import const
 
 DEFAULT_CONFIG = {key: defaults for key, defaults in const.conf.SECTIONS}
 
+cached_config = DEFAULT_CONFIG
+cache_timestamp = None
+
 
 def _deepmerge_without_addition(dst: dict, src: dict) -> dict:
     """
@@ -37,15 +40,28 @@ def fetch() -> dict:
     Returns the default config if the config file is unavailable.
     """
 
+    from os.path import getmtime
+
     from .paths import CONFIG
 
+    global cached_config, cache_timestamp
+
     try:
+        file_timestamp = getmtime(CONFIG)
+        if file_timestamp == cache_timestamp:
+            # Return cache if cache is up to date
+            return cached_config
+
         with open(CONFIG, "rb") as f:
             config = tomllib.load(f)
     except (FileNotFoundError, IsADirectoryError, PermissionError):
         return DEFAULT_CONFIG
 
-    return _deepmerge_without_addition(DEFAULT_CONFIG, config)
+    # Substitute missing values with defaults; cache the result
+    cached_config = _deepmerge_without_addition(DEFAULT_CONFIG, config)
+    cache_timestamp = file_timestamp
+
+    return cached_config
 
 def get_contact_details() -> dict:
     return fetch()[const.conf.CONTACT_KEY]
