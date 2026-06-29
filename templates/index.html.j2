@@ -9,9 +9,11 @@
 	<link rel="icon" type="image/svg+xml" href="{{ url_for(static, filename='favicon/favicon.svg') }}" sizes="any" />
 </head>
 
-<body>
-	<h1>Hello World!</h1>
-
+<body>{% if custom[conf.LOGO_KEY][conf.APP_KEY] %}
+	<header>
+		<img src="{{ custom[conf.LOGO_KEY][conf.APP_KEY] }}" />
+	</header>
+{% endif %}
 	<form method="post" action="/" enctype="multipart/form-data">
 		{{ form.csrf_token }}
 		<div>{% for field in form.get_inputfields() %}

@@ -37,4 +37,5 @@ def index():
         'index.html.j2', **_CONTEXT,
         form = webform,
         contact = settings[const.conf.CONTACT_KEY],
+        custom = settings[const.conf.WEBSITE_KEY],
     )

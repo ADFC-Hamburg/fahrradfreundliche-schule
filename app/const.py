@@ -37,6 +37,15 @@ class conf(ABC):
         },
     }
 
+    WEBSITE_KEY = 'Webseite'
+    LOGO_KEY = 'Logos'
+    APP_KEY = 'FahrradfreundlicheSchule'
+    WEBSITE_DEFAULT = {
+        LOGO_KEY: {
+            APP_KEY: '/static/logos/FFS_generic_logo_small.png',
+        },
+    }
+
     FORM_KEY = 'Formular'
     DEFAULT_KEY = 'Vorgabe'
     CITY_KEY = 'Ort'
@@ -64,6 +73,7 @@ class conf(ABC):
 
     SECTIONS = (
         (CONTACT_KEY, CONTACT_DEFAULT),
+        (WEBSITE_KEY, WEBSITE_DEFAULT),
         (FORM_KEY, FORM_DEFAULT),
     )
 
