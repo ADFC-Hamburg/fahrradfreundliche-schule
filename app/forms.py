@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Field, FileField, IntegerField, RadioField, StringField
+from wtforms import Field, FileField, IntegerField, RadioField, StringField, TelField
 import wtforms.validators as validators
 
 from . import const
@@ -39,7 +39,7 @@ class ApplicationForm(FlaskForm):
             validators.InputRequired(),
         ],
     )
-    phone = StringField(
+    phone = TelField(
         const.form.INPUTFIELDS_LABELS['phone'],
         validators=[
             validators.InputRequired(),
