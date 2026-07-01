@@ -228,48 +228,54 @@ class ApplicationForm(FlaskForm):
         message = const.form.ERROR_REQUIRED_FILE,
         target = (True, 1, '1'),
     )
-    _FILESIZE_VALIDATOR = FileSize(
+    _FILESIZE_DEFAULT_VALIDATOR = FileSize(
         message = const.form.ERROR_FILESIZE % const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
         max_size = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] * 1024 * 1024
     )
-    _MEDIATYPE_VALIDATOR = MediatypeAllowed(
+    _MEDIATYPE_DEFAULT_VALIDATOR = MediatypeAllowed(
         message = const.form.ERROR_MEDIATYPE % format_mediatypes_from_config(const.conf.FORM_DEFAULT),
         mediatypes = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
     )
-    _FILEFIELD_COMMON_ARGS = {
-        'validators': [
-            _FILE_MAYBE_REQUIRED_VALIDATOR,
-            _FILESIZE_VALIDATOR,
-            _MEDIATYPE_VALIDATOR,
-        ],
-        'render_kw': {
-            'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
-        },
+    _FILEFIELD_DEFAULT_VALIDATORS = (
+        _FILE_MAYBE_REQUIRED_VALIDATOR,
+        _FILESIZE_DEFAULT_VALIDATOR,
+        _MEDIATYPE_DEFAULT_VALIDATOR,
+    )
+    _FILEFIELD_DEFAULT_RENDER_KW = {
+        'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
     }
 
     file_campaign_organizing = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_campaign_participation = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_compass = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_coordinator = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_lessons = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_parking = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_repairs = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     file_routemap = FileField(
-        **_FILEFIELD_COMMON_ARGS,
+        validators = _FILEFIELD_DEFAULT_VALIDATORS,
+        render_kw = _FILEFIELD_DEFAULT_RENDER_KW,
     )
     #endregion
 
@@ -304,12 +310,28 @@ class ApplicationForm(FlaskForm):
                     fields[0].flags.skip_validation = True
                     fields[0].validate_choice = False
 
-            self._FILESIZE_VALIDATOR.message = const.form.ERROR_FILESIZE % int(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]),
-            self._FILESIZE_VALIDATOR.max_size = int(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024
-            self._MEDIATYPE_VALIDATOR.mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]
-            self._MEDIATYPE_VALIDATOR.message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig)
+            # Replace filefield validators and other settings
+            filefield_validators = [self._FILE_MAYBE_REQUIRED_VALIDATOR,]
+            if formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
+                filefield_validators.append(self._FILESIZE_DEFAULT_VALIDATOR)
+            else:
+                filefield_validators.append(FileSize(
+                    message = const.form.ERROR_FILESIZE % formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
+                    max_size = int(float(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024)
+                ))
+            if formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
+                filefield_validators.append(self._MEDIATYPE_DEFAULT_VALIDATOR)
+            else:
+                filefield_validators.append(MediatypeAllowed(
+                    message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig),
+                    mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
+                ))
+            filefield_render_kw = {
+                'accept': ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
+            }
             for fields in self.questions.values():
-                fields[1].render_kw['accept'] = ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
+                fields[1].validators = filefield_validators
+                fields[1].render_kw = filefield_render_kw
 
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
