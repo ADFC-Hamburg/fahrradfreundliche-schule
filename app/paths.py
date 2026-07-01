@@ -11,4 +11,5 @@ STATIC = path.join (ROOT, const.directories.STATIC)
 TEMPLATES = path.join (ROOT, const.directories.TEMPLATES)
 
 CONFIG_DEFAULT = path.join (ROOT, 'CONFIG.toml')
-CONFIG = environ.get(const.env.CONFIG, CONFIG_DEFAULT)
+CONFIGDIR = environ.get(const.env.CONFIGDIR, ROOT)
+CONFIG = environ.get(const.env.CONFIGFILE, path.join(CONFIGDIR, 'CONFIG.toml'))

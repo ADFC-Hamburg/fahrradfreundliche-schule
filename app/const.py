@@ -21,7 +21,8 @@ class directories(ABC):
 @final
 class env(ABC):
     """Names of environmental variables"""
-    CONFIG = 'FAHRRADSCHULE_CONFIG_FILE'
+    CONFIGDIR = 'FAHRRADSCHULE_CONFIG_DIR'
+    CONFIGFILE = 'FAHRRADSCHULE_CONFIG_FILE'
 
 @final
 class conf(ABC):
