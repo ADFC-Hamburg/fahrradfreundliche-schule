@@ -10,6 +10,9 @@ LABEL org.opencontainers.image.description="Ein Webserver, über den Schulen sic
 ARG workdir='/opt/fahrradschule'
 WORKDIR "${workdir}"
 
+# Install required packages
+RUN apk add --no-cache libmagic
+
 # Update pip and install Python dependencies
 ENV PIP_ROOT_USER_ACTION=ignore
 COPY ./requirements.txt /abrechnungsformular/requirements.txt
