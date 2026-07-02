@@ -48,20 +48,16 @@ async function submitApplication() {
 	} else {
 		// Show received error messages on corresponding form field
 		try {
-			let focused = false
 			for (let key in result.errors) {
 				if (key == 'csrf_token') throw new Error('Invalid CSRF token');
 
 				const field = document.querySelector(`#${key}`);
 				field.setCustomValidity(result.errors[key][0]);
-				if (!focused) {
-					field.focus();
-					focused = true;
-				}
 				field.addEventListener('change', function clicked(){
 					field.setCustomValidity('');
 					field.removeEventListener('change', clicked);
 				});
+				document.querySelector('input:invalid').focus();
 			}
 		} catch (error) {
 			console.error("Failed to set custom validity for", key);
