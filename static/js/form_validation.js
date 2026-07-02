@@ -122,7 +122,7 @@ function processQuestion(name) {
 	for (let i = 0; i < options.length; i++) {
 		validateRadio(options[i]);
 	}
-	file.required = (selected && selected.value && selected.value != "0");
+	file.required = (selected && selected.value && selected.value != "0" && file.dataset.neverrequired != 'true');
 	validateFile(file);
 }
 

@@ -44,6 +44,7 @@ class conf(ABC):
     QUESTIONS_KEY = 'Fragen'
     LIST_KEY = 'Liste'
     UPLOADS_KEY = 'Belege'
+    REQUIRED_KEY = 'Erforderlich'
     FILESIZE_KEY = 'HoechstgroesseInMiB'
     MEDIATYPE_KEY = 'ErlaubteFormate'
     FORM_DEFAULT = {
@@ -64,6 +65,7 @@ class conf(ABC):
             ),
         },
         UPLOADS_KEY: {
+            REQUIRED_KEY: True,
             FILESIZE_KEY: 10,
             MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf'),
         }

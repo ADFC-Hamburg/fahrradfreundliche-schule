@@ -312,7 +312,9 @@ class ApplicationForm(FlaskForm):
                     fields[0].validate_choice = False
 
             # Replace filefield validators and other settings
-            filefield_validators = [self._FILE_MAYBE_REQUIRED_VALIDATOR,]
+            filefield_validators = []
+            if formconfig[const.conf.UPLOADS_KEY][const.conf.REQUIRED_KEY]:
+                filefield_validators.append(self._FILE_MAYBE_REQUIRED_VALIDATOR)
             if formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
                 filefield_maxsize = self._FILESIZE_DEFAULT_VALIDATOR.max_size
                 filefield_validators.append(self._FILESIZE_DEFAULT_VALIDATOR)
@@ -334,6 +336,7 @@ class ApplicationForm(FlaskForm):
             filefield_render_kw = {
                 'accept': ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]),
                 'data-maxsize': str(filefield_maxsize) if filefield_maxsize else '',
+                'data-neverrequired': 'true' if not formconfig[const.conf.UPLOADS_KEY][const.conf.REQUIRED_KEY] else 'false',
             }
             for fields in self.questions.values():
                 fields[1].validators = filefield_validators
