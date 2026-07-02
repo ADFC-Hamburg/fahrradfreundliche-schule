@@ -314,14 +314,14 @@ class ApplicationForm(FlaskForm):
             filefield_validators = [self._FILE_MAYBE_REQUIRED_VALIDATOR,]
             if formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
                 filefield_validators.append(self._FILESIZE_DEFAULT_VALIDATOR)
-            else:
+            elif formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
                 filefield_validators.append(FileSize(
                     message = const.form.ERROR_FILESIZE % formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
                     max_size = int(float(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024)
                 ))
             if formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
                 filefield_validators.append(self._MEDIATYPE_DEFAULT_VALIDATOR)
-            else:
+            elif formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
                 filefield_validators.append(MediatypeAllowed(
                     message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig),
                     mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
