@@ -54,10 +54,6 @@ async function submitApplication() {
 				try {
 					const field = document.querySelector(`input[name="${key}"]`);
 					field.setCustomValidity(result.errors[key][0]);
-					field.addEventListener('change', function clicked(){
-						field.setCustomValidity('');
-						field.removeEventListener('change', clicked);
-					});
 				} catch (error) {
 					throw new Error('Failed to set custom validity for '+key);
 				}
