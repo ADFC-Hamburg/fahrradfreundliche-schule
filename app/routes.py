@@ -73,5 +73,5 @@ def submit_application():
         # Return status message with validation errors
         return jsonify({
             const.api.STATUS_KEY: const.api.FAIL_VALUE,
-            const.api.ERROR_KEY: forms.bundle_errors(webform.get_fields())
+            const.api.ERROR_KEY: webform.errors
         })

@@ -222,13 +222,3 @@ class ApplicationForm(FlaskForm):
             *(field for question in self.questions.values() for field in question),
         )
     #endregion
-
-
-def bundle_errors(fields: tuple[Field, ...]) -> dict[str, list[str, ...]]:
-    """Returns a dictionary mapping the names of provided fields to
-    a list of errors for that field, skipping fields without errors."""
-    output = {}
-    for field in fields:
-        if field.errors:
-            output[field.name] = field.errors
-    return output
