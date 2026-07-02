@@ -44,7 +44,12 @@
 		<h2>Dauer der Auszeichnungsgültigkeit</h2>
 		<p>
 			Nach {{ cert[conf.VALID_YEARS_KEY] }} Jahren kann eine Rezertifizierung erfolgen, wenn die Kriterien weiterhin erfüllt werden.
-		</p>{% endif %}
+		</p>{% endif %}{% if custom[conf.LOGO_KEY][conf.SPONSORS_KEY] %}
+
+		<h2>Gefördert von:</h2>
+		<div>{% for logo in custom[conf.LOGO_KEY][conf.SPONSORS_KEY] %}
+			<img src="{{ logo }}" />{% endfor %}
+		</div>{% endif %}
 	</main>
 
 	<form method="post" action="/" enctype="multipart/form-data">
