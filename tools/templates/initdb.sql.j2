@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS {{ tablename }} (
+	id INTEGER PRIMARY KEY AUTOINCREMENT{% for field in inputfields %},
+	{{ field }} {% if field in wholenumfields %}INTEGER CHECK ({{ field }} >= 0){% else %}TEXT{% endif %} NOT NULL{% endfor %},
+	timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP{% for field in questions %},
+	{{ field }} INTEGER CHECK ({{ field }} = 0 OR {{ field }} = 1),
+	{{ fileprefix }}{{ field }} TEXT{% endfor %}
+);

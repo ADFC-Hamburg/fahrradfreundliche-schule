@@ -357,4 +357,12 @@ class ApplicationForm(FlaskForm):
         else:
             order = const.form.QUESTIONS_LABELS.keys()
         return tuple(self.questions[key] for key in order)
+    
+    def get_fields(self) -> tuple[Field, ...]:
+        """Return all fields in this form."""
+        return(
+            self.csrf_token,
+            *self.get_inputfields(),
+            *(field for question in self.questions.values() for field in question),
+        )
     #endregion

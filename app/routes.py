@@ -4,9 +4,9 @@ and for rendering content.
 """
 
 # Imports
-from flask import Blueprint, render_template
+from flask import Blueprint, jsonify, render_template
 
-from . import config, const, forms, paths
+from . import config, const, database, uploads, forms, paths
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -41,3 +41,43 @@ def index():
         custom = settings[const.conf.WEBSITE_KEY],
         uploads = settings[const.conf.FORM_KEY][const.conf.UPLOADS_KEY]
     )
+
+@pages.route('/api/submit', methods=['POST'])
+def submit_application():
+    webform = forms.ApplicationForm(formconfig=config.get_form_config())
+    if webform.validate_on_submit():
+        # Put all values into dictionaries
+        input_values = {field.short_name: field.data
+                        for field in webform.get_inputfields()}
+        question_values = {}
+        question_filenames = {}
+        for key, fields in webform.questions.items():
+            question_values[key] = fields[0].data
+            if fields[1].data:
+                # Save uploaded file; use filename as value
+                filename = uploads.add(
+                    fields[1].data,
+                    webform.school.data,
+                    fields[0].short_name,
+                )
+                question_filenames[const.form.FILE_PREFIX + key] = filename
+
+        # Create database entry
+        new_id = database.addapplication(
+            **input_values,
+            **question_values,
+            **question_filenames,
+        )
+
+        # Return status message with database entry ID
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+            const.api.ID_KEY: new_id,
+        })
+
+    else:
+        # Return status message with validation errors
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.ERROR_KEY: webform.errors
+        })

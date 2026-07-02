@@ -11,5 +11,8 @@ if [ -z $FLASK_SECRET_KEY ]; then
 	fi
 fi
 
+# Create database if not existing (as non-root user)
+su appuser -s /bin/sh -c "python3 \"/opt/fahrradschule/tools/initdb.py\" -q \"$FAHRRADSCHULE_SAVE_DIR/database.db\""
+
 # Execute command (as non-root user)
 exec su appuser -s /bin/sh -c "$*"

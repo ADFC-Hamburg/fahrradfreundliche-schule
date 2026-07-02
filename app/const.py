@@ -8,6 +8,14 @@ from re import compile as compile_regex
 from typing import final
 
 @final
+class api(ABC):
+    STATUS_KEY = 'status'
+    ERROR_KEY = 'errors'
+    ID_KEY = 'id'
+    PASS_VALUE = 'ok'
+    FAIL_VALUE = 'error'
+
+@final
 class app(ABC):
     """Information about this app."""
     NAME = 'Fahrradfreundliche Schule Bewerbungsformular'
@@ -17,12 +25,14 @@ class app(ABC):
 class directories(ABC):
     STATIC = 'static'
     TEMPLATES = 'templates'
+    UPLOADS = 'documents'
 
 @final
 class env(ABC):
     """Names of environmental variables"""
     CONFIGDIR = 'FAHRRADSCHULE_CONFIG_DIR'
     CONFIGFILE = 'FAHRRADSCHULE_CONFIG_FILE'
+    SAVEDIR = 'FAHRRADSCHULE_SAVE_DIR'
 
 @final
 class conf(ABC):
@@ -117,6 +127,8 @@ class conf(ABC):
 
 @final
 class form(ABC):
+    FORM_NAME = 'applications'
+
     INPUTFIELDS_LABELS = {
         'firstname': 'Vorname',
         'lastname': 'Nachname',
@@ -128,6 +140,7 @@ class form(ABC):
         'city': 'Ort',
         'headcount': 'Anzahl Schülerinnen, Schüler und Lehrkräfte (Gesamt)',
     }
+    INPUTFIELDS_WHOLENUM = ('headcount',)
     HEADCOUNT_MAX = 9999
     PHONE_PATTERN = '(\\+\\d)?[ \\d\\-\\/]+\\d'
     PHONE_REGEX = compile_regex('^'+PHONE_PATTERN+'$')
@@ -159,3 +172,10 @@ class form(ABC):
     ERROR_REQUIRED_CONSENT = 'Bitte willigen Sie ein.'
     ERROR_REQUIRED_FILE = 'Bitte laden Sie für jedes '+CHOICE_YES+' eine Datei hoch.'
     ERROR_REQUIRED_YESNO = 'Bitte wählen Sie '+CHOICE_YES+' oder '+CHOICE_NO+' aus.'
+
+    FILE_PREFIX = 'filename_'
+    FILE_CHAR_REMOVE_PATTERN = '[^A-Za-zÄäÖöÜüß0-9_\\-]'
+
+@final
+class sql(ABC):
+    INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
