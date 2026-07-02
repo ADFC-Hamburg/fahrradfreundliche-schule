@@ -227,7 +227,8 @@ class ApplicationForm(FlaskForm):
         _MEDIATYPE_DEFAULT_VALIDATOR,
     )
     _FILEFIELD_DEFAULT_RENDER_KW = {
-        'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
+        'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]),
+        'data-maxsize': str(_FILESIZE_DEFAULT_VALIDATOR.max_size),
     }
 
     file_campaign_organizing = FileField(
@@ -313,12 +314,16 @@ class ApplicationForm(FlaskForm):
             # Replace filefield validators and other settings
             filefield_validators = [self._FILE_MAYBE_REQUIRED_VALIDATOR,]
             if formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
+                filefield_maxsize = self._FILESIZE_DEFAULT_VALIDATOR.max_size
                 filefield_validators.append(self._FILESIZE_DEFAULT_VALIDATOR)
             elif formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
+                filefield_maxsize = int(float(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024)
                 filefield_validators.append(FileSize(
                     message = const.form.ERROR_FILESIZE % formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
-                    max_size = int(float(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024)
+                    max_size = filefield_maxsize
                 ))
+            else:
+                filefield_maxsize = None
             if formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
                 filefield_validators.append(self._MEDIATYPE_DEFAULT_VALIDATOR)
             elif formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
@@ -327,7 +332,8 @@ class ApplicationForm(FlaskForm):
                     mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
                 ))
             filefield_render_kw = {
-                'accept': ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY])
+                'accept': ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]),
+                'data-maxsize': str(filefield_maxsize) if filefield_maxsize else '',
             }
             for fields in self.questions.values():
                 fields[1].validators = filefield_validators

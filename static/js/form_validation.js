@@ -99,6 +99,9 @@ function validateRadio(target) {
 function validateFile(target) {
 	if (target.validity.valueMissing) {
 		target.setCustomValidity('Bitte laden Sie für jedes Ja einen Beleg hoch.');
+	} else if (target.dataset.maxsize && target.files[0] && target.files[0].size > Number(target.dataset.maxsize)) {
+		const mibibytes = parseFloat((Number(target.dataset.maxsize)/1024/1024).toFixed(2)).toString().replace('.',',');
+		target.setCustomValidity('Bitte laden Sie eine Datei hoch, die nicht größer als ' + mibibytes + ' MiB ist.');
 	} else {
 		target.setCustomValidity('');
 	}
