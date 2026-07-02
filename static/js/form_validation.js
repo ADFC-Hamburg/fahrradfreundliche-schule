@@ -1,0 +1,173 @@
+// ---- CONSTANTS ----
+
+const questionFileMarker = 'file_'
+
+const personalFields = document.getElementById('personaldata').getElementsByTagName('input');
+const questionFields = document.getElementById('questions').getElementsByTagName('input');
+const complianceFields = document.getElementById('compliance').getElementsByTagName('input');
+
+
+// ---- FUNCTIONS ----
+
+/**
+ * Überprüft ein Texteingabefeld und gibt gegebenenfalls
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird
+ */
+function validateText(target) {
+	target.value = target.value.trim()
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte füllen Sie dieses Feld aus.');
+	} else if (target.type == 'email' && target.validity.typeMismatch) {
+		target.setCustomValidity('Bitte geben Sie eine Email-Adresse ein.');
+	} else if (target.validity.patternMismatch) {
+		target.setCustomValidity('Bitte geben Sie einen gültigen Wert ein.');
+	} else if (target.minLength > -1 && (target.maxLength == target.minLength) && (target.value.length != target.minLength)) {
+		target.setCustomValidity('Bitte geben Sie genau '+target.minLength+' Zeichen ein.');
+	} else if (target.minLength > -1 && target.value.length < target.minLength) {
+		target.setCustomValidity('Bitte geben Sie mindestens '+target.minLength+' Zeichen ein.');
+	} else if (target.maxLength > -1 && target.value.length > target.maxLength) {
+		target.setCustomValidity('Bitte geben Sie höchstens '+target.maxLength+' Zeichen ein.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft ein Zahleneingabefeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateNumber(target) {
+	if (target.validity.valueMissing || target.validity.badInput) {
+		target.setCustomValidity('Bitte geben Sie hier eine Zahl ein.');
+	} else if (target.validity.rangeUnderflow) {
+		if (target.min == 0) {
+			target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht negativ ist.');
+		} else {
+			target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht kleiner als '+target.min+' ist.');
+		}
+	} else 	if (target.validity.rangeOverflow) {
+		target.setCustomValidity('Bitte geben Sie hier eine Zahl ein, die nicht größer als '+target.max+' ist.');
+	} else if (target.validity.stepMismatch) {
+		if (!target.step || target.step == 1) {
+			target.setCustomValidity('Bitte geben Sie hier nur ganze Zahlen ein.');
+		} else {
+			target.setCustomValidity('Bitte geben Sie hier nur durch '+target.step+' teilbahre Zahlen ein.');
+		}
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft ein Kontrollkästchenfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateCheckbox(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte willigen Sie ein.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft ein Optionsfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateRadio(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte treffen Sie eine Auswahl.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft ein Uploadfeld und gibt gegebenenfalls 
+ * eine passende Fehlermeldung aus.
+ * 
+ * @param {HTMLInputElement} target	Das Eingabefeld, das überprüft wird 
+ */
+function validateFile(target) {
+	if (target.validity.valueMissing) {
+		target.setCustomValidity('Bitte laden Sie für jedes Ja einen Beleg hoch.');
+	} else if (target.dataset.maxsize && target.files[0] && target.files[0].size > Number(target.dataset.maxsize)) {
+		const mibibytes = parseFloat((Number(target.dataset.maxsize)/1024/1024).toFixed(2)).toString().replace('.',',');
+		target.setCustomValidity('Bitte laden Sie eine Datei hoch, die nicht größer als ' + mibibytes + ' MiB ist.');
+	} else {
+		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft alle Felder, die zu einer Frage gehören.
+ * Setzt außerdem das Uploadfeld auf Benötigt oder Optional, abhängig
+ * davon, welches Optionsfeld ausgewählt ist.
+ * 
+ * @param {string} name 
+ */
+function processQuestion(name) {
+	const options = document.querySelectorAll('input[name="'+name+'"]');
+	const file = document.getElementById(questionFileMarker+name);
+	const selected = document.querySelector('input[name="'+name+'"]:checked')
+
+	for (let i = 0; i < options.length; i++) {
+		validateRadio(options[i]);
+	}
+	file.required = (selected && selected.value && selected.value != "0" && file.dataset.neverrequired != 'true');
+	validateFile(file);
+}
+
+
+// ---- MAIN ----
+
+function start() {
+	for (let i = 0; i < personalFields.length; i++) {
+		if (personalFields[i].type == 'text' || personalFields[i].type == 'email') {
+			validateText(personalFields[i]);
+			personalFields[i].addEventListener('change',function(){
+				validateText(this);
+			});
+		} else if (personalFields[i].type == 'number') {
+			validateNumber(personalFields[i]);
+			personalFields[i].addEventListener('change',function(){
+				validateNumber(this);
+			});
+		}
+	}
+
+	for (let i = 0; i < questionFields.length; i++) {
+		if (questionFields[i].type == 'radio') {
+			if (questionFields[i].id.endsWith('-0')) {
+				processQuestion(questionFields[i].name);
+			}
+			questionFields[i].addEventListener('input',function(){
+				processQuestion(this.name);
+			});
+		} else if (questionFields[i].type == 'file') {
+			validateFile(questionFields[i]);
+			questionFields[i].addEventListener('input',function(){
+				validateFile(this);
+			});
+		}
+	}
+
+	for (let i = 0; i < complianceFields.length; i++) {
+		if (complianceFields[i].type == 'checkbox') {
+			validateCheckbox(complianceFields[i]);
+			complianceFields[i].addEventListener('change',function(){
+				validateCheckbox(this);
+			});
+		}
+	}
+}
+
+window.addEventListener('pageshow', start);

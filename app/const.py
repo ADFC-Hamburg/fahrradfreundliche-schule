@@ -53,6 +53,10 @@ class conf(ABC):
     ZIPCODE_KEY = 'Postleitzahl'
     QUESTIONS_KEY = 'Fragen'
     LIST_KEY = 'Liste'
+    UPLOADS_KEY = 'Belege'
+    REQUIRED_KEY = 'Erforderlich'
+    FILESIZE_KEY = 'HoechstgroesseInMiB'
+    MEDIATYPE_KEY = 'ErlaubteFormate'
     FORM_DEFAULT = {
         DEFAULT_KEY: {
             ZIPCODE_KEY: '',
@@ -70,6 +74,11 @@ class conf(ABC):
                 'lessons',
             ),
         },
+        UPLOADS_KEY: {
+            REQUIRED_KEY: True,
+            FILESIZE_KEY: 10,
+            MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf'),
+        }
     }
 
     SECTIONS = (
@@ -110,3 +119,15 @@ class form(ABC):
     }
     CHOICE_YES = 'Ja'
     CHOICE_NO = 'Nein'
+
+    LIST_SEPARATOR = ', '
+    LIST_SEPARATOR_LAST = ' oder '
+
+    ERROR_FILESIZE = 'Bitte laden Sie eine Datei hoch, die nicht größer als %i MiB ist.'
+    ERROR_INVALID = 'Bitte geben Sie einen gültigen Wert ein.'
+    ERROR_LENGTH_ZIPCODE = 'Bitte geben Sie genau '+str(ZIP_DIGITS)+' Ziffern ein.'
+    ERROR_MEDIATYPE = 'Bitte laden Sie eine Datei im Format %s hoch.'
+    ERROR_REQUIRED = 'Bitte füllen Sie dieses Feld aus.'
+    ERROR_REQUIRED_CONSENT = 'Bitte willigen Sie ein.'
+    ERROR_REQUIRED_FILE = 'Bitte laden Sie für jedes '+CHOICE_YES+' eine Datei hoch.'
+    ERROR_REQUIRED_YESNO = 'Bitte wählen Sie '+CHOICE_YES+' oder '+CHOICE_NO+' aus.'

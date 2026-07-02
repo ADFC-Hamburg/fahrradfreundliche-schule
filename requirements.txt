@@ -15,4 +15,7 @@ packaging
 
 # Form creation and validation
 Flask-WTF
-WTForms
+WTForms[email]
+
+# File type detection
+python-magic
