@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="application-name" content="{{ appname }}" />{% if version %} <!--{{ version }}-->{% endif%}
-	<title>Server Hello World</title>
+	<title>Fahrradfreundliche Schule</title>
 	<link rel="icon" type="image/png" href="{{ url_for(static, filename='favicon/favicon.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/svg+xml" href="{{ url_for(static, filename='favicon/favicon.svg') }}" sizes="any" />
 </head>
@@ -14,7 +14,43 @@
 		<img src="{{ custom[conf.LOGO_KEY][conf.APP_KEY] }}" />
 	</header>
 {% endif %}
+	<main>
+		<h1>Formular zur Teilnahme am Auszeichnungsverfahren zur Fahrradfreundlichen Schule</h1>
+{% if cert[conf.ENDDATE_KEY] %}
+		<h2>Bewerbungen für den aktuellen Auszeichnungszeitraum bitte einreichen bis zum: {{ cert[conf.ENDDATE_KEY] }}</h2>{% endif %}
+		<p>
+			Für die Auszeichnung zur <strong>„Fahrradfreundlichen Schule“</strong> {% if contact[conf.NAME_KEY] %}durch den {% if contact[conf.URL_KEY][HOMEPAGE_KEY] %}<a href="{{ contact[conf.URL_KEY][HOMEPAGE_KEY] }}">{{ contact[conf.NAME_KEY] }}</a>{% else %}<em>{{ contact[conf.NAME_KEY] }}</em>{% endif %}{% endif %}
+			können sich {% if cert[conf.QUALIFICATION_KEY][conf.SCHOOLTYPE_KEY] %}{{ cert[conf.QUALIFICATION_KEY][conf.SCHOOLTYPE_KEY] }}{% else %}Schulen aller Schulformen{% endif %}{% if cert[conf.QUALIFICATION_KEY][conf.LOCATION_KEY] %} aus {{ cert[conf.QUALIFICATION_KEY][conf.LOCATION_KEY] }}{% endif %} bewerben.
+			Um am Auszeichnungsverfahren teilnehmen zu können, werden im nachfolgenden Formular verschiedene Kriterien abgefragt, die von den Schulen durch Fotos, Berichte etc. nachgewiesen werden müssen.
+		</p>
+		<p>
+			Bitte füllen Sie dafür alle Felder aus und laden Sie die Nachweisdokumente an entsprechender Stelle des Formulars{% if uploads[conf.MEDIATYPE_KEY] %} als {{ form.format_mediatypes_from_config(form.config) }}{% endif %} hoch.{% if not uploads[conf.REQUIRED_KEY] %}
+			Sollten Sie noch nicht zu jedem Kriterium einen Nachweis zur Verfügung haben, können Sie trotzdem mit dem Bewerbungsprozess beginnen.
+		</p>
+		<p>
+			Sie können die fehlenden Nachweise auch im Anschluss noch innerhalb von 6 Wochen über das Formular{% if contact[conf.MAIL_KEY] %} oder per Mail (<a href="mailto:{{ contact[conf.MAIL_KEY] }}?subject=Fahrradfreundliche%20Schule">{{ contact[conf.MAIL_KEY] }}</a>){% endif %} unter Angabe Ihres Schulnamens nachreichen.{% endif %}
+		</p>
+
+		<h2>Anforderungen an die Nachweise</h2>
+		<p>
+			Um die Auszeichnung zu erhalten, müssen nachvollziehbare Nachweise für alle Kriterien eingereicht werden.{% if contact[conf.URL_KEY][conf.EXAMPLE_KEY] %}
+			Beispiele und ausführliche Beschreibungen zur Form dafür finden Sie <a href="{{ contact[conf.URL_KEY][conf.EXAMPLE_KEY] }}">hier</a> auf unserer Projektseite.{% endif %}
+		</p>{% if contact[conf.MAIL_KEY] or contact[conf.PHONE_KEY] %}
+		<p>
+			Sollten Sie bei einigen Kriterien Fragen haben oder Unterstützung benötigen, nehmen Sie gerne Kontakt mit uns auf:
+			{% if contact[conf.MAIL_KEY] and contact[conf.PHONE_KEY] %}entweder{% else %}Sie erreichen uns{% endif %}{% if contact[conf.MAIL_KEY] %} per Mail an <a href="mailto:{{ contact[conf.MAIL_KEY] }}?subject=Fahrradfreundliche%20Schule">{{ contact[conf.MAIL_KEY] }}</a>{% if contact[conf.PHONE_KEY] %} oder{% endif %}{% endif %}{% if contact[conf.PHONE_KEY] %} telefonisch unter <a href="tel:{{ contact[conf.PHONE_KEY] | select("in","0123456789+") | list | join() }}">{{ contact[conf.PHONE_KEY] }}</a>{% endif %}.
+		</p>{% endif %}
+{% if cert[conf.VALID_YEARS_KEY] %}
+		<h2>Dauer der Auszeichnungsgültigkeit</h2>
+		<p>
+			Nach {{ cert[conf.VALID_YEARS_KEY] }} Jahren kann eine Rezertifizierung erfolgen, wenn die Kriterien weiterhin erfüllt werden.
+		</p>{% endif %}
+	</main>
+
 	<form method="post" action="/" enctype="multipart/form-data">
+		<header>
+			Bitte füllen Sie das Formular vollständig aus und laden Sie{% if not uploads[conf.REQUIRED_KEY] %}, wenn vorhanden,{% endif%} Belege{% if uploads[conf.MEDIATYPE_KEY] %} als {{ form.format_mediatypes_from_config(form.config) }}{% endif %} hoch.
+		</header>
 		{{ form.csrf_token }}
 		<div id="personaldata">{% for field in form.get_inputfields() %}
 			<p>{{ field.label }} {{ field() }}</p>{% endfor %}

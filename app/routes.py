@@ -36,6 +36,8 @@ def index():
     return render_template(
         'index.html.j2', **_CONTEXT,
         form = webform,
+        cert = settings[const.conf.CERT_KEY],
         contact = settings[const.conf.CONTACT_KEY],
         custom = settings[const.conf.WEBSITE_KEY],
+        uploads = settings[const.conf.FORM_KEY][const.conf.UPLOADS_KEY]
     )

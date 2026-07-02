@@ -28,13 +28,38 @@ class env(ABC):
 class conf(ABC):
     """Keys and default values for the config file."""
     CONTACT_KEY = 'Kontaktdaten'
+    NAME_KEY = 'KreisverbandName'
+    PHONE_KEY = 'Telefonnummer'
+    MAIL_KEY = 'Email'
     URL_KEY = 'Web'
+    HOMEPAGE_KEY = 'Homepage'
+    EXAMPLE_KEY = 'BelegeBeispiele'
     LEGAL_KEY = 'Impressum'
     PRIVACY_KEY = 'Datenschutz'
     CONTACT_DEFAULT = {
+        NAME_KEY: '',
+        PHONE_KEY: '',
+        MAIL_KEY: '',
         URL_KEY: {
+            HOMEPAGE_KEY: '',
+            EXAMPLE_KEY: '',
             LEGAL_KEY: '',
             PRIVACY_KEY: '',
+        },
+    }
+
+    CERT_KEY = 'Zertifikat'
+    VALID_YEARS_KEY = 'GueltigkeitInJahren'
+    ENDDATE_KEY = 'EinreichenBisDatum'
+    QUALIFICATION_KEY = 'Vorraussetzungen'
+    LOCATION_KEY = 'Standort'
+    SCHOOLTYPE_KEY = 'Schulformen'
+    CERT_DEFAULT = {
+        VALID_YEARS_KEY: 0,
+        ENDDATE_KEY: '',
+        QUALIFICATION_KEY: {
+            LOCATION_KEY: '',
+            SCHOOLTYPE_KEY: 'Schulen aller Schulformen',
         },
     }
 
@@ -83,6 +108,7 @@ class conf(ABC):
 
     SECTIONS = (
         (CONTACT_KEY, CONTACT_DEFAULT),
+        (CERT_KEY, CERT_DEFAULT),
         (WEBSITE_KEY, WEBSITE_DEFAULT),
         (FORM_KEY, FORM_DEFAULT),
     )
