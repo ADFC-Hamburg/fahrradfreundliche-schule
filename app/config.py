@@ -64,7 +64,7 @@ def fetch() -> dict:
     return cached_config
 
 def get_contact_details() -> dict:
-    return fetch()[const.conf.CONTACT_KEY]
+    return fetch()[const.conf.keys.CONTACT]
 
 def get_form_config() -> dict:
-    return fetch()[const.conf.FORM_KEY]
+    return fetch()[const.conf.keys.FORM]

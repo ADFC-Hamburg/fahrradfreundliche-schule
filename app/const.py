@@ -37,70 +37,76 @@ class env(ABC):
 @final
 class conf(ABC):
     """Keys and default values for the config file."""
-    CONTACT_KEY = 'Kontaktdaten'
-    NAME_KEY = 'KreisverbandName'
-    PHONE_KEY = 'Telefonnummer'
-    MAIL_KEY = 'Email'
-    URL_KEY = 'Web'
-    HOMEPAGE_KEY = 'Homepage'
-    EXAMPLE_KEY = 'BelegeBeispiele'
-    LEGAL_KEY = 'Impressum'
-    PRIVACY_KEY = 'Datenschutz'
+
+    @final
+    class keys(ABC):
+        """Keys used in the config file."""
+        APP = 'FahrradfreundlicheSchule'
+        CERT = 'Zertifikat'
+        CITY = 'Ort'
+        CONTACT = 'Kontaktdaten'
+        DEFAULT = 'Vorgabe'
+        ENDDATE = 'EinreichenBisDatum'
+        EXAMPLE = 'BelegeBeispiele'
+        FILESIZE = 'HoechstgroesseInMiB'
+        FORM = 'Formular'
+        HOMEPAGE = 'Homepage'
+        LEGAL = 'Impressum'
+        LIST = 'Liste'
+        LOCATION = 'Standort'
+        LOGO = 'Logos'
+        MAIL = 'Email'
+        MEDIATYPE = 'ErlaubteFormate'
+        NAME = 'KreisverbandName'
+        PHONE = 'Telefonnummer'
+        PRIVACY = 'Datenschutz'
+        QUALIFICATION = 'Vorraussetzungen'
+        QUESTIONS = 'Fragen'
+        REQUIRED = 'Erforderlich'
+        SCHOOLTYPE = 'Schulformen'
+        SPONSORS = 'Foerderer'
+        UPLOADS = 'Belege'
+        URL = 'Web'
+        VALID_YEARS = 'GueltigkeitInJahren'
+        WEBSITE = 'Webseite'
+        ZIPCODE = 'Postleitzahl'
+        
+
     CONTACT_DEFAULT = {
-        NAME_KEY: '',
-        PHONE_KEY: '',
-        MAIL_KEY: '',
-        URL_KEY: {
-            HOMEPAGE_KEY: '',
-            EXAMPLE_KEY: '',
-            LEGAL_KEY: '',
-            PRIVACY_KEY: '',
+        keys.NAME: '',
+        keys.PHONE: '',
+        keys.MAIL: '',
+        keys.URL: {
+            keys.HOMEPAGE: '',
+            keys.EXAMPLE: '',
+            keys.LEGAL: '',
+            keys.PRIVACY: '',
         },
     }
 
-    CERT_KEY = 'Zertifikat'
-    VALID_YEARS_KEY = 'GueltigkeitInJahren'
-    ENDDATE_KEY = 'EinreichenBisDatum'
-    QUALIFICATION_KEY = 'Vorraussetzungen'
-    LOCATION_KEY = 'Standort'
-    SCHOOLTYPE_KEY = 'Schulformen'
     CERT_DEFAULT = {
-        VALID_YEARS_KEY: 0,
-        ENDDATE_KEY: '',
-        QUALIFICATION_KEY: {
-            LOCATION_KEY: '',
-            SCHOOLTYPE_KEY: 'Schulen aller Schulformen',
+        keys.VALID_YEARS: 0,
+        keys.ENDDATE: '',
+        keys.QUALIFICATION: {
+            keys.LOCATION: '',
+            keys.SCHOOLTYPE: 'Schulen aller Schulformen',
         },
     }
 
-    WEBSITE_KEY = 'Webseite'
-    LOGO_KEY = 'Logos'
-    APP_KEY = 'FahrradfreundlicheSchule'
-    SPONSORS_KEY = 'Foerderer'
     WEBSITE_DEFAULT = {
-        LOGO_KEY: {
-            APP_KEY: '/static/logos/FFS_generic_logo_small.png',
-            SPONSORS_KEY: (),
+        keys.LOGO: {
+            keys.APP: '/static/logos/FFS_generic_logo_small.png',
+            keys.SPONSORS: (),
         },
     }
 
-    FORM_KEY = 'Formular'
-    DEFAULT_KEY = 'Vorgabe'
-    CITY_KEY = 'Ort'
-    ZIPCODE_KEY = 'Postleitzahl'
-    QUESTIONS_KEY = 'Fragen'
-    LIST_KEY = 'Liste'
-    UPLOADS_KEY = 'Belege'
-    REQUIRED_KEY = 'Erforderlich'
-    FILESIZE_KEY = 'HoechstgroesseInMiB'
-    MEDIATYPE_KEY = 'ErlaubteFormate'
     FORM_DEFAULT = {
-        DEFAULT_KEY: {
-            ZIPCODE_KEY: '',
-            CITY_KEY: '',
+        keys.DEFAULT: {
+            keys.ZIPCODE: '',
+            keys.CITY: '',
         },
-        QUESTIONS_KEY: {
-            LIST_KEY: (
+        keys.QUESTIONS: {
+            keys.LIST: (
                 'coordinator',
                 'compass',
                 'routemap',
@@ -111,18 +117,18 @@ class conf(ABC):
                 'lessons',
             ),
         },
-        UPLOADS_KEY: {
-            REQUIRED_KEY: True,
-            FILESIZE_KEY: 10,
-            MEDIATYPE_KEY: ('image/jpeg', 'image/png', 'application/pdf'),
+        keys.UPLOADS: {
+            keys.REQUIRED: True,
+            keys.FILESIZE: 10,
+            keys.MEDIATYPE: ('image/jpeg', 'image/png', 'application/pdf'),
         }
     }
 
     SECTIONS = (
-        (CONTACT_KEY, CONTACT_DEFAULT),
-        (CERT_KEY, CERT_DEFAULT),
-        (WEBSITE_KEY, WEBSITE_DEFAULT),
-        (FORM_KEY, FORM_DEFAULT),
+        (keys.CONTACT, CONTACT_DEFAULT),
+        (keys.CERT, CERT_DEFAULT),
+        (keys.WEBSITE, WEBSITE_DEFAULT),
+        (keys.FORM, FORM_DEFAULT),
     )
 
 @final

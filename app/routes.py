@@ -22,7 +22,7 @@ _CONTEXT = {
     # Values to be passed to all templates
     'static': _STATIC_ENDPOINT,
     'appname': const.app.NAME,
-    'conf': const.conf,
+    'keys': const.conf.keys,
     'version': const.app.VERSION
 }
 
@@ -31,15 +31,15 @@ _CONTEXT = {
 def index():
     settings = config.fetch()
     webform = forms.ApplicationForm(
-        formconfig=settings[const.conf.FORM_KEY],
+        formconfig=settings[const.conf.keys.FORM],
     )
     return render_template(
         'index.html.j2', **_CONTEXT,
         form = webform,
-        cert = settings[const.conf.CERT_KEY],
-        contact = settings[const.conf.CONTACT_KEY],
-        custom = settings[const.conf.WEBSITE_KEY],
-        uploads = settings[const.conf.FORM_KEY][const.conf.UPLOADS_KEY]
+        cert = settings[const.conf.keys.CERT],
+        contact = settings[const.conf.keys.CONTACT],
+        custom = settings[const.conf.keys.WEBSITE],
+        uploads = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS]
     )
 
 @pages.route('/api/submit', methods=['POST'])

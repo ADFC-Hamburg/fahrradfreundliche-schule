@@ -7,6 +7,9 @@ import wtforms.validators as validators
 
 from . import const
 
+keys = const.conf.keys
+
+
 class ConditionalInputRequired(validators.InputRequired):
     """A validator which makes a field required, but skips validation
     if the field has flags.skip_validation set to True."""
@@ -66,7 +69,7 @@ class ApplicationForm(FlaskForm):
         formats the list of allowed media types as a string."""
         from mimetypes import guess_extension
 
-        mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]
+        mediatypes = formconfig[keys.UPLOADS][keys.MEDIATYPE]
         extensions = tuple(guess_extension(t)[1:].upper() for t in mediatypes)
         if not extensions:
             return ''
@@ -214,12 +217,12 @@ class ApplicationForm(FlaskForm):
         target = (True, 1, '1'),
     )
     _FILESIZE_DEFAULT_VALIDATOR = FileSize(
-        message = const.form.ERROR_FILESIZE % const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
-        max_size = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] * 1024 * 1024
+        message = const.form.ERROR_FILESIZE % const.conf.FORM_DEFAULT[keys.UPLOADS][keys.FILESIZE],
+        max_size = const.conf.FORM_DEFAULT[keys.UPLOADS][keys.FILESIZE] * 1024 * 1024
     )
     _MEDIATYPE_DEFAULT_VALIDATOR = MediatypeAllowed(
         message = const.form.ERROR_MEDIATYPE % format_mediatypes_from_config(const.conf.FORM_DEFAULT),
-        mediatypes = const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
+        mediatypes = const.conf.FORM_DEFAULT[keys.UPLOADS][keys.MEDIATYPE],
     )
     _FILEFIELD_DEFAULT_VALIDATORS = (
         _FILE_MAYBE_REQUIRED_VALIDATOR,
@@ -227,7 +230,7 @@ class ApplicationForm(FlaskForm):
         _MEDIATYPE_DEFAULT_VALIDATOR,
     )
     _FILEFIELD_DEFAULT_RENDER_KW = {
-        'accept': ', '.join(const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]),
+        'accept': ', '.join(const.conf.FORM_DEFAULT[keys.UPLOADS][keys.MEDIATYPE]),
         'data-maxsize': str(_FILESIZE_DEFAULT_VALIDATOR.max_size),
     }
 
@@ -302,41 +305,41 @@ class ApplicationForm(FlaskForm):
         if formconfig:
             # Apply settings
             if not self.zipcode.data:
-                self.zipcode.data = formconfig[const.conf.DEFAULT_KEY][const.conf.ZIPCODE_KEY]
+                self.zipcode.data = formconfig[keys.DEFAULT][keys.ZIPCODE]
             if not self.city.data:
-                self.city.data = formconfig[const.conf.DEFAULT_KEY][const.conf.CITY_KEY]
+                self.city.data = formconfig[keys.DEFAULT][keys.CITY]
             for key, fields in self.questions.items():
-                if key not in formconfig[const.conf.QUESTIONS_KEY][const.conf.LIST_KEY]:
+                if key not in formconfig[keys.QUESTIONS][keys.LIST]:
                     # Do not verify unused fields
                     fields[0].flags.skip_validation = True
                     fields[0].validate_choice = False
 
             # Replace filefield validators and other settings
             filefield_validators = []
-            if formconfig[const.conf.UPLOADS_KEY][const.conf.REQUIRED_KEY]:
+            if formconfig[keys.UPLOADS][keys.REQUIRED]:
                 filefield_validators.append(self._FILE_MAYBE_REQUIRED_VALIDATOR)
-            if formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
+            if formconfig[keys.UPLOADS][keys.FILESIZE] == const.conf.FORM_DEFAULT[keys.UPLOADS][keys.FILESIZE]:
                 filefield_maxsize = self._FILESIZE_DEFAULT_VALIDATOR.max_size
                 filefield_validators.append(self._FILESIZE_DEFAULT_VALIDATOR)
-            elif formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]:
-                filefield_maxsize = int(float(formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY]) * 1024 * 1024)
+            elif formconfig[keys.UPLOADS][keys.FILESIZE]:
+                filefield_maxsize = int(float(formconfig[keys.UPLOADS][keys.FILESIZE]) * 1024 * 1024)
                 filefield_validators.append(FileSize(
-                    message = const.form.ERROR_FILESIZE % formconfig[const.conf.UPLOADS_KEY][const.conf.FILESIZE_KEY],
+                    message = const.form.ERROR_FILESIZE % formconfig[keys.UPLOADS][keys.FILESIZE],
                     max_size = filefield_maxsize
                 ))
             else:
                 filefield_maxsize = None
-            if formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY] == const.conf.FORM_DEFAULT[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
+            if formconfig[keys.UPLOADS][keys.MEDIATYPE] == const.conf.FORM_DEFAULT[keys.UPLOADS][keys.MEDIATYPE]:
                 filefield_validators.append(self._MEDIATYPE_DEFAULT_VALIDATOR)
-            elif formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]:
+            elif formconfig[keys.UPLOADS][keys.MEDIATYPE]:
                 filefield_validators.append(MediatypeAllowed(
                     message = const.form.ERROR_MEDIATYPE % self.format_mediatypes_from_config(formconfig),
-                    mediatypes = formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY],
+                    mediatypes = formconfig[keys.UPLOADS][keys.MEDIATYPE],
                 ))
             filefield_render_kw = {
-                'accept': ', '.join(formconfig[const.conf.UPLOADS_KEY][const.conf.MEDIATYPE_KEY]),
+                'accept': ', '.join(formconfig[keys.UPLOADS][keys.MEDIATYPE]),
                 'data-maxsize': str(filefield_maxsize) if filefield_maxsize else '',
-                'data-neverrequired': 'true' if not formconfig[const.conf.UPLOADS_KEY][const.conf.REQUIRED_KEY] else 'false',
+                'data-neverrequired': 'true' if not formconfig[keys.UPLOADS][keys.REQUIRED] else 'false',
             }
             for fields in self.questions.values():
                 fields[1].validators = filefield_validators
@@ -353,7 +356,7 @@ class ApplicationForm(FlaskForm):
         """Return ordered input fields for questionnaire
         and corresponding input fields for file uploads."""
         if self.config:
-            order = self.config[const.conf.QUESTIONS_KEY][const.conf.LIST_KEY]
+            order = self.config[keys.QUESTIONS][keys.LIST]
         else:
             order = const.form.QUESTIONS_LABELS.keys()
         return tuple(self.questions[key] for key in order)
