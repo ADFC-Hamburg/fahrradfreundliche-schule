@@ -21,16 +21,15 @@ def _deepmerge_without_addition(dst: dict, src: dict) -> dict:
 
     This function only replaces values; no new keys are added.
     """
+    out = {}
     for key in dst:
-        if key not in src:
-            continue
-        if dst[key] is src[key]:
-            continue
-        if isinstance(dst[key], dict):
-            dst[key] = _deepmerge_without_addition(dst[key], src[key])
+        if key not in src or dst[key] is src[key]:
+            out[key] = dst[key]
+        elif isinstance(dst[key], dict):
+            out[key] = _deepmerge_without_addition(dst[key], src[key])
         else:
-            dst[key] = src[key]
-    return dst
+            out[key] = src[key]
+    return out
 
 def fetch() -> dict:
     """
