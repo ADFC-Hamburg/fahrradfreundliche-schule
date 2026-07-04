@@ -52,13 +52,16 @@ class MediatypeAllowed():
         ):
             return
         
-        mediatypes = tuple(magic_from_buffer(f.read(), mime=True) for f in field_data)
-        if not all(t in self.allowed_types for t in mediatypes):
-            raise validators.StopValidation(
-                self.message or
-                ('File does not have an approved media type: '
-                + ', '.join(self.allowed_types))
-            )
+        for f in field_data:
+            previous_position = f.stream.tell()
+            mediatype = magic_from_buffer(f.read(), mime=True)
+            f.stream.seek(previous_position)
+            if not mediatype in self.allowed_types:
+                raise validators.StopValidation(
+                    self.message or
+                    ('File does not have an approved media type: '
+                    + ', '.join(self.allowed_types))
+                )
 
 class ApplicationForm(FlaskForm):
 
