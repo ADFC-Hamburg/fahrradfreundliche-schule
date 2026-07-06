@@ -290,6 +290,11 @@ class ApplicationForm(FlaskForm):
         super().__init__(*args, **kwargs)
 
         self.config = formconfig
+        self.inputfields = (
+            self.firstname,self.lastname,self.email,
+            self.school,self.phone,self.address,
+            self.zipcode,self.city,self.headcount,
+        )
         self.questions = {
             'campaign_organizing': (self.campaign_organizing, self.file_campaign_organizing),
             'campaign_participation': (self.campaign_participation, self.file_campaign_participation),
@@ -300,10 +305,12 @@ class ApplicationForm(FlaskForm):
             'repairs': (self.repairs, self.file_repairs),
             'routemap': (self.routemap, self.file_routemap),
         }
+        self.yesnofields = {key: fields[0] for key, fields in self.questions.items()}
+        self.filefields = {key: fields[1] for key, fields in self.questions.items()}
 
-        for fields in self.questions.values():
+        for key in self.questions.keys():
             # Link upload to question (for FileRequiredIfLinkDataMatch validator)
-            fields[1].link = fields[0]
+            self.filefields[key].link = self.yesnofields[key]
 
         if formconfig:
             # Apply settings
@@ -311,11 +318,11 @@ class ApplicationForm(FlaskForm):
                 self.zipcode.data = formconfig[keys.DEFAULT][keys.ZIPCODE]
             if not self.city.data:
                 self.city.data = formconfig[keys.DEFAULT][keys.CITY]
-            for key, fields in self.questions.items():
+            for key, question in self.get_yesnofields().items():
                 if key not in formconfig[keys.QUESTIONS][keys.LIST]:
                     # Do not verify unused fields
-                    fields[0].flags.skip_validation = True
-                    fields[0].validate_choice = False
+                    question.flags.skip_validation = True
+                    question.validate_choice = False
 
             # Replace filefield validators and other settings
             filefield_validators = []
@@ -344,18 +351,16 @@ class ApplicationForm(FlaskForm):
                 'data-maxsize': str(filefield_maxsize) if filefield_maxsize else '',
                 'data-neverrequired': 'true' if not formconfig[keys.UPLOADS][keys.REQUIRED] else 'false',
             }
-            for fields in self.questions.values():
-                fields[1].validators = filefield_validators
-                fields[1].render_kw = filefield_render_kw
+            for filefield in self.get_filefields().values():
+                filefield.validators = filefield_validators
+                filefield.render_kw = filefield_render_kw
 
     #region Methods for grouping input fields
     def get_inputfields(self) -> tuple[Field, ...]:
         """Return input fields for personal and school information."""
-        return (self.firstname,self.lastname,self.email,
-                self.school,self.phone,self.address,
-                self.zipcode,self.city,self.headcount)
+        return self.inputfields
 
-    def get_questionfields(self, formconfig: None | dict = None) -> tuple[tuple[Field, FileField], ...]:
+    def get_questionfields(self) -> tuple[tuple[Field, FileField], ...]:
         """Return ordered input fields for questionnaire
         and corresponding input fields for file uploads."""
         if self.config:
@@ -371,4 +376,12 @@ class ApplicationForm(FlaskForm):
             *self.get_inputfields(),
             *(field for question in self.questions.values() for field in question),
         )
+
+    def get_yesnofields(self) -> dict[str, RadioField]:
+        """Return input fields for questionnaire."""
+        return self.yesnofields
+
+    def get_filefields(self) -> dict[str, FileField]:
+        """Return input fields for file uploads."""
+        return self.filefields
     #endregion

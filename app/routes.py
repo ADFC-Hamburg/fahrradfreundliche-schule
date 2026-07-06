@@ -51,14 +51,15 @@ def submit_application():
                         for field in webform.get_inputfields()}
         question_values = {}
         question_filenames = {}
-        for key, fields in webform.questions.items():
-            question_values[key] = fields[0].data
-            if fields[1].data:
+        for key, question in webform.get_yesnofields().items():
+            question_values[key] = question.data
+        for key, filefield in webform.get_filefields().items():
+            if filefield.data:
                 # Save uploaded file; use filename as value
                 filename = uploads.add(
-                    fields[1].data,
+                    filefield.data,
                     webform.school.data,
-                    fields[0].short_name,
+                    key,
                 )
                 question_filenames[const.form.FILE_PREFIX + key] = filename
 
