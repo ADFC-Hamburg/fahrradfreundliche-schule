@@ -4,7 +4,8 @@ const applicationform = document.querySelector("#application")
 
 const error_server = "Bei der Kommunikation mit dem Server ist ein Fehler aufgetreten."
 const error_requires_reload = "Beim Auswerten des Formulars ist ein Fehler aufgetreten.\nBitte laden Sie diese Seite neu."
-const message_success = "Ihr Antrag ist bei uns eingegangen.\nIhre Vorgangsnummer lautet {{ID}}."
+const message_success = "Ihr Antrag ist bei uns eingegangen."
+const message_mail = "Wir senden Ihnen eine Empfangsbestätigung per Email."
 
 
 // ---- FUNCTIONS ----
@@ -44,7 +45,11 @@ async function submitApplication() {
 		return;
 	}
 	if (result.status.toLowerCase() === 'ok') {
-		window.alert(message_success.replace("{{ID}}", result.id));
+		let message = message_success;
+		if (result.sending_mail == true) {
+			message = message + '\n' + message_mail;
+		}
+		window.alert(message);
 	} else {
 		// Show received error messages on corresponding form field
 		try {
