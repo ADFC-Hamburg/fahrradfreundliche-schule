@@ -44,7 +44,8 @@ def index():
 
 @pages.route('/api/submit', methods=['POST'])
 def submit_application():
-    webform = forms.ApplicationForm(formconfig=config.get_form_config())
+    settings = config.fetch()
+    webform = forms.ApplicationForm(formconfig=settings[const.conf.keys.FORM])
     if webform.validate_on_submit():
         # Put all values into dictionaries
         input_values = {field.short_name: field.data

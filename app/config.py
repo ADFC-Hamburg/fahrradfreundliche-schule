@@ -61,9 +61,3 @@ def fetch() -> dict:
     cache_timestamp = file_timestamp
 
     return cached_config
-
-def get_contact_details() -> dict:
-    return fetch()[const.conf.keys.CONTACT]
-
-def get_form_config() -> dict:
-    return fetch()[const.conf.keys.FORM]
