@@ -26,8 +26,8 @@ _CONTEXT = {
     'version': const.app.VERSION
 }
 
-@pages.route('/index', methods=['GET','POST'])
-@pages.route('/', methods=['GET','POST'])
+@pages.route('/index')
+@pages.route('/')
 def index():
     settings = config.fetch()
     webform = forms.ApplicationForm(
