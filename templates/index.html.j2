@@ -9,7 +9,8 @@
 	<link rel="icon" type="image/svg+xml" href="{{ url_for(static, filename='favicon/favicon.svg') }}" sizes="any" />
 </head>
 
-<body>{% if custom[keys.LOGO][keys.APP] %}
+<body>
+{%- if custom[keys.LOGO][keys.APP] %}
 	<header>
 		<img src="{{ custom[keys.LOGO][keys.APP] }}" />
 	</header>
@@ -17,7 +18,8 @@
 	<main>
 		<h1>Formular zur Teilnahme am Auszeichnungsverfahren zur Fahrradfreundlichen Schule</h1>
 {% if cert[keys.ENDDATE] %}
-		<h2>Bewerbungen für den aktuellen Auszeichnungszeitraum bitte einreichen bis zum: {{ cert[keys.ENDDATE] }}</h2>{% endif %}
+		<h2>Bewerbungen für den aktuellen Auszeichnungszeitraum bitte einreichen bis zum: {{ cert[keys.ENDDATE] }}</h2>
+{%- endif %}
 		<p>
 			Für die Auszeichnung zur <strong>„Fahrradfreundlichen Schule“</strong> {% if contact[keys.NAME] %}durch den {% if contact[keys.URL][keys.HOMEPAGE] %}<a href="{{ contact[keys.URL][keys.HOMEPAGE] }}">{{ contact[keys.NAME] }}</a>{% else %}<em>{{ contact[keys.NAME] }}</em>{% endif %}{% endif %}
 			können sich {% if cert[keys.QUALIFICATION][keys.SCHOOLTYPE] %}{{ cert[keys.QUALIFICATION][keys.SCHOOLTYPE] }}{% else %}Schulen aller Schulformen{% endif %}{% if cert[keys.QUALIFICATION][keys.LOCATION] %} aus {{ cert[keys.QUALIFICATION][keys.LOCATION] }}{% endif %} bewerben.
@@ -35,21 +37,27 @@
 		<p>
 			Um die Auszeichnung zu erhalten, müssen nachvollziehbare Nachweise für alle Kriterien eingereicht werden.{% if contact[keys.URL][keys.EXAMPLE] %}
 			Beispiele und ausführliche Beschreibungen zur Form dafür finden Sie <a href="{{ contact[keys.URL][keys.EXAMPLE] }}">hier</a> auf unserer Projektseite.{% endif %}
-		</p>{% if contact[keys.MAIL] or contact[keys.PHONE] %}
+		</p>
+{%- if contact[keys.MAIL] or contact[keys.PHONE] %}
 		<p>
 			Sollten Sie bei einigen Kriterien Fragen haben oder Unterstützung benötigen, nehmen Sie gerne Kontakt mit uns auf:
 			{% if contact[keys.MAIL] and contact[keys.PHONE] %}entweder{% else %}Sie erreichen uns{% endif %}{% if contact[keys.MAIL] %} per Mail an <a href="mailto:{{ contact[keys.MAIL] }}?subject=Fahrradfreundliche%20Schule">{{ contact[keys.MAIL] }}</a>{% if contact[keys.PHONE] %} oder{% endif %}{% endif %}{% if contact[keys.PHONE] %} telefonisch unter <a href="tel:{{ contact[keys.PHONE] | select("in","0123456789+") | list | join() }}">{{ contact[keys.PHONE] }}</a>{% endif %}.
-		</p>{% endif %}
-{% if cert[keys.VALID_YEARS] %}
+		</p>
+{%- endif %}
+{%- if cert[keys.VALID_YEARS] %}
+
 		<h2>Dauer der Auszeichnungsgültigkeit</h2>
 		<p>
 			Nach {{ cert[keys.VALID_YEARS] }} Jahren kann eine Rezertifizierung erfolgen, wenn die Kriterien weiterhin erfüllt werden.
-		</p>{% endif %}{% if custom[keys.LOGO][keys.SPONSORS] %}
+		</p>
+{%- endif %}
+{%- if custom[keys.LOGO][keys.SPONSORS] %}
 
 		<h2>Gefördert von:</h2>
 		<div>{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
 			<img src="{{ logo }}" />{% endfor %}
-		</div>{% endif %}
+		</div>
+{%- endif %}
 	</main>
 
 	<form id="application">
@@ -57,31 +65,47 @@
 			Bitte füllen Sie das Formular vollständig aus und laden Sie{% if not uploads[keys.REQUIRED] %}, wenn vorhanden,{% endif%} Belege{% if uploads[keys.MEDIATYPE] %} als {{ form.format_mediatypes_from_config(form.config) }}{% endif %} hoch.
 		</header>
 		{{ form.csrf_token }}
-		<div id="personaldata">{% for field in form.get_inputfields() %}
-			<p>{{ field.label }} {{ field() }}</p>{% endfor %}
+
+		<div id="personaldata">
+{%- for field in form.get_inputfields() %}
+			<p>{{ field.label }} {{ field() }}</p>
+{%- endfor %}
 		</div>
-		<div id="questions">{% for field, upload in form.get_questionfields() %}
+
+		<div id="questions">
+{%- for field, upload in form.get_questionfields() %}
 			<div>
 				{{ field.label }}
 				{{ field() }}
 				{{ upload() }}
-			</div>{% endfor %}
+			</div>
+{%- endfor %}
 		</div>
-{% if form.privacy_consent or form.storage_consent %}
-		<div id="compliance">{% if form.privacy_consent %}
+{%- if form.privacy_consent or form.storage_consent %}
+
+		<div id="compliance">
+{%- if form.privacy_consent %}
 			<h2>Datenschutz</h2>
-			{{ form.privacy_consent }}<label for="{{ form.privacy_consent.id }}"> Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>{% endif %}{% if form.storage_consent %}
+			{{ form.privacy_consent }}<label for="{{ form.privacy_consent.id }}"> Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
+{%- endif %}
+{%- if form.storage_consent %}
 			<h2>E-Mail-Versand</h2>
-			{{ form.storage_consent }}<label for="{{ form.storage_consent.id }}"> Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>{% endif %}
+			{{ form.storage_consent }}<label for="{{ form.storage_consent.id }}"> Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
+{%- endif %}
 		</div>
-{% endif %}
+{%- endif %}
+
 		<input type="submit" value="Submit">
 	</form>
 
 	<footer>
-		<nav>{% if contact[keys.URL][keys.LEGAL] %}
-			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Legal Notice</a>{% endif %}{% if contact[keys.URL][keys.PRIVACY] %}
-			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Privacy Policy</a>{% endif %}
+		<nav>
+{%- if contact[keys.URL][keys.LEGAL] %}
+			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Legal Notice</a>
+{%- endif %}
+{%- if contact[keys.URL][keys.PRIVACY] %}
+			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Privacy Policy</a>
+{%- endif %}
 		</nav>
 	</footer>
 
