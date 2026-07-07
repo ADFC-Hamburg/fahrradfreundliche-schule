@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use the official Python Alpine image as base
-FROM python:alpine AS build
+FROM python:3.14-alpine3.24 AS build
 
 # Description of resulting image
 LABEL org.opencontainers.image.description="Ein Webserver, über den Schulen sich für eine Auszeichnung als fahrradfreundliche Schule bewerben können."

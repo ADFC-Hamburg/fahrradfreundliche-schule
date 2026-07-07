@@ -1,21 +1,21 @@
 # This file is used by pip to install required python packages
 
 # Main packages
-gunicorn
-Flask
-Jinja2
+gunicorn ~= 26.0.0
+Flask ~= 3.1.3
+Jinja2 ~= 3.1.6
 
 # Main package dependencies
-blinker
-click
-itsdangerous
-MarkupSafe
-Werkzeug
-packaging
+blinker ~= 1.9.0
+click ~= 8.4.2
+itsdangerous ~= 2.2.0
+MarkupSafe ~= 3.0.3
+Werkzeug ~= 3.1.8
+packaging ~= 26.2
 
 # Form creation and validation
-Flask-WTF
-WTForms[email]
+Flask-WTF ~= 1.3.0
+WTForms[email] ~= 3.2.2
 
 # File type detection
-python-magic
+python-magic ~= 0.4.27
