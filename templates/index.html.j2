@@ -19,7 +19,7 @@
 {% if cert[keys.ENDDATE] %}
 		<h2>Bewerbungen für den aktuellen Auszeichnungszeitraum bitte einreichen bis zum: {{ cert[keys.ENDDATE] }}</h2>{% endif %}
 		<p>
-			Für die Auszeichnung zur <strong>„Fahrradfreundlichen Schule“</strong> {% if contact[keys.NAME] %}durch den {% if contact[keys.URL][HOMEPAGE_KEY] %}<a href="{{ contact[keys.URL][HOMEPAGE_KEY] }}">{{ contact[keys.NAME] }}</a>{% else %}<em>{{ contact[keys.NAME] }}</em>{% endif %}{% endif %}
+			Für die Auszeichnung zur <strong>„Fahrradfreundlichen Schule“</strong> {% if contact[keys.NAME] %}durch den {% if contact[keys.URL][keys.HOMEPAGE] %}<a href="{{ contact[keys.URL][keys.HOMEPAGE] }}">{{ contact[keys.NAME] }}</a>{% else %}<em>{{ contact[keys.NAME] }}</em>{% endif %}{% endif %}
 			können sich {% if cert[keys.QUALIFICATION][keys.SCHOOLTYPE] %}{{ cert[keys.QUALIFICATION][keys.SCHOOLTYPE] }}{% else %}Schulen aller Schulformen{% endif %}{% if cert[keys.QUALIFICATION][keys.LOCATION] %} aus {{ cert[keys.QUALIFICATION][keys.LOCATION] }}{% endif %} bewerben.
 			Um am Auszeichnungsverfahren teilnehmen zu können, werden im nachfolgenden Formular verschiedene Kriterien abgefragt, die von den Schulen durch Fotos, Berichte etc. nachgewiesen werden müssen.
 		</p>
