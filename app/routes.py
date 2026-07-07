@@ -71,10 +71,26 @@ def submit_application():
             **question_filenames,
         )
 
+        # Send confirmation mail
+        from  threading import Thread
+        from . import mail
+
+        send_mail = mail.available()
+        if send_mail:
+            Thread(
+                target=mail.send_confirmation,
+                kwargs={
+                    'recipient': webform.email.data,
+                    'config': settings,
+                    'data': input_values,
+                },
+            ).start()
+
         # Return status message with database entry ID
         return jsonify({
             const.api.STATUS_KEY: const.api.PASS_VALUE,
             const.api.ID_KEY: new_id,
+            const.api.MAIL_KEY: send_mail,
         })
 
     else:

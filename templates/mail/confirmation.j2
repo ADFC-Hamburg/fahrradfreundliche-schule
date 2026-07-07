@@ -1,0 +1,61 @@
+{% if data.get('firstname') or data.get('lastname') -%}
+Hallo {{ data.get('firstname', '') }} {{ data.get('lastname', '') }}
+
+{% endif -%}
+Vielen Dank! Ihre Selbstevaluation
+{%- if data.get('school') -%}
+{%- if 'ymnasium' in data.get('school') %} des {%- else %} der {%- endif %} {{ data.get('school') }}
+{%- else %} Ihrer Schule
+{%- endif %} für die Auszeichnung
+Fahrradfreundliche Schule ist bei uns eingetroffen.
+
+Wir werden die erhaltenen Unterlagen baldmöglichst prüfen und uns 
+gegebenenfalls melden, falls es Rückfragen geben sollte.
+Wenn alle Nachweise OK sind und Ihre Schule die Kriterien erfüllt, 
+dürfen Sie damit rechnen, in nächster Zeit die Auszeichnung zu erhalten. 
+Sie bekommen dazu eine weitere Mail und eine Postsendung mit der 
+Plakette, die Sie an geeigneter Stelle im Schulgelände anbringen können.
+
+{% if cert[keys.VALID_YEARS] -%}
+{% set numberwords = {2: 'zwei', 3: 'drei', 4: 'vier', 5: 'fünf'} -%}
+Tipp: Merken Sie sich gerne schon jetzt einen Termin vor, um die 
+Zertifizierung in {{ numberwords.get(cert[keys.VALID_YEARS], cert[keys.VALID_YEARS]) }} Jahren zu erneuern, wenn die Kriterien weiterhin 
+erfüllt werden.
+
+{% endif -%}
+Sollten Sie Fragen haben oder Unterstützung benötigen, nehmen Sie gerne 
+Kontakt mit uns auf{% if not contact[keys.MAIL] and not contact[keys.PHONE] %}.{% else -%}:
+{%- if contact[keys.MAIL] and contact[keys.PHONE] %} entweder {%- else %} Sie erreichen uns {%- endif -%}
+{%- if contact[keys.MAIL] %} per Mail an {{ contact[keys.MAIL] }} {%- endif -%}
+{%- if contact[keys.MAIL] and contact[keys.PHONE] %} 
+oder {%- endif -%}
+{%- if contact[keys.PHONE] %} telefonisch unter {{ contact[keys.PHONE] }} {%- endif -%}
+.{% endif %}
+
+Mit freundlichen Grüßen
+Das Team des {{ contact[keys.NAME_SHORT] or contact[keys.NAME] }}
+
+--
+{{ contact[keys.NAME] or contact[keys.NAME_SHORT] }}
+Fahrradfreundliche Schule
+{% if contact[keys.ADDRESS][keys.LINE1] -%}
+{{ contact[keys.ADDRESS][keys.LINE1] }}
+{% endif -%}
+{% if contact[keys.ADDRESS][keys.LINE2] -%}
+{{ contact[keys.ADDRESS][keys.LINE2] }}
+{% endif -%}
+{% if contact[keys.ADDRESS][keys.LINE3] -%}
+{{ contact[keys.ADDRESS][keys.LINE3] }}
+{% endif -%}
+
+{% if contact[keys.PHONE] or contact[keys.MAIL] or contact[keys.URL][keys.HOMEPAGE] %}
+{% if contact[keys.PHONE] -%}
+Telefon: {{ contact[keys.PHONE] }}
+{% endif -%}
+{% if contact[keys.MAIL] -%}
+Mail: {{ contact[keys.MAIL] }}
+{% endif -%}
+{% if contact[keys.URL][keys.HOMEPAGE] -%}
+Web: {{ contact[keys.URL][keys.HOMEPAGE] }}
+{% endif -%}
+{% endif -%}

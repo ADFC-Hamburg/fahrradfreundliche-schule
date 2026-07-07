@@ -11,6 +11,19 @@ if [ -z $FLASK_SECRET_KEY ]; then
 	fi
 fi
 
+# Read SMTP_PASSWORD from SMTP_PASSWORD_FILE if unset
+if [[ -n "$SMTP_HOST" && -z "$SMTP_PASSWORD" ]]
+then
+	if [[ -f "$SMTP_PASSWORD_FILE" && -r "$SMTP_PASSWORD_FILE" ]]
+	then
+		export SMTP_PASSWORD=$(cat "$SMTP_PASSWORD_FILE")
+	else
+		[ -n "$SMTP_PASSWORD_FILE" ] && echo -e "\033[1;33mWARNING:\033[22m Could not read password from file: '$SMTP_PASSWORD_FILE'\033[0m" >&2
+	fi
+else
+	[ -z "$SMTP_HOST" ] && echo -e "\033[1;32mINFO:\033[22m SMTP_HOST not set. Confirmation emails will not be sent.\033[0m" >&2
+fi
+
 # Create database if not existing (as non-root user)
 su appuser -s /bin/sh -c "python3 \"/opt/fahrradschule/tools/initdb.py\" -q \"$FAHRRADSCHULE_SAVE_DIR/database.db\""
 

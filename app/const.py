@@ -12,6 +12,7 @@ class api(ABC):
     STATUS_KEY = 'status'
     ERROR_KEY = 'errors'
     ID_KEY = 'id'
+    MAIL_KEY = 'sending_mail'
     PASS_VALUE = 'ok'
     FAIL_VALUE = 'error'
 
@@ -33,6 +34,10 @@ class env(ABC):
     CONFIGDIR = 'FAHRRADSCHULE_CONFIG_DIR'
     CONFIGFILE = 'FAHRRADSCHULE_CONFIG_FILE'
     SAVEDIR = 'FAHRRADSCHULE_SAVE_DIR'
+    MAILSERVER = 'SMTP_HOST'
+    MAILPORT = 'SMTP_PORT'
+    MAILUSER = 'SMTP_USERNAME'
+    MAILPASSWORD = 'SMTP_PASSWORD'
 
 @final
 class conf(ABC):
@@ -41,23 +46,31 @@ class conf(ABC):
     @final
     class keys(ABC):
         """Keys used in the config file."""
+        ADDRESS = 'Adresse'
         APP = 'FahrradfreundlicheSchule'
+        CC = 'CC'
         CERT = 'Zertifikat'
         CITY = 'Ort'
+        CONFIRM_MAIL = 'Bestaetigungsmail'
         CONTACT = 'Kontaktdaten'
         DEFAULT = 'Vorgabe'
         ENDDATE = 'EinreichenBisDatum'
         EXAMPLE = 'BelegeBeispiele'
         FILESIZE = 'HoechstgroesseInMiB'
         FORM = 'Formular'
+        FROM = 'Absender'
         HOMEPAGE = 'Homepage'
         LEGAL = 'Impressum'
+        LINE1 = 'Zeile1'
+        LINE2 = 'Zeile2'
+        LINE3 = 'Zeile3'
         LIST = 'Liste'
         LOCATION = 'Standort'
         LOGO = 'Logos'
         MAIL = 'Email'
         MEDIATYPE = 'ErlaubteFormate'
         NAME = 'KreisverbandName'
+        NAME_SHORT = 'KreisverbandNameKurz'
         PHONE = 'Telefonnummer'
         PRIVACY = 'Datenschutz'
         QUALIFICATION = 'Vorraussetzungen'
@@ -73,7 +86,13 @@ class conf(ABC):
         
 
     CONTACT_DEFAULT = {
-        keys.NAME: '',
+        keys.NAME: 'Allgemeiner Deutscher Fahrrad-Club e. V.',
+        keys.NAME_SHORT: 'ADFC',
+        keys.ADDRESS: {
+            keys.LINE1: '',
+            keys.LINE2: '',
+            keys.LINE3: '',
+        },
         keys.PHONE: '',
         keys.MAIL: '',
         keys.URL: {
@@ -121,6 +140,10 @@ class conf(ABC):
             keys.REQUIRED: True,
             keys.FILESIZE: 10,
             keys.MEDIATYPE: ('image/jpeg', 'image/png', 'application/pdf'),
+        },
+        keys.CONFIRM_MAIL: {
+            keys.FROM: 'noreply@adfc.de',
+            keys.CC: '',
         }
     }
 
@@ -181,6 +204,8 @@ class form(ABC):
 
     FILE_PREFIX = 'filename_'
     FILE_CHAR_REMOVE_PATTERN = '[^A-Za-zÄäÖöÜüß0-9_\\-]'
+
+    MAIL_SUBJECT = 'Eingangsbestätigung für Ihre Selbstevaluation'
 
 @final
 class sql(ABC):
