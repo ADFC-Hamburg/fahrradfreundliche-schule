@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="de">
+{% extends 'base.html.j2' %}
 
-<head>
-	<meta charset="utf-8">
-	<meta name="application-name" content="{{ appname }}" />{% if version %} <!--{{ version }}-->{% endif%}
-	<title>Fahrradfreundliche Schule</title>
-	<link rel="icon" type="image/png" href="{{ url_for(static, filename='favicon/favicon.png') }}" sizes="32x32" />
-	<link rel="icon" type="image/svg+xml" href="{{ url_for(static, filename='favicon/favicon.svg') }}" sizes="any" />
-</head>
-
-<body>
+{% block body %}
 {%- if custom[keys.LOGO][keys.APP] %}
 	<header>
 		<img src="{{ custom[keys.LOGO][keys.APP] }}" />
@@ -111,6 +102,4 @@
 
 	<script src="{{ url_for(static, filename='js/form_validation.js') }}{% if version %}?v={{ version | urlencode }}{% endif%}"></script>
 	<script src="{{ url_for(static, filename='js/form.js') }}{% if version %}?v={{ version | urlencode }}{% endif%}"></script>
-</body>
-
-</html>
+{% endblock %}
