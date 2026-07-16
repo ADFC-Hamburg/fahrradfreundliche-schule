@@ -4,7 +4,7 @@ and for rendering content.
 """
 
 # Imports
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify, render_template, request
 
 from . import config, const, database, uploads, forms, paths
 
@@ -45,6 +45,11 @@ def index():
 @pages.route('/api/submit', methods=['POST'])
 def submit_application():
     settings = config.fetch()
+
+    questioncount = len(settings[const.conf.keys.FORM][const.conf.keys.QUESTIONS][const.conf.keys.LIST])
+    maxsize_file = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS][const.conf.keys.FILESIZE]
+    request.max_content_length = max(maxsize_file * questioncount, 1) * 1024 * 1024
+
     webform = forms.ApplicationForm(formconfig=settings[const.conf.keys.FORM])
     if webform.validate_on_submit():
         # Put all values into dictionaries
