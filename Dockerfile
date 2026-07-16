@@ -44,6 +44,9 @@ COPY app/ "${workdir}/app/"
 # Expose a port for the web application
 EXPOSE 8000
 
+# Define default settings for Flask
+ENV FLASK_MAX_CONTENT_LENGTH=1048576
+
 # Define default executable and the command to run the Flask application using Gunicorn
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=2", "--no-control-socket", "main:flaskapp"]
