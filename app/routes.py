@@ -34,7 +34,7 @@ def index():
         formconfig=settings[const.conf.keys.FORM],
     )
     return render_template(
-        'index.html.j2', **_CONTEXT,
+        'form.html.j2', **_CONTEXT,
         form = webform,
         cert = settings[const.conf.keys.CERT],
         contact = settings[const.conf.keys.CONTACT],
