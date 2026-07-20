@@ -209,4 +209,15 @@ class form(ABC):
 
 @final
 class sql(ABC):
+    COLUMNS_ALL = ('*',)
+    COLUMNS_FILES = tuple(form.FILE_PREFIX + key for key in form.QUESTIONS_LABELS)
+
     INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
+    SELECT = 'SELECT %(fields)s FROM %(table)s'
+    DELETE = 'DELETE FROM %(table)s'
+    EXISTS = 'SELECT EXISTS (%s)'
+
+    SORT_DESC = 'ORDER BY %(sortfield)s DESC'
+    FILTER_ID = 'WHERE id = %(id)i'
+    FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
+    ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)

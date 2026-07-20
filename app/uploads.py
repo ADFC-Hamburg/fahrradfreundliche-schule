@@ -2,7 +2,7 @@
 Provides functions for managing uploaded files.
 """
 
-from os import makedirs, path
+from os import makedirs, path, remove
 
 from werkzeug.datastructures import FileStorage
 
@@ -42,3 +42,21 @@ def add(storage: FileStorage, *args: str) -> str:
         with open(filepath, 'wb') as file:
             file.write(data)
     return filename
+
+def delete(*filenames: str):
+    """Deletes the uploaded files with the given filename(s)."""
+
+    for filename in filenames:
+        try:
+            remove(path.join(paths.UPLOADS, filename))
+        except OSError:
+            pass
+
+def deletedanglingfiles(*filenames: str):
+    """Checks which of the given filenames are still referenced in the
+       database and deletes any uploaded files that are not."""
+
+    from .database import filterdanglingfiles
+
+    dangling_files = filterdanglingfiles(*filenames)
+    delete(*dangling_files)
