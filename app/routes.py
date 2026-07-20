@@ -104,3 +104,22 @@ def submit_application():
             const.api.STATUS_KEY: const.api.FAIL_VALUE,
             const.api.ERROR_KEY: webform.errors
         })
+
+@pages.route('/api/delete/<int:id>', methods=['POST'])
+def delete_application(id: int):
+    filenames = tuple(database.getfilenamedict(id).values())
+    if database.deleteapplication(id):
+        # Successful deletion; also delete dangling files
+        from threading import Thread
+        Thread(
+            target=uploads.deletedanglingfiles,
+            args=filenames,
+        ).start()
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+        })
+    else:
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
+        }), 404

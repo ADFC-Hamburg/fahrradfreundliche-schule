@@ -11,10 +11,13 @@ from typing import final
 class api(ABC):
     STATUS_KEY = 'status'
     ERROR_KEY = 'errors'
+    SINGLE_ERROR_KEY = 'error'
     ID_KEY = 'id'
     MAIL_KEY = 'sending_mail'
     PASS_VALUE = 'ok'
     FAIL_VALUE = 'error'
+
+    IDNOTFOUND_MESSAGE = 'Der gewünschte Eintrag wurde nicht gefunden.'
 
 @final
 class app(ABC):
