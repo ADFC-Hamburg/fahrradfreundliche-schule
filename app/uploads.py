@@ -68,4 +68,19 @@ def getpath(filename: str) -> path:
     """Returns the correct path for the given filename."""
 
     return path.join(paths.UPLOADS, filename)
+
+def namefileforuser(field: str, filename: str) -> str:
+    """Creates a new filename for frontend use."""
+
+    if field in const.viewer.FILENAMES.keys():
+        return ''.join((
+            const.viewer.FILENAME_PREFIX,
+            const.viewer.FILENAMES[field],
+            path.splitext(filename)[1]
+        ))
+    else:
+        return ''.join((
+            field,
+            path.splitext(filename)[1]
+        ))
 #endregion

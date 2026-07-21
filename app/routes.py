@@ -4,7 +4,7 @@ and for rendering content.
 """
 
 # Imports
-from flask import Blueprint, jsonify, render_template, request
+from flask import abort, Blueprint, jsonify, render_template, request, send_file
 
 from . import config, const, database, uploads, forms, paths
 
@@ -123,3 +123,21 @@ def delete_application(id: int):
             const.api.STATUS_KEY: const.api.FAIL_VALUE,
             const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
         }), 404
+
+@pages.route('/api/download/<int:id>/<field>')
+def download_file(id: int, field: str):
+    if field not in const.viewer.FILENAMES.keys():
+        abort(404)
+
+    filenamefield = const.form.FILE_PREFIX + field
+    row = database.getapplication(id, filenamefield)
+    if not row:
+        abort(404, description=const.api.IDNOTFOUND_MESSAGE)
+    if not row[filenamefield]:
+        abort(404, description=const.api.FILENOTFOUND_MESSAGE)
+
+    return send_file(
+        uploads.getpath(row[filenamefield]),
+        as_attachment=True,
+        download_name=uploads.namefileforuser(field, row[filenamefield]),
+    )

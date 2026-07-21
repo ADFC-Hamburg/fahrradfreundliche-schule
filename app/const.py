@@ -18,6 +18,7 @@ class api(ABC):
     FAIL_VALUE = 'error'
 
     IDNOTFOUND_MESSAGE = 'Der gewünschte Eintrag wurde nicht gefunden.'
+    FILENOTFOUND_MESSAGE = 'Die gewünschte Datei wurde nicht gefunden.'
 
 @final
 class app(ABC):
@@ -224,3 +225,17 @@ class sql(ABC):
     FILTER_ID = 'WHERE id = %(id)i'
     FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
     ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)
+
+@final
+class viewer(ABC):
+    FILENAME_PREFIX = 'Beleg '
+    FILENAMES = {
+        'campaign_organizing': 'Schulaktion',
+        'campaign_participation': 'Fahrrad-Kampagne',
+        'compass': 'Mobilitätskompass',
+        'coordinator': 'Koordination',
+        'lessons': 'Unterricht',
+        'parking': 'Radabstellanlagen',
+        'repairs': 'Reparaturmöglichkeit',
+        'routemap': 'Schulradwegplan',
+    }
