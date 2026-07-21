@@ -141,3 +141,36 @@ def download_file(id: int, field: str):
         as_attachment=True,
         download_name=uploads.namefileforuser(field, row[filenamefield]),
     )
+
+@pages.route('/api/download/<int:id>')
+def download_archive(id: int):
+
+    row = database.getapplication(id)
+    if not row:
+        abort(404, description=const.api.IDNOTFOUND_MESSAGE)
+
+    archivename = ''.join((
+        const.viewer.ARCHIVE_PREFIX,
+        row['school'] or str(id),
+        '.zip'
+    ))
+
+    from io import BytesIO
+    import zipfile
+    zipbuffer = BytesIO()
+    with zipfile.ZipFile(zipbuffer, 'a', zipfile.ZIP_DEFLATED, False) as zfile:
+        for field in const.viewer.FILENAMES.keys():
+            filename = row[const.form.FILE_PREFIX + field]
+            if not filename:
+                continue
+            zfile.write(
+                uploads.getpath(filename),
+                uploads.namefileforuser(field, filename),
+            )
+
+    zipbuffer.seek(0)
+    return send_file(
+        zipbuffer,
+        as_attachment=True,
+        download_name=archivename,
+    )

@@ -239,3 +239,4 @@ class viewer(ABC):
         'repairs': 'Reparaturmöglichkeit',
         'routemap': 'Schulradwegplan',
     }
+    ARCHIVE_PREFIX = 'Bewerbung '
