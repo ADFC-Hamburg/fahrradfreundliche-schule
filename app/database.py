@@ -120,3 +120,18 @@ def filterdanglingfiles(*filenames: str) -> list[str]:
                 dangling_files.append(filename)
     return dangling_files
 #endregion
+
+def summarize(row: sqlite3.Row) -> str:
+    """Returns a formatted text summary of an application."""
+
+    import jinja2
+
+    env = jinja2.Environment(
+        loader = jinja2.FileSystemLoader(paths.TEMPLATES),
+        extensions=['jinja2.ext.do']
+    )
+    template = env.get_template("viewer/summary.txt.j2")
+    return template.render(
+        row=row,
+        questions=const.viewer.CRITERIA_SORTED,
+    )

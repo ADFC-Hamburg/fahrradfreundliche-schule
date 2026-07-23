@@ -159,6 +159,11 @@ def download_archive(id: int):
     import zipfile
     zipbuffer = BytesIO()
     with zipfile.ZipFile(zipbuffer, 'a', zipfile.ZIP_DEFLATED, False) as zfile:
+
+        # Text summary
+        zfile.writestr(const.viewer.SUMMARY_FILENAME + '.txt', database.summarize(row))
+
+        # Uploaded files
         for field in const.viewer.FILENAMES.keys():
             filename = row[const.form.FILE_PREFIX + field]
             if not filename:

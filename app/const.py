@@ -228,6 +228,16 @@ class sql(ABC):
 
 @final
 class viewer(ABC):
+    CRITERIA_SORTED = {
+        'coordinator': 'Fahrrad-Koordinator*in oder Fahrrad-AG',
+        'compass': 'Vorhandenes Konzept „Mobilitäts-Kompass“',
+        'routemap': 'Aktueller Schulradwegplan',
+        'parking': 'Ausreichend gute Radabstellanlagen',
+        'repairs': 'Vorhandene Fahrrad-Reparaturmöglichkeit',
+        'campaign_organizing': 'Jährliche Schulaktion zum Thema Fahrrad',
+        'campaign_participation': 'Teilnahme an einer Fahrrad-Kampagne',
+        'lessons': 'Behandlung nachhaltiger Mobilität mit dem Fahrrad im Unterricht',
+    }
     FILENAME_PREFIX = 'Beleg '
     FILENAMES = {
         'campaign_organizing': 'Schulaktion',
@@ -239,4 +249,5 @@ class viewer(ABC):
         'repairs': 'Reparaturmöglichkeit',
         'routemap': 'Schulradwegplan',
     }
+    SUMMARY_FILENAME = 'Angaben zur Bewerbung'
     ARCHIVE_PREFIX = 'Bewerbung '
