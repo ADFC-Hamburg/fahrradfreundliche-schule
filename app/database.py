@@ -126,10 +126,13 @@ def summarize(row: sqlite3.Row) -> str:
 
     import jinja2
 
+    from . import config
+
     env = jinja2.Environment(
         loader = jinja2.FileSystemLoader(paths.TEMPLATES),
         extensions=['jinja2.ext.do']
     )
+    env.filters['applytimezone'] = config.applytimezone
     template = env.get_template("viewer/summary.txt.j2")
     return template.render(
         row=row,

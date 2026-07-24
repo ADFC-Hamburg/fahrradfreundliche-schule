@@ -61,3 +61,15 @@ def fetch() -> dict:
     cache_timestamp = file_timestamp
 
     return cached_config
+
+# Functions for applying settings
+def applytimezone(timestamp: str, settings: dict = fetch()) -> str:
+    """Converts a UTC timestamp in ISO 8601 format to a
+       timestamp for a given timezone."""
+
+    from datetime import datetime, timezone
+    from zoneinfo import ZoneInfo
+
+    tz = ZoneInfo(settings[const.conf.keys.WEBSITE][const.conf.keys.TIMEZONE])
+    time = datetime.fromisoformat(timestamp).replace(tzinfo=timezone.utc).astimezone(tz)
+    return time.strftime(const.viewer.TIMESTAMP_FORMAT)

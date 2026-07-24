@@ -19,3 +19,6 @@ WTForms[email] ~= 3.2.2
 
 # File type detection
 python-magic ~= 0.4.27
+
+# Timezones
+tzdata == 2026.3

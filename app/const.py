@@ -82,6 +82,7 @@ class conf(ABC):
         REQUIRED = 'Erforderlich'
         SCHOOLTYPE = 'Schulformen'
         SPONSORS = 'Foerderer'
+        TIMEZONE = 'Zeitzone'
         UPLOADS = 'Belege'
         URL = 'Web'
         VALID_YEARS = 'GueltigkeitInJahren'
@@ -121,6 +122,7 @@ class conf(ABC):
             keys.APP: '/static/logos/FFS_generic_logo_small.png',
             keys.SPONSORS: (),
         },
+        keys.TIMEZONE: 'Europe/Berlin'
     }
 
     FORM_DEFAULT = {
@@ -251,3 +253,4 @@ class viewer(ABC):
     }
     SUMMARY_FILENAME = 'Angaben zur Bewerbung'
     ARCHIVE_PREFIX = 'Bewerbung '
+    TIMESTAMP_FORMAT = '%d.%m.%Y %H:%M'

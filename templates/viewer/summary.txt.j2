@@ -27,4 +27,4 @@ Erfüllte Kriterien:
 {%- endfor %}
 {{ fulfilled_criteria|join('\n')|default('Keine Kriterien erfüllt', true) }}
 
-Eintrag eingereicht: {{ row['timestamp'] }}
+Eintrag eingereicht: {{ row['timestamp']|applytimezone }}
