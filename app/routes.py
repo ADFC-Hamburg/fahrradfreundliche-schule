@@ -17,6 +17,7 @@ pages = Blueprint(_BLUEPRINT_NAME, __name__,
                   template_folder=paths.TEMPLATES,
                   static_folder=paths.STATIC,
                   static_url_path='/static')
+pages.add_app_template_filter(config.applytimezone, 'applytimezone')
 
 _CONTEXT = {
     # Values to be passed to all templates
@@ -40,6 +41,21 @@ def index():
         contact = settings[const.conf.keys.CONTACT],
         custom = settings[const.conf.keys.WEBSITE],
         uploads = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS]
+    )
+
+@pages.route('/viewer/<int:id>')
+def show_application(id: int):
+    row = database.getapplication(id)
+    if not row:
+        abort(404, description=const.api.IDNOTFOUND_MESSAGE)
+    settings = config.fetch()
+
+    return render_template(
+        'viewer/entry.html.j2', **_CONTEXT,
+        row = row,
+        settings = settings,
+        file_prefix = const.form.FILE_PREFIX,
+        questions = const.viewer.CRITERIA_SORTED,
     )
 
 @pages.route('/api/submit', methods=['POST'])
