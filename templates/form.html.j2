@@ -1,5 +1,9 @@
 {% extends 'base.html.j2' %}
 
+{% block head %}
+{{- super() }}	<link rel="stylesheet" href="{{ url_for(static, filename='css/form.css') }}">
+{% endblock %}
+
 {% block body %}
 {%- if custom[keys.LOGO][keys.APP] %}
 	<header>
