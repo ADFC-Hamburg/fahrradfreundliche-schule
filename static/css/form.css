@@ -116,6 +116,43 @@ body > form {
 	max-width:			var(--page-maxwidth);
 }
 
+#personaldata {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	column-gap:			2rem;
+}
+
+#personaldata > p {
+	flex-basis:			var(--page-maxwidth);
+	flex-grow:			4;
+	order:				1;
+}
+
+#personaldata #firstnamecontainer,
+#personaldata #lastnamecontainer,
+#personaldata #emailcontainer,
+#personaldata #phonecontainer {
+	flex-basis:			20rem;
+	flex-grow:			2;
+	order:				-1;
+}
+
+#personaldata #zipcodecontainer,
+#personaldata #citycontainer,
+#personaldata #headcountcontainer {
+	flex-basis:			20rem;
+	flex-grow:			2;
+}
+
+#personaldata input{
+	display:			block;
+	width:				100%;
+	padding:			.5em;
+
+	font-size:			larger;
+}
+
 /* ––––––––––––– Document footer –––––––––––––*/
 
 body > footer {

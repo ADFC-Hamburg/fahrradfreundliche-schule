@@ -65,7 +65,7 @@
 
 		<div id="personaldata">
 {%- for field in form.get_inputfields() %}
-			<p>{{ field.label }} {{ field() }}</p>
+			<p id={{ field.short_name }}container>{{ field.label }} {{ field() }}</p>
 {%- endfor %}
 		</div>
 
