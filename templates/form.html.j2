@@ -48,10 +48,12 @@
 {%- endif %}
 {%- if custom[keys.LOGO][keys.SPONSORS] %}
 
-		<h2>Gefördert von:</h2>
-		<div>{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
-			<img src="{{ logo }}" />{% endfor %}
-		</div>
+		<footer>
+			<h2>Gefördert von:</h2>
+			<div class="logos">{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
+				<img src="{{ logo }}" />{% endfor %}
+			</div>
+		</footer>
 {%- endif %}
 	</main>
 

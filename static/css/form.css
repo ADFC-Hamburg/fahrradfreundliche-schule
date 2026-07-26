@@ -17,7 +17,6 @@ body {
 	align-items:		center;
 }
 
-/* #endregion */
 /* ––––––––––––– Document header –––––––––––––*/
 
 body > header {
@@ -35,7 +34,6 @@ body > header > img {
 	object-fit:			contain;
 }
 
-/* #endregion */
 /* –––––––––– Document main section ––––––––––*/
 
 body > main {
@@ -46,7 +44,29 @@ body > main {
 	max-width:			var(--page-maxwidth);
 }
 
-/* #endregion */
+body > main > footer {
+	margin-top:			4rem;
+	text-align:			center;
+}
+
+body > main .logos {
+	display:			flex;
+	flex-direction: 	row;
+	flex-wrap:			wrap;
+	align-items: 		center;
+	justify-content:	center;
+	gap:				1rem;
+}
+
+body > main .logos > img {
+	display:			block;
+	padding:			0;
+	margin:				0;
+	width:				10rem;
+	height:				10rem;
+	object-fit:			contain;
+}
+
 /* –––––––––––––––––– Form –––––––––––––––––––*/
 
 body > form {
@@ -57,7 +77,6 @@ body > form {
 	max-width:			var(--page-maxwidth);
 }
 
-/* #endregion */
 /* ––––––––––––– Document footer –––––––––––––*/
 
 body > footer {
@@ -65,5 +84,3 @@ body > footer {
 	margin-top:			auto;
 	padding: 			.5rem;
 }
-
-/* #endregion */
