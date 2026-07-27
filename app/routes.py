@@ -43,6 +43,17 @@ def index():
         uploads = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS]
     )
 
+@pages.route('/viewer')
+def list_applications():
+    rows = database.getapplicationlist('id', 'school', 'timestamp', const.sql.FILECOUNT)
+    settings = config.fetch()
+
+    return render_template(
+        'viewer/list.html.j2', **_CONTEXT,
+        rows = rows,
+        settings = settings,
+    )
+
 @pages.route('/viewer/<int:id>')
 def show_application(id: int):
     row = database.getapplication(id)

@@ -218,6 +218,8 @@ class sql(ABC):
     COLUMNS_ALL = ('*',)
     COLUMNS_FILES = tuple(form.FILE_PREFIX + key for key in form.QUESTIONS_LABELS)
 
+    FILECOUNT = ' + '.join((f"(IFNULL({key}, '') != '')" for key in COLUMNS_FILES)) + ' as filecount'
+
     INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
     SELECT = 'SELECT %(fields)s FROM %(table)s'
     DELETE = 'DELETE FROM %(table)s'

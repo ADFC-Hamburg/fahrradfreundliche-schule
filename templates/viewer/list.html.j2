@@ -1,0 +1,14 @@
+{% extends 'viewer/base.html.j2' %}
+
+{% block title %}Fahrradfreundliche Schule: Liste der Bewerbungen{% endblock %}
+
+{% block content %}{% for row in rows %}
+    <div class="listing">
+        <p class="name">{{ row['school'] }}</p>
+        <p class="timestamp">{{ row['timestamp']|applytimezone(settings) }}</p>
+        <nav>
+            <a href="{{ url_for('pages.download_archive', id=row['id']) }}" class="download">Zusammenfassung {%- if row['filecount'] %} und {{ row['filecount'] }} Beleg{% if row['filecount'] != 1 %}e{% endif %} {%- endif %} herunterladen</a>
+            <a href="{{ url_for('pages.show_application', id=row['id']) }}" class="show">Anzeigen</a>
+        </nav>
+    </div>
+{% endfor %}{% endblock %}
