@@ -134,7 +134,7 @@ def submit_application():
 
 @pages.route('/api/delete/<int:id>', methods=['POST'])
 def delete_application(id: int):
-    filenames = tuple(database.getfilenamedict(id).values())
+    filenames = tuple(database.getfilenames(id).values())
     if database.deleteapplication(id):
         # Successful deletion; also delete dangling files
         from threading import Thread
