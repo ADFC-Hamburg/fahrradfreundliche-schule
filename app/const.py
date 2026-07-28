@@ -3,6 +3,7 @@ Provides constants used across this app.
 """
 
 from abc import ABC
+from enum import StrEnum
 from os import environ
 from re import compile as compile_regex
 from typing import final
@@ -229,6 +230,26 @@ class sql(ABC):
     FILTER_ID = 'WHERE id = %(id)i'
     FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
     ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)
+
+@final
+class users(ABC):
+    TABLENAME = 'users'
+
+    @final
+    class keys(ABC):
+        ID = 'id'
+        LOGIN_STATUS = 'logged_in'
+        NAME = 'username'
+        PASS = 'password'
+        SALT = 'salt'
+
+    DEFAULTUSER = 'admin'
+    DEFAULTPASS = 'admin'
+
+    @final
+    class PERMISSIONS(StrEnum):
+        ADMIN = 'may_manage_accounts'
+        DELETE = 'may_delete_entries'
 
 @final
 class viewer(ABC):

@@ -5,3 +5,17 @@ CREATE TABLE IF NOT EXISTS {{ tablename }} (
 	{{ field }} INTEGER CHECK ({{ field }} = 0 OR {{ field }} = 1),
 	{{ fileprefix }}{{ field }} TEXT{% endfor %}
 );
+
+CREATE TABLE IF NOT EXISTS {{ users.TABLENAME }} (
+	{{ users.keys.ID }} INTEGER PRIMARY KEY AUTOINCREMENT,
+	{{ users.keys.NAME }} TEXT UNIQUE,
+	{{ users.keys.PASS }} TEXT,
+	{{ users.keys.SALT }} TEXT
+	{%- for permission in users.PERMISSIONS %},
+	{{ permission }} INTEGER NOT NULL CHECK ({{ permission }} = 0 OR {{ permission }} = 1) DEFAULT 0
+	{%- endfor %}
+);
+
+INSERT INTO {{ users.TABLENAME}} (username, password, {{ ', '.join(users.PERMISSIONS) }})
+SELECT '{{ users.DEFAULTUSER }}', '{{ users.DEFAULTPASS }}', {{ ', '.join(('1',) * (users.PERMISSIONS|length))}}
+WHERE NOT EXISTS (SELECT * FROM {{ users.TABLENAME }});
