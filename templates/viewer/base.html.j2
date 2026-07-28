@@ -6,5 +6,8 @@
 {%- block nav %}
 {% endblock %}        </nav>
     </header>
-{% block content %}{% endblock -%}
+{% block content %}{% endblock %}
+{%- block scripts %}
+    <script src="{{ url_for(static, filename='js/viewer_api_calls.js') }}{% if version %}?v={{ version | urlencode }}{% endif%}"></script>
+{% endblock -%}
 {% endblock %}
