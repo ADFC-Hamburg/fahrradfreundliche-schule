@@ -4,13 +4,24 @@ and for rendering content.
 """
 
 # Imports
-from flask import abort, Blueprint, jsonify, render_template, request, send_file
+from functools import wraps
+
+from flask import abort, Blueprint, jsonify, render_template, redirect, request, send_file, session, url_for
 
 from . import config, const, database, uploads, forms, paths
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
 _STATIC_ENDPOINT = _BLUEPRINT_NAME + '.static'
+
+# Decorators
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get(const.users.keys.LOGIN_STATUS):
+            return redirect(url_for('pages.login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Routes
 pages = Blueprint(_BLUEPRINT_NAME, __name__,
@@ -26,6 +37,36 @@ _CONTEXT = {
     'keys': const.conf.keys,
     'version': const.app.VERSION
 }
+
+@pages.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+
+    loginform = forms.LoginForm()
+
+    if request.method == 'POST':
+        if loginform.validate_on_submit():
+            row = database.getuser(
+                loginform.username.data,
+                loginform.password.data
+            )
+            if row:
+                session.clear()
+                session[const.users.keys.LOGIN_STATUS] = True
+                session[const.users.keys.NAME] = row[const.users.keys.NAME]
+                for permission in const.users.PERMISSIONS:
+                    session[permission] = bool(row[permission])
+                return redirect(url_for('pages.list_applications'))
+            else:
+                error = const.users.ERROR_INVALID
+        else:
+            error = const.users.ERROR_EMPTY
+    
+    return render_template(
+        'viewer/login.html.j2', **_CONTEXT,
+        error = error,
+        form = loginform,
+    )
 
 @pages.route('/index')
 @pages.route('/')
@@ -44,6 +85,7 @@ def index():
     )
 
 @pages.route('/viewer')
+@login_required
 def list_applications():
     rows = database.getapplicationlist('id', 'school', 'timestamp', const.sql.FILECOUNT)
     settings = config.fetch()
@@ -55,6 +97,7 @@ def list_applications():
     )
 
 @pages.route('/viewer/<int:id>')
+@login_required
 def show_application(id: int):
     row = database.getapplication(id)
     if not row:
@@ -133,6 +176,7 @@ def submit_application():
         })
 
 @pages.route('/api/delete/<int:id>', methods=['POST'])
+@login_required
 def delete_application(id: int):
     filenames = tuple(database.getfilenames(id).values())
     if database.deleteapplication(id):
@@ -152,6 +196,7 @@ def delete_application(id: int):
         }), 404
 
 @pages.route('/api/download/<int:id>/<field>')
+@login_required
 def download_file(id: int, field: str):
     if field not in const.viewer.FILENAMES.keys():
         abort(404)
@@ -170,6 +215,7 @@ def download_file(id: int, field: str):
     )
 
 @pages.route('/api/download/<int:id>')
+@login_required
 def download_archive(id: int):
 
     row = database.getapplication(id)

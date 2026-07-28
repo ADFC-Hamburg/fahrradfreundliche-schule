@@ -228,6 +228,7 @@ class sql(ABC):
 
     SORT_DESC = 'ORDER BY %(sortfield)s DESC'
     FILTER_ID = 'WHERE id = %(id)i'
+    FILTER = 'WHERE %(filterby)s = ?'
     FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
     ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)
 
@@ -250,6 +251,15 @@ class users(ABC):
     class PERMISSIONS(StrEnum):
         ADMIN = 'may_manage_accounts'
         DELETE = 'may_delete_entries'
+
+    LABELS = {
+        'username': 'Benutzername',
+        'password': 'Passwort',
+        'submit': 'Einloggen',
+    }
+
+    ERROR_EMPTY = 'Benutzername und Passwort erforderlich.'
+    ERROR_INVALID = 'Ungültige Anmeldedaten.'
 
 @final
 class viewer(ABC):

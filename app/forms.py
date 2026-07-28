@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileSize
-from wtforms import Field, BooleanField, EmailField, IntegerField, RadioField, StringField, TelField
+from wtforms import Field, BooleanField, EmailField, IntegerField, PasswordField, RadioField, StringField, SubmitField, TelField
 import wtforms.validators as validators
 
 from . import const
@@ -385,3 +385,21 @@ class ApplicationForm(FlaskForm):
         """Return input fields for file uploads."""
         return self.filefields
     #endregion
+
+class LoginForm(FlaskForm):
+    _FIELD_REQUIRED_VALIDATOR = validators.InputRequired(message=const.users.ERROR_EMPTY)
+    username = StringField(
+        label=const.users.LABELS['username'],
+        validators=[
+            _FIELD_REQUIRED_VALIDATOR,
+        ]
+    )
+    password = PasswordField(
+        label=const.users.LABELS['password'],
+        validators=[
+            _FIELD_REQUIRED_VALIDATOR,
+        ]
+    )
+    submit = SubmitField(
+        label=const.users.LABELS['submit'],
+    )

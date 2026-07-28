@@ -121,6 +121,36 @@ def filterdanglingfiles(*filenames: str) -> list[str]:
     return dangling_files
 #endregion
 
+#region Functions for managing user accounts
+def getuser(username: str, password: str, *columns: str) -> sqlite3.Row | None:
+    """Returns the specified columns of the user account with given
+       username and password. Defaults to all columns.
+       Returns None if no matching user exists."""
+
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'fields': ', '.join(columns or const.sql.COLUMNS_ALL),
+        'filterby': const.users.keys.NAME,
+    }
+    sql_query = ' '.join((
+        const.sql.SELECT,
+        const.sql.FILTER
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(sql_query, (username,))
+        conn.commit()
+        row = cursor.fetchone()
+    
+    if not row:
+        return None
+    if row[const.users.keys.PASS] == password:
+        return row
+    return None
+#endregion
+
 def summarize(row: sqlite3.Row) -> str:
     """Returns a formatted text summary of an application."""
 
