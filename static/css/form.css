@@ -2,6 +2,7 @@
 
 :root {
 	--page-maxwidth: 	60rem;
+	--adfc-blue:		#004b7c;
 }
 
 * {
@@ -151,6 +152,32 @@ body > form {
 	padding:			.5em;
 
 	font-size:			larger;
+}
+
+input {
+	background-color:	transparent;
+	border-style:		solid;
+	border-color:		black;
+	border-width:		1pt;
+	border-radius:		0;
+	outline:			0;
+}
+
+input:not(:focus):user-invalid {
+	border-color:		red;
+}
+
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="phone"]:focus,
+input[type="text"]:focus {
+	border-color:		var(--adfc-blue);
+	box-shadow:			0 0 0 1pt var(--adfc-blue);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	accent-color:		var(--adfc-blue);
 }
 
 /* ––––––––––––– Document footer –––––––––––––*/
