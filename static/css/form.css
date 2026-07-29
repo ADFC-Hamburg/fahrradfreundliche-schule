@@ -180,6 +180,34 @@ input[type="radio"] {
 	accent-color:		var(--adfc-blue);
 }
 
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="file"]::file-selector-button {
+	padding:			.5em 1em;
+	margin-right:		1rem;
+	border-radius:		4pt;
+
+	border:				none;
+	font-weight:		bold;
+	color:				white;
+	background-color:	var(--adfc-blue);
+}
+
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="file"]::file-selector-button:hover {
+	text-shadow:		0 0 .5pt;
+}
+
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+input[type="file"]::file-selector-button:active {
+	box-shadow:			0 .125em .25em black inset;
+}
+
 /* ––––––––––––– Document footer –––––––––––––*/
 
 body > footer {
