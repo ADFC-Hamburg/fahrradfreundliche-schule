@@ -163,7 +163,46 @@ def getuser(username: str, password: str, *columns: str) -> sqlite3.Row | None:
         return row
     return None
 
-def setuserpassword(id: str, password: str):
+def getuserlist(*columns: str) -> list[sqlite3.Row]:
+    """Returns a list of user accounts with the specified columns.
+       Defaults to all columns."""
+
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'fields': ', '.join(columns or const.sql.COLUMNS_ALL),
+        'sortfield': const.users.keys.NAME,
+    }
+    sql_query = ' '.join((
+        const.sql.SELECT,
+        const.sql.SORT,
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        return cursor.fetchall()
+
+def deleteuser(id: int):
+    """Deletes the user account with the given ID. Returns True on
+       successful deletion, False if no such application existed."""
+
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'id': id,
+    }
+    sql_query = ' '.join((
+        const.sql.DELETE,
+        const.sql.FILTER_ID,
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        conn.commit()
+        return bool(cursor.rowcount)
+
+def setuserpassword(id: int, password: str):
     """Updates a user account in the database with
        the provided password hashed and salted."""
 

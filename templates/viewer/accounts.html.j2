@@ -1,0 +1,27 @@
+{% extends 'viewer/base.html.j2' %}
+
+{% block title %}Fahrradfreundliche Schule: Benutzerverwaltung{% endblock %}
+
+{% block nav %}
+			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
+			{{- super() }}
+{% endblock %}
+
+{% block content %}
+	<h1>Benutzerverwaltung</h1>
+	<div class="accounts">
+		{%- for row in rows %}
+		<div class="listing">
+			<p class="name">{{ row[userkeys.NAME] }}</p>
+			<p class="permission {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.ADMIN] %}<s>{% endif %}Darf Benutzerkonten verwalten{% if not row[userperms.ADMIN] %}</s>{% endif %}</p>
+			<p class="permission {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.DELETE] %}<s>{% endif %}Darf Einträge löschen{% if not row[userperms.DELETE] %}</s>{% endif %}</p>
+			<nav>
+				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}" class="edit">Bearbeiten</a>
+				{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
+				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
+				{%- endif %}
+			</nav>
+		</div>
+		{%- endfor %}
+	</div>
+{% endblock %}

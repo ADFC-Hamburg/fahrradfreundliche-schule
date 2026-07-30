@@ -23,6 +23,14 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get(const.users.PERMISSIONS.ADMIN):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Routes
 pages = Blueprint(_BLUEPRINT_NAME, __name__,
                   template_folder=paths.TEMPLATES,
@@ -55,6 +63,7 @@ def login():
             if row:
                 session.clear()
                 session[const.users.keys.LOGIN_STATUS] = True
+                session[const.users.keys.ID] = row[const.users.keys.ID]
                 session[const.users.keys.NAME] = row[const.users.keys.NAME]
                 for permission in const.users.PERMISSIONS:
                     session[permission] = bool(row[permission])
@@ -117,6 +126,22 @@ def show_application(id: int):
         settings = settings,
         file_prefix = const.form.FILE_PREFIX,
         questions = const.viewer.CRITERIA_SORTED,
+    )
+
+@pages.route('/viewer/accounts')
+@login_required
+@admin_required
+def list_users():
+    rows = database.getuserlist(
+        const.users.keys.ID,
+        const.users.keys.NAME,
+        const.users.PERMISSIONS.ADMIN,
+        const.users.PERMISSIONS.DELETE,
+    )
+
+    return render_template(
+        'viewer/accounts.html.j2', **_CONTEXT,
+        rows = rows,
     )
 
 @pages.route('/api/submit', methods=['POST'])
@@ -259,3 +284,17 @@ def download_archive(id: int):
         as_attachment=True,
         download_name=archivename,
     )
+
+@pages.route('/api/users/delete/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_user(id: int):
+    if database.deleteuser(id):
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+        })
+    else:
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
+        }), 404

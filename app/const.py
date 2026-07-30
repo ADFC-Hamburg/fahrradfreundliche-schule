@@ -227,6 +227,7 @@ class sql(ABC):
     DELETE = 'DELETE FROM %(table)s'
     EXISTS = 'SELECT EXISTS (%s)'
 
+    SORT = 'ORDER BY %(sortfield)s'
     SORT_DESC = 'ORDER BY %(sortfield)s DESC'
     FILTER_ID = 'WHERE id = %(id)i'
     FILTER = 'WHERE %(filterby)s = ?'
@@ -257,6 +258,8 @@ class users(ABC):
         'username': 'Benutzername',
         'password': 'Passwort',
         'submit': 'Einloggen',
+        'admin': 'Darf Benutzeraccounts verwalten',
+        'delete': 'Darf Einträge löschen',
     }
 
     ERROR_EMPTY = 'Benutzername und Passwort erforderlich.'

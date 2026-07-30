@@ -2,6 +2,13 @@
 
 {% block title %}Fahrradfreundliche Schule: Liste der Bewerbungen{% endblock %}
 
+{% block nav %}
+            {%- if session.get(userperms.ADMIN) %}
+            <a href="{{ url_for('pages.list_users') }}" class="accounts">Benutzerverwaltung</a>
+            {%- endif %}
+            {{- super() }}
+{% endblock %}
+
 {% block content %}{% for row in rows %}
     <div class="listing">
         <p class="name">{{ row['school'] }}</p>
