@@ -35,6 +35,7 @@ _CONTEXT = {
     'static': _STATIC_ENDPOINT,
     'appname': const.app.NAME,
     'keys': const.conf.keys,
+    'userkeys': const.users.keys,
     'version': const.app.VERSION
 }
 
@@ -67,6 +68,11 @@ def login():
         error = error,
         form = loginform,
     )
+
+@pages.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('pages.login'))
 
 @pages.route('/index')
 @pages.route('/')
