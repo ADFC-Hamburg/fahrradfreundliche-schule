@@ -36,6 +36,7 @@ _CONTEXT = {
     'appname': const.app.NAME,
     'keys': const.conf.keys,
     'userkeys': const.users.keys,
+    'userperms': const.users.PERMISSIONS,
     'version': const.app.VERSION
 }
 
