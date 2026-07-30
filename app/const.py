@@ -222,6 +222,7 @@ class sql(ABC):
     FILECOUNT = ' + '.join((f"(IFNULL({key}, '') != '')" for key in COLUMNS_FILES)) + ' as filecount'
 
     INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
+    UPDATE = 'UPDATE %(table)s SET %(changes)s'
     SELECT = 'SELECT %(fields)s FROM %(table)s'
     DELETE = 'DELETE FROM %(table)s'
     EXISTS = 'SELECT EXISTS (%s)'

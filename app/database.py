@@ -146,10 +146,55 @@ def getuser(username: str, password: str, *columns: str) -> sqlite3.Row | None:
     
     if not row:
         return None
-    if row[const.users.keys.PASS] == password:
+    if not row[const.users.keys.SALT] and row[const.users.keys.PASS] == password:
+        # Password is stored plain; hash it in the background
+        from threading import Thread
+        Thread(
+            target=setuserpassword,
+            kwargs={
+                'id': row[const.users.keys.ID],
+                'password': row[const.users.keys.PASS],
+            },
+        ).start()
+        return row
+
+    salt = row[const.users.keys.SALT] or ''
+    if row[const.users.keys.PASS] == _hash_password(password, salt):
         return row
     return None
+
+def setuserpassword(id: str, password: str):
+    """Updates a user account in the database with
+       the provided password hashed and salted."""
+
+    salt = _random_salt()
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'changes': ', '.join((
+            f'{const.users.keys.PASS} = "{_hash_password(password, salt)}"',
+            f'{const.users.keys.SALT} = "{salt}"',
+        )),
+        'id': id,
+    }
+    sql_query = ' '.join((
+        const.sql.UPDATE,
+        const.sql.FILTER_ID
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        conn.commit()
 #endregion
+
+#region Helper functions
+def _hash_password(password: str, salt: str = '') -> str:
+    from hashlib import sha256
+    return sha256((password+salt).encode('utf-8')).hexdigest()
+
+def _random_salt() -> str:
+    from secrets import token_hex
+    return token_hex(32)
 
 def summarize(row: sqlite3.Row) -> str:
     """Returns a formatted text summary of an application."""
@@ -168,3 +213,4 @@ def summarize(row: sqlite3.Row) -> str:
         row=row,
         questions=const.viewer.CRITERIA_SORTED,
     )
+#endregion
