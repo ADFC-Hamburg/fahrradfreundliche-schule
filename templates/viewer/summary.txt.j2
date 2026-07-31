@@ -18,13 +18,14 @@ Schule:
 
 Anzahl Schüler*innen und Lehrkräfte: {{ row['headcount']|default('Keine Angabe') }}
 
-Erfüllte Kriterien:
 {%- set fulfilled_criteria = [] %}
 {%- for key, text in questions|items %}
 	{%- if row[key] %}
 		{%- do fulfilled_criteria.append(text) %}
 	{%- endif %}
 {%- endfor %}
+
+Erfüllte Kriterien ({{ fulfilled_criteria|count }}/{{ questions|count }}):
 {{ fulfilled_criteria|join('\n')|default('Keine Kriterien erfüllt', true) }}
 
 Eintrag eingereicht: {{ row['timestamp']|applytimezone }}
