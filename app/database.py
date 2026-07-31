@@ -122,6 +122,27 @@ def filterdanglingfiles(*filenames: str) -> list[str]:
 #endregion
 
 #region Functions for managing user accounts
+def getuser(id: int, *columns: str) -> sqlite3.Row | None:
+    """Returns the specified columns of the user account with given id.
+       Defaults to all columns. Returns None if no matching user exists."""
+
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'fields': ', '.join(columns or const.sql.COLUMNS_ALL),
+        'id': id
+    }
+    sql_query = ' '.join((
+        const.sql.SELECT,
+        const.sql.FILTER_ID
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        conn.commit()
+        return cursor.fetchone()
+
 def validateuser(username: str, password: str) -> sqlite3.Row | None:
     """Fetches the user account with given username and password
        from the database. Returns None if no matching user exists."""
@@ -207,9 +228,48 @@ def adduser(**kwargs) -> int:
         conn.commit()
         return new_id
 
-def deleteuser(id: int):
+def edituser(id: int, **kwargs) -> bool:
+    """Alters a user account in the database. Returns True on
+       successful deletion, False if no such account existed."""
+
+    values = {}
+    if kwargs.get(const.users.keys.NAME):
+        values[str(const.users.keys.NAME)] = kwargs.get(const.users.keys.NAME)
+    if kwargs.get(const.users.keys.PASS):
+        salt = _random_salt()
+        values[str(const.users.keys.PASS)] = _hash_password(
+            kwargs.get(const.users.keys.NAME),
+            salt
+        )
+        values[str(const.users.keys.SALT)] = salt
+    for permission in const.users.PERMISSIONS:
+        if kwargs.get(permission) is not None:
+            values[str(permission)] = int(kwargs.get(permission))
+
+    if not values:
+        return
+    
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'changes': ', '.join((
+            f'{key} = ?' for key in values.keys()
+        )),
+        'id': id,
+    }
+    sql_query = ' '.join((
+        const.sql.UPDATE,
+        const.sql.FILTER_ID,
+    )) % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql_query, tuple(values.values()))
+        conn.commit()
+        return bool(cursor.rowcount)
+
+def deleteuser(id: int) -> bool:
     """Deletes the user account with the given ID. Returns True on
-       successful deletion, False if no such application existed."""
+       successful deletion, False if no such account existed."""
 
     query_inserts = {
         'table': const.users.TABLENAME,

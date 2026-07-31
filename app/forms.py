@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileSize
-from wtforms import Field, BooleanField, EmailField, IntegerField, PasswordField, RadioField, StringField, SubmitField, TelField
+from wtforms import Field, BooleanField, EmailField, HiddenField, IntegerField, PasswordField, RadioField, StringField, SubmitField, TelField
 import wtforms.validators as validators
 
 from . import const
@@ -414,3 +414,31 @@ class AccountForm(LoginForm):
     submit = SubmitField(
         label=const.users.LABELS['submit_edit'],
     )
+
+class AccountEditForm(AccountForm):
+    _OPTIONAL_VALIDATOR = validators.Optional()
+    username = StringField(
+        label=const.users.LABELS['username'],
+        validators=[
+            _OPTIONAL_VALIDATOR,
+        ]
+    )
+    password = PasswordField(
+        label=const.users.LABELS['password'],
+        validators=[
+            _OPTIONAL_VALIDATOR,
+        ]
+    )
+    target_id = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if kwargs.get(const.users.keys.ID):
+            self.target_id.data = str(kwargs.get(const.users.keys.ID))
+        if kwargs.get(const.users.keys.NAME):
+            self.username.data = str(kwargs.get(const.users.keys.NAME))
+        if kwargs.get(const.users.PERMISSIONS.ADMIN):
+            self.admin_permission.default = self.admin_permission.data = bool(kwargs.get(const.users.PERMISSIONS.ADMIN))
+        if kwargs.get(const.users.PERMISSIONS.DELETE):
+            self.delete_permission.data = bool(kwargs.get(const.users.PERMISSIONS.DELETE))

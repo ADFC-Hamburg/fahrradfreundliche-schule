@@ -3,6 +3,9 @@
 {% block title %}Fahrradfreundliche Schule: Benutzerverwaltung{% endblock %}
 
 {% block nav %}
+			{%- if row_to_edit %}
+			<a href="{{ url_for('pages.list_users') }}#accountform" class="edit">Neuen Benutzeraccount anlegen</a>
+			{%- endif %}
 			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
 			{{- super() }}
 {% endblock %}
@@ -16,7 +19,7 @@
 			<p class="permission {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.ADMIN] %}<s>{% endif %}Darf Benutzerkonten verwalten{% if not row[userperms.ADMIN] %}</s>{% endif %}</p>
 			<p class="permission {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.DELETE] %}<s>{% endif %}Darf Einträge löschen{% if not row[userperms.DELETE] %}</s>{% endif %}</p>
 			<nav>
-				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}" class="edit">Bearbeiten</a>
+				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="edit">Bearbeiten</a>
 				{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
 				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
 				{%- endif %}
@@ -26,15 +29,16 @@
 	</div>
 
 	<form method="POST" id="accountform">
-		<h2>Einen neuen Benutzer anlegen</h2>
+		<h2>{% if row_to_edit %}Benutzer <em>{{ row_to_edit[userkeys.NAME] }}</em> bearbeiten{% else %}Einen neuen Benutzeraccount anlegen{% endif %}</h2>
 		{{ form.csrf_token }}
+		{% if row_to_edit %}{{ form.target_id }}{% endif %}
 		<div>
 			{{ form.username.label }}
 			{{ form.username() }}
 		</div>
 		<div>
 			{{ form.password.label }}
-			{{ form.password() }}
+			{{ form.password }}
 		</div>
 		{%- for permission in form.admin_permission, form.delete_permission %}
 		<div>
@@ -42,6 +46,9 @@
 		</div>
 		{%- endfor %}
 		{{ form.submit() }}
+		{%- if row_to_edit %}
+		<input type="reset" value="Zurücksetzen">
+		{%- endif %}
 	</form>
 {% endblock %}
 

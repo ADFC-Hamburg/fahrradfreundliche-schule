@@ -2,8 +2,11 @@
 
 const accountform = document.getElementById('accountform');
 const inputfields = accountform.getElementsByTagName('input');
+const idfield = document.getElementById('target_id');
 
 const error_requires_reload = "Beim Auswerten des Formulars ist ein Fehler aufgetreten.\nDie Seite wird nun neu geladen.";
+const message_create_success = "Der Benutzeraccount wurde angelegt."
+const message_changes_success = "Die Änderungen wurden gespeichert.";
 
 const textfieldtypes = ['text', 'email', 'password'];
 
@@ -27,7 +30,12 @@ function validateText(target) {
 }
 
 async function sendAccountForm() {
-	const result = await call('/api/users/add', new FormData(accountform));
+	let url = '/api/users/add';
+	if (idfield && idfield.value) {
+		url = '/api/users/edit/' + idfield.value;
+	}
+
+	const result = await call(url, new FormData(accountform));
 	if (!result) {
 		window.alert(error_server);
 	} else if (!(result.status.toLowerCase() === 'ok')) {
@@ -50,6 +58,11 @@ async function sendAccountForm() {
 			return;
 		}
 	} else {
+		if (idfield && idfield.value) {
+			window.alert(message_changes_success);
+		} else {
+			window.alert(message_create_success);
+		}
 		location.reload();
 	}
 }

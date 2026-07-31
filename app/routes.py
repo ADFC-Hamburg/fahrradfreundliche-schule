@@ -138,11 +138,21 @@ def list_users():
         const.users.PERMISSIONS.ADMIN,
         const.users.PERMISSIONS.DELETE,
     )
-    form = forms.AccountForm()
+    if 'edit' in request.args and request.args.get('edit').isdigit():
+        row_to_edit = database.getuser(int(request.args.get('edit')))
+    else:
+        row_to_edit = None
+    if row_to_edit:
+        form = forms.AccountEditForm(
+            **dict(row_to_edit)
+        )
+    else:
+        form = forms.AccountForm()
 
     return render_template(
         'viewer/accounts.html.j2', **_CONTEXT,
         rows = rows,
+        row_to_edit = row_to_edit,
         form = form,
     )
 
@@ -307,6 +317,39 @@ def add_user():
             const.api.STATUS_KEY: const.api.PASS_VALUE,
             const.api.ID_KEY: new_id,
         })
+    else:
+        # Return status message with validation errors
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.ERROR_KEY: webform.errors
+        })
+
+@pages.route('/api/users/edit/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def edit_user(id: int):
+    form = forms.AccountEditForm()
+    if form.validate_on_submit:
+        # Put all values into a dictionary
+        values = {
+            const.users.keys.NAME: form.username.data,
+            const.users.keys.PASS: form.password.data,
+            str(const.users.PERMISSIONS.ADMIN): form.admin_permission.data,
+            str(const.users.PERMISSIONS.DELETE): form.delete_permission.data,
+        }
+        # Edit database entry
+        if database.edituser(int(form.target_id.data),**values):
+            # Return status message; update username if neccessary
+            if id == session.get(const.users.keys.ID) and form.username.data:
+                session[const.users.keys.NAME] = form.username.data
+            return jsonify({
+                const.api.STATUS_KEY: const.api.PASS_VALUE,
+            })
+        else:
+            return jsonify({
+                const.api.STATUS_KEY: const.api.FAIL_VALUE,
+                const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
+            }), 404
     else:
         # Return status message with validation errors
         return jsonify({
