@@ -403,3 +403,14 @@ class LoginForm(FlaskForm):
     submit = SubmitField(
         label=const.users.LABELS['submit'],
     )
+
+class AccountForm(LoginForm):
+    admin_permission = BooleanField(
+        label=const.users.LABELS['admin'],
+    )
+    delete_permission = BooleanField(
+        label=const.users.LABELS['delete'],
+    )
+    submit = SubmitField(
+        label=const.users.LABELS['submit_edit'],
+    )

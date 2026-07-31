@@ -183,6 +183,31 @@ def getuserlist(*columns: str) -> list[sqlite3.Row]:
         cursor.execute(sql_query)
         return cursor.fetchall()
 
+def adduser(**kwargs) -> int:
+    """Adds a new user account to the database."""
+
+    salt = _random_salt()
+    hashed_password = _hash_password(kwargs.get(const.users.keys.PASS), salt)
+    values = {
+        const.users.keys.NAME: kwargs.get(const.users.keys.NAME),
+        const.users.keys.PASS: hashed_password,
+        const.users.keys.SALT: salt,
+        **{str(perm): int(kwargs.get(perm)) for perm in const.users.PERMISSIONS},
+    }
+    query_inserts = {
+        'table': const.users.TABLENAME,
+        'fields': ', '.join(values.keys()),
+        'values': ', '.join(['?'] * len(values))
+    }
+    sql_query = const.sql.INSERT % query_inserts
+
+    with sqlite3.connect(paths.DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql_query, tuple(values.values()))
+        new_id = cursor.lastrowid
+        conn.commit()
+        return new_id
+
 def deleteuser(id: int):
     """Deletes the user account with the given ID. Returns True on
        successful deletion, False if no such application existed."""

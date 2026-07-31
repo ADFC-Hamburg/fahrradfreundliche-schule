@@ -138,10 +138,12 @@ def list_users():
         const.users.PERMISSIONS.ADMIN,
         const.users.PERMISSIONS.DELETE,
     )
+    form = forms.AccountForm()
 
     return render_template(
         'viewer/accounts.html.j2', **_CONTEXT,
         rows = rows,
+        form = form,
     )
 
 @pages.route('/api/submit', methods=['POST'])
@@ -284,6 +286,33 @@ def download_archive(id: int):
         as_attachment=True,
         download_name=archivename,
     )
+
+@pages.route('/api/users/add', methods=['POST'])
+@login_required
+@admin_required
+def add_user():
+    form = forms.AccountForm()
+    if form.validate_on_submit:
+        # Put all values into a dictionary
+        values = {
+            const.users.keys.NAME: form.username.data,
+            const.users.keys.PASS: form.password.data,
+            str(const.users.PERMISSIONS.ADMIN): form.admin_permission.data,
+            str(const.users.PERMISSIONS.DELETE): form.delete_permission.data,
+        }
+        # Create database entry
+        new_id = database.adduser(**values)
+        # Return status message with database entry ID
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+            const.api.ID_KEY: new_id,
+        })
+    else:
+        # Return status message with validation errors
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.ERROR_KEY: webform.errors
+        })
 
 @pages.route('/api/users/delete/<int:id>', methods=['POST'])
 @login_required

@@ -24,4 +24,27 @@
 		</div>
 		{%- endfor %}
 	</div>
+
+	<form method="POST" id="accountform">
+		<h2>Einen neuen Benutzer anlegen</h2>
+		{{ form.csrf_token }}
+		<div>
+			{{ form.username.label }}
+			{{ form.username() }}
+		</div>
+		<div>
+			{{ form.password.label }}
+			{{ form.password() }}
+		</div>
+		{%- for permission in form.admin_permission, form.delete_permission %}
+		<div>
+			{{ permission() }}{{ permission.label }}
+		</div>
+		{%- endfor %}
+		{{ form.submit() }}
+	</form>
 {% endblock %}
+
+{% block scripts -%}
+	{{ super() }}	<script src="{{ url_for(static, filename='js/accounts.js') }}{% if version %}?v={{ version | urlencode }}{% endif %}"></script>
+{%- endblock %}

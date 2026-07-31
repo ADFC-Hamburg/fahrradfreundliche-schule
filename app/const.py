@@ -258,6 +258,7 @@ class users(ABC):
         'username': 'Benutzername',
         'password': 'Passwort',
         'submit': 'Einloggen',
+        'submit_edit': 'Speichern',
         'admin': 'Darf Benutzeraccounts verwalten',
         'delete': 'Darf Einträge löschen',
     }
