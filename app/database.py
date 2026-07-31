@@ -122,14 +122,13 @@ def filterdanglingfiles(*filenames: str) -> list[str]:
 #endregion
 
 #region Functions for managing user accounts
-def getuser(username: str, password: str, *columns: str) -> sqlite3.Row | None:
-    """Returns the specified columns of the user account with given
-       username and password. Defaults to all columns.
-       Returns None if no matching user exists."""
+def validateuser(username: str, password: str) -> sqlite3.Row | None:
+    """Fetches the user account with given username and password
+       from the database. Returns None if no matching user exists."""
 
     query_inserts = {
         'table': const.users.TABLENAME,
-        'fields': ', '.join(columns or const.sql.COLUMNS_ALL),
+        'fields': ', '.join(const.sql.COLUMNS_ALL),
         'filterby': const.users.keys.NAME,
     }
     sql_query = ' '.join((

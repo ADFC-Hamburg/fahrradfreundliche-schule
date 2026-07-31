@@ -56,7 +56,7 @@ def login():
 
     if request.method == 'POST':
         if loginform.validate_on_submit():
-            row = database.getuser(
+            row = database.validateuser(
                 loginform.username.data,
                 loginform.password.data
             )
