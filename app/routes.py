@@ -8,7 +8,7 @@ from functools import wraps
 
 from flask import abort, Blueprint, jsonify, render_template, redirect, request, send_file, session, url_for
 
-from . import config, const, database, uploads, forms, paths
+from . import config, const, database, uploads, forms, paths, protection
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -49,6 +49,7 @@ _CONTEXT = {
 }
 
 @pages.route('/login', methods=['GET', 'POST'])
+@protection.block_repeated_attempts
 def login():
     error = None
 
@@ -70,6 +71,7 @@ def login():
                 return redirect(url_for('pages.list_applications'))
             else:
                 error = const.users.ERROR_INVALID
+                protection.log_failed_login(request.remote_addr)
         else:
             error = const.users.ERROR_EMPTY
     

@@ -21,6 +21,9 @@ class api(ABC):
     IDNOTFOUND_MESSAGE = 'Der gewünschte Eintrag wurde nicht gefunden.'
     FILENOTFOUND_MESSAGE = 'Die gewünschte Datei wurde nicht gefunden.'
 
+    MAX_LOGIN_ATTEMPTS = 3
+    MAX_LOGIN_LOCKOUT_SECONDS = 180
+
 @final
 class app(ABC):
     """Information about this app."""
