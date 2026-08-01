@@ -54,6 +54,14 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def deletion_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get(const.users.PERMISSIONS.DELETE):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
 def block_repeated_attempts(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):

@@ -200,6 +200,7 @@ def submit_application():
 
 @pages.route('/api/delete/<int:id>', methods=['POST'])
 @protection.login_required
+@protection.deletion_required
 def delete_application(id: int):
     filenames = tuple(database.getfilenames(id).values())
     if database.deleteapplication(id):
