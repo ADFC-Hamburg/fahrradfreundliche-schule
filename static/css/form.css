@@ -154,6 +154,25 @@ body > form {
 	font-size:			larger;
 }
 
+#questions > div {
+	margin-bottom:		2em;
+	font-size:			large;
+}
+
+#questions ul {
+	list-style-type:	none;
+	margin:				.7em 0;
+}
+
+#questions .upload {
+	margin:				0 2em;
+}
+
+#questions .upload::before {
+	font-size:			small;
+	content:			"Beleg für dieses Kriterium";
+}
+
 input {
 	background-color:	transparent;
 	border-style:		solid;
@@ -165,6 +184,7 @@ input {
 
 input:not(:focus):user-invalid {
 	border-color:		red;
+	border-style:		solid;
 }
 
 input[type="email"]:focus,
@@ -178,6 +198,12 @@ input[type="text"]:focus {
 input[type="checkbox"],
 input[type="radio"] {
 	accent-color:		var(--adfc-blue);
+}
+
+input[type="file"] {
+	border-style:			dashed;
+	width:					100%;
+	padding:				1em;
 }
 
 input[type="button"],
