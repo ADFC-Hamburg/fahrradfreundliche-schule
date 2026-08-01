@@ -116,6 +116,17 @@ body > form {
 
 	width:				100%;
 	max-width:			var(--page-maxwidth);
+
+	box-shadow: 1pt 1pt 3pt gray;
+}
+
+body > form > header {
+	text-align:			center;
+	font-style:			italic;
+}
+
+body > form > div {
+	margin:				2em 0;
 }
 
 #personaldata {
