@@ -100,11 +100,12 @@
 	<footer>
 		<nav>
 {%- if contact[keys.URL][keys.LEGAL] %}
-			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Legal Notice</a>
+			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Impressum</a>
 {%- endif %}
 {%- if contact[keys.URL][keys.PRIVACY] %}
-			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Privacy Policy</a>
+			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutz</a>
 {%- endif %}
+			<div>{{ appname }}{% if version %} {{ version }}{% endif%}</div>
 		</nav>
 	</footer>
 

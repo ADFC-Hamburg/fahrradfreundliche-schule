@@ -3,6 +3,7 @@
 :root {
 	--page-maxwidth: 	60rem;
 	--adfc-blue:		#004b7c;
+	--color-dark:		#737373;
 }
 
 * {
@@ -111,7 +112,7 @@ body > main .logos > img {
 
 body > form {
 	padding:			2rem;
-	margin: 			2rem auto 1rem;
+	margin: 			2rem auto 2rem;
 
 	width:				100%;
 	max-width:			var(--page-maxwidth);
@@ -239,5 +240,25 @@ input[type="file"]::file-selector-button:active {
 body > footer {
 	width:				100%;
 	margin-top:			auto;
-	padding: 			.5rem;
+	padding: 			.5em;
+
+	font-size:			small;
+	color:				white;
+	background-color:	var(--color-dark);
+}
+
+body > footer a {
+	display:			inline-block;
+	margin-right:		.5em;
+	float:				left;
+
+	color:				unset;
+	font-style:			normal;
+	text-decoration:	none;
+}
+
+body > footer div {
+	display:			inline-block;
+	margin-left:		.5em;
+	float:				right;
 }
