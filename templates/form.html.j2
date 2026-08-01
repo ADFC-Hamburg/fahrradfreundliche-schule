@@ -85,11 +85,10 @@
 		<div id="compliance">
 {%- if form.privacy_consent %}
 			<h2>Datenschutz</h2>
-			{{ form.privacy_consent }}<label for="{{ form.privacy_consent.id }}"> Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
+			<label>{{ form.privacy_consent }}Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
 {%- endif %}
 {%- if form.storage_consent %}
-			<h2>E-Mail-Versand</h2>
-			{{ form.storage_consent }}<label for="{{ form.storage_consent.id }}"> Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
+			<label>{{ form.storage_consent }}Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
 {%- endif %}
 		</div>
 {%- endif %}
