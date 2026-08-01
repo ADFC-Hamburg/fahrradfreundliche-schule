@@ -14,23 +14,6 @@ from . import config, const, database, uploads, forms, paths, protection
 _BLUEPRINT_NAME = 'pages'
 _STATIC_ENDPOINT = _BLUEPRINT_NAME + '.static'
 
-# Decorators
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not session.get(const.users.keys.LOGIN_STATUS):
-            return redirect(url_for('pages.login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not session.get(const.users.PERMISSIONS.ADMIN):
-            abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
-
 # Routes
 pages = Blueprint(_BLUEPRINT_NAME, __name__,
                   template_folder=paths.TEMPLATES,
@@ -57,17 +40,11 @@ def login():
 
     if request.method == 'POST':
         if loginform.validate_on_submit():
-            row = database.validateuser(
+            login_valid = protection.login_user(
                 loginform.username.data,
                 loginform.password.data
             )
-            if row:
-                session.clear()
-                session[const.users.keys.LOGIN_STATUS] = True
-                session[const.users.keys.ID] = row[const.users.keys.ID]
-                session[const.users.keys.NAME] = row[const.users.keys.NAME]
-                for permission in const.users.PERMISSIONS:
-                    session[permission] = bool(row[permission])
+            if login_valid:
                 return redirect(url_for('pages.list_applications'))
             else:
                 error = const.users.ERROR_INVALID
@@ -103,7 +80,7 @@ def index():
     )
 
 @pages.route('/viewer')
-@login_required
+@protection.login_required
 def list_applications():
     rows = database.getapplicationlist('id', 'school', 'timestamp', const.sql.FILECOUNT)
     settings = config.fetch()
@@ -115,7 +92,7 @@ def list_applications():
     )
 
 @pages.route('/viewer/<int:id>')
-@login_required
+@protection.login_required
 def show_application(id: int):
     row = database.getapplication(id)
     if not row:
@@ -131,8 +108,8 @@ def show_application(id: int):
     )
 
 @pages.route('/viewer/accounts')
-@login_required
-@admin_required
+@protection.login_required
+@protection.admin_required
 def list_users():
     rows = database.getuserlist(
         const.users.keys.ID,
@@ -222,7 +199,7 @@ def submit_application():
         })
 
 @pages.route('/api/delete/<int:id>', methods=['POST'])
-@login_required
+@protection.login_required
 def delete_application(id: int):
     filenames = tuple(database.getfilenames(id).values())
     if database.deleteapplication(id):
@@ -242,7 +219,7 @@ def delete_application(id: int):
         }), 404
 
 @pages.route('/api/download/<int:id>/<field>')
-@login_required
+@protection.login_required
 def download_file(id: int, field: str):
     if field not in const.viewer.FILENAMES.keys():
         abort(404)
@@ -261,7 +238,7 @@ def download_file(id: int, field: str):
     )
 
 @pages.route('/api/download/<int:id>')
-@login_required
+@protection.login_required
 def download_archive(id: int):
 
     row = database.getapplication(id)
@@ -300,8 +277,8 @@ def download_archive(id: int):
     )
 
 @pages.route('/api/users/add', methods=['POST'])
-@login_required
-@admin_required
+@protection.login_required
+@protection.admin_required
 def add_user():
     form = forms.AccountForm()
     if form.validate_on_submit:
@@ -327,8 +304,8 @@ def add_user():
         })
 
 @pages.route('/api/users/edit/<int:id>', methods=['POST'])
-@login_required
-@admin_required
+@protection.login_required
+@protection.admin_required
 def edit_user(id: int):
     form = forms.AccountEditForm()
     if form.validate_on_submit:
@@ -360,8 +337,8 @@ def edit_user(id: int):
         })
 
 @pages.route('/api/users/delete/<int:id>', methods=['POST'])
-@login_required
-@admin_required
+@protection.login_required
+@protection.admin_required
 def delete_user(id: int):
     if database.deleteuser(id):
         return jsonify({
