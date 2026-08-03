@@ -4,6 +4,9 @@
     <header>
         <nav>
 {%- block nav %}
+            {%- if session.get(userkeys.LOGIN_STATUS) %}
+            <a href="{{ url_for('pages.logout') }}" class="return">Ausloggen ({{ session[userkeys.NAME] }})</a>
+            {%- endif %}
 {%- endblock %}
         </nav>
     </header>

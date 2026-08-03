@@ -3,6 +3,7 @@ Provides constants used across this app.
 """
 
 from abc import ABC
+from enum import StrEnum
 from os import environ
 from re import compile as compile_regex
 from typing import final
@@ -19,6 +20,9 @@ class api(ABC):
 
     IDNOTFOUND_MESSAGE = 'Der gewünschte Eintrag wurde nicht gefunden.'
     FILENOTFOUND_MESSAGE = 'Die gewünschte Datei wurde nicht gefunden.'
+
+    MAX_LOGIN_ATTEMPTS = 3
+    MAX_LOGIN_LOCKOUT_SECONDS = 180
 
 @final
 class app(ABC):
@@ -221,14 +225,49 @@ class sql(ABC):
     FILECOUNT = ' + '.join((f"(IFNULL({key}, '') != '')" for key in COLUMNS_FILES)) + ' as filecount'
 
     INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
+    UPDATE = 'UPDATE %(table)s SET %(changes)s'
     SELECT = 'SELECT %(fields)s FROM %(table)s'
     DELETE = 'DELETE FROM %(table)s'
     EXISTS = 'SELECT EXISTS (%s)'
 
+    SORT = 'ORDER BY %(sortfield)s'
     SORT_DESC = 'ORDER BY %(sortfield)s DESC'
     FILTER_ID = 'WHERE id = %(id)i'
+    FILTER = 'WHERE %(filterby)s = ?'
     FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
     ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)
+
+@final
+class users(ABC):
+    TABLENAME = 'users'
+
+    @final
+    class keys(ABC):
+        ID = 'id'
+        LOGIN_STATUS = 'logged_in'
+        NAME = 'username'
+        PASS = 'password'
+        SALT = 'salt'
+
+    DEFAULTUSER = 'admin'
+    DEFAULTPASS = 'admin'
+
+    @final
+    class PERMISSIONS(StrEnum):
+        ADMIN = 'may_manage_accounts'
+        DELETE = 'may_delete_entries'
+
+    LABELS = {
+        'username': 'Benutzername',
+        'password': 'Passwort',
+        'submit': 'Einloggen',
+        'submit_edit': 'Speichern',
+        'admin': 'Darf Benutzeraccounts verwalten',
+        'delete': 'Darf Einträge löschen',
+    }
+
+    ERROR_EMPTY = 'Benutzername und Passwort erforderlich.'
+    ERROR_INVALID = 'Ungültige Anmeldedaten.'
 
 @final
 class viewer(ABC):

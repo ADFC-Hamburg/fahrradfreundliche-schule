@@ -4,9 +4,11 @@ and for rendering content.
 """
 
 # Imports
-from flask import abort, Blueprint, jsonify, render_template, request, send_file
+from functools import wraps
 
-from . import config, const, database, uploads, forms, paths
+from flask import abort, Blueprint, jsonify, render_template, redirect, request, send_file, session, url_for
+
+from . import config, const, database, uploads, forms, paths, protection
 
 # Constants
 _BLUEPRINT_NAME = 'pages'
@@ -24,8 +26,42 @@ _CONTEXT = {
     'static': _STATIC_ENDPOINT,
     'appname': const.app.NAME,
     'keys': const.conf.keys,
+    'userkeys': const.users.keys,
+    'userperms': const.users.PERMISSIONS,
     'version': const.app.VERSION
 }
+
+@pages.route('/login', methods=['GET', 'POST'])
+@protection.block_repeated_attempts
+def login():
+    error = None
+
+    loginform = forms.LoginForm()
+
+    if request.method == 'POST':
+        if loginform.validate_on_submit():
+            login_valid = protection.login_user(
+                loginform.username.data,
+                loginform.password.data
+            )
+            if login_valid:
+                return redirect(url_for('pages.list_applications'))
+            else:
+                error = const.users.ERROR_INVALID
+                protection.log_failed_login(request.remote_addr)
+        else:
+            error = const.users.ERROR_EMPTY
+    
+    return render_template(
+        'viewer/login.html.j2', **_CONTEXT,
+        error = error,
+        form = loginform,
+    )
+
+@pages.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('pages.login'))
 
 @pages.route('/index')
 @pages.route('/')
@@ -44,6 +80,7 @@ def index():
     )
 
 @pages.route('/viewer')
+@protection.login_required
 def list_applications():
     rows = database.getapplicationlist('id', 'school', 'timestamp', const.sql.FILECOUNT)
     settings = config.fetch()
@@ -55,6 +92,7 @@ def list_applications():
     )
 
 @pages.route('/viewer/<int:id>')
+@protection.login_required
 def show_application(id: int):
     row = database.getapplication(id)
     if not row:
@@ -67,6 +105,34 @@ def show_application(id: int):
         settings = settings,
         file_prefix = const.form.FILE_PREFIX,
         questions = const.viewer.CRITERIA_SORTED,
+    )
+
+@pages.route('/viewer/accounts')
+@protection.login_required
+@protection.admin_required
+def list_users():
+    rows = database.getuserlist(
+        const.users.keys.ID,
+        const.users.keys.NAME,
+        const.users.PERMISSIONS.ADMIN,
+        const.users.PERMISSIONS.DELETE,
+    )
+    if 'edit' in request.args and request.args.get('edit').isdigit():
+        row_to_edit = database.getuser(int(request.args.get('edit')))
+    else:
+        row_to_edit = None
+    if row_to_edit:
+        form = forms.AccountEditForm(
+            **dict(row_to_edit)
+        )
+    else:
+        form = forms.AccountForm()
+
+    return render_template(
+        'viewer/accounts.html.j2', **_CONTEXT,
+        rows = rows,
+        row_to_edit = row_to_edit,
+        form = form,
     )
 
 @pages.route('/api/submit', methods=['POST'])
@@ -134,6 +200,8 @@ def submit_application():
         })
 
 @pages.route('/api/delete/<int:id>', methods=['POST'])
+@protection.login_required
+@protection.deletion_required
 def delete_application(id: int):
     filenames = tuple(database.getfilenames(id).values())
     if database.deleteapplication(id):
@@ -153,6 +221,7 @@ def delete_application(id: int):
         }), 404
 
 @pages.route('/api/download/<int:id>/<field>')
+@protection.login_required
 def download_file(id: int, field: str):
     if field not in const.viewer.FILENAMES.keys():
         abort(404)
@@ -171,6 +240,7 @@ def download_file(id: int, field: str):
     )
 
 @pages.route('/api/download/<int:id>')
+@protection.login_required
 def download_archive(id: int):
 
     row = database.getapplication(id)
@@ -207,3 +277,77 @@ def download_archive(id: int):
         as_attachment=True,
         download_name=archivename,
     )
+
+@pages.route('/api/users/add', methods=['POST'])
+@protection.login_required
+@protection.admin_required
+def add_user():
+    form = forms.AccountForm()
+    if form.validate_on_submit:
+        # Put all values into a dictionary
+        values = {
+            const.users.keys.NAME: form.username.data,
+            const.users.keys.PASS: form.password.data,
+            str(const.users.PERMISSIONS.ADMIN): form.admin_permission.data,
+            str(const.users.PERMISSIONS.DELETE): form.delete_permission.data,
+        }
+        # Create database entry
+        new_id = database.adduser(**values)
+        # Return status message with database entry ID
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+            const.api.ID_KEY: new_id,
+        })
+    else:
+        # Return status message with validation errors
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.ERROR_KEY: webform.errors
+        })
+
+@pages.route('/api/users/edit/<int:id>', methods=['POST'])
+@protection.login_required
+@protection.admin_required
+def edit_user(id: int):
+    form = forms.AccountEditForm()
+    if form.validate_on_submit:
+        # Put all values into a dictionary
+        values = {
+            const.users.keys.NAME: form.username.data,
+            const.users.keys.PASS: form.password.data,
+            str(const.users.PERMISSIONS.ADMIN): form.admin_permission.data,
+            str(const.users.PERMISSIONS.DELETE): form.delete_permission.data,
+        }
+        # Edit database entry
+        if database.edituser(int(form.target_id.data),**values):
+            # Return status message; update username if neccessary
+            if id == session.get(const.users.keys.ID) and form.username.data:
+                session[const.users.keys.NAME] = form.username.data
+            return jsonify({
+                const.api.STATUS_KEY: const.api.PASS_VALUE,
+            })
+        else:
+            return jsonify({
+                const.api.STATUS_KEY: const.api.FAIL_VALUE,
+                const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
+            }), 404
+    else:
+        # Return status message with validation errors
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.ERROR_KEY: webform.errors
+        })
+
+@pages.route('/api/users/delete/<int:id>', methods=['POST'])
+@protection.login_required
+@protection.admin_required
+def delete_user(id: int):
+    if database.deleteuser(id):
+        return jsonify({
+            const.api.STATUS_KEY: const.api.PASS_VALUE,
+        })
+    else:
+        return jsonify({
+            const.api.STATUS_KEY: const.api.FAIL_VALUE,
+            const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
+        }), 404

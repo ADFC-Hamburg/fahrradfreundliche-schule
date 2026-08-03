@@ -14,9 +14,9 @@ const fallback_element = 'der Eintrag'
  * @param {string} url
  * @returns {Promise.<Object,undefined>}
  */
-async function call(url) {
+async function call(url, body = '') {
 	try {
-		const response = await fetch(url, {method: "POST"});
+		const response = await fetch(url, {method: "POST", body: body});
 		if (!response.ok) {
 			throw new Error(`Response status: ${response.status}`);
 		}const data = await response.json();
@@ -35,8 +35,8 @@ async function call(url) {
  * @param {string} url
  * @returns {Promise.<boolean>}
  */
-async function executeApiCall(url) {
-	const result = await call(url);
+async function executeApiCall(url, body = '') {
+	const result = await call(url, body);
 	if (!result) {
 		window.alert(error_server);
 		return false;
