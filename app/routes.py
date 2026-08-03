@@ -115,6 +115,7 @@ def submit_application():
                     'recipient': webform.email.data,
                     'config': settings,
                     'data': input_values,
+                    'summary_id': new_id,
                 },
             ).start()
 
