@@ -1,0 +1,50 @@
+{% extends 'viewer/base.html.j2' %}
+
+{% block title %}Fahrradfreundliche Schule: Bewerbung {% if 'ymnasium' in row['school'] %}des{%- else %}der{%- endif %} {{ row['school'] }}{% endblock %}
+
+{% block nav %}
+			<a href="{{ url_for('pages.download_archive', id=row['id']) }}" class="download">Herunterladen</a>
+			{%- if session.get(userperms.DELETE) %}
+			<a href="{{ url_for('pages.delete_application', id=row['id'])}}" class="delete" data-description="diese Bewerbung" data-returnhref="{{ url_for('pages.list_applications') }}">Löschen</a>
+			{%- endif %}
+			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
+			{{- super() }}
+{%- endblock %}
+
+{% block content %}
+	<div class="data">
+		<h2>Kontakt</h2>
+		<dl>
+			<dt>Name</dt>
+			<dd>{{ (row['firstname'], row['lastname'])|select|join(' ') }}</dd>
+			<dt>Telefonnummer</dt>
+			<dd>{{ row['phone'] }}</dd>
+			<dt>Email-Adresse</dt>
+			<dd>{{ row['email'] }}</dd>
+		</dl>
+
+		<h2>Schule</h2>
+		<dl>
+			<dt>Name</dt>
+			<dd>{{ row['school'] }}</dd>
+			<dt>Adresse</dt>
+			<dd>{{ (row['address'], (row['zipcode'], row['city'])|select|join(' '))|select|join('<br />') }}</dd>
+			<dt>Kopfzahl</dt>
+			<dd>{% if row['headcount'] %}{{ row['headcount'] }} Schüler*innen und Lehrkräfte{% endif %}</dd>
+			<dt>Antrag eingereicht am</dt>
+			<dd>{{ row['timestamp']|applytimezone(settings) }}</dd>
+		</dl>
+	</div>
+
+	<div class="criteria">
+		<h2>Wertungs&shy;kriterien</h2>
+		{%- for key, description in questions|items %}
+		<div class="{% if row[key] %}pass{% elif row[key] is not none %}fail{% else %}unknown{% endif %}">
+			<p>{% if not row[key] %}<s>{% endif %}{{ description }}{% if not row[key] %}</s>{% endif %}</p>
+			{%- if row[file_prefix + key] %}
+			<a href="{{ url_for('pages.download_file', id=row['id'], field=key) }}" class="download">Beleg herunterladen</a>
+			{%- endif %}
+		</div>
+		{%- endfor %}
+	</div>
+{% endblock %}

@@ -3,6 +3,7 @@ Provides constants used across this app.
 """
 
 from abc import ABC
+from enum import StrEnum
 from os import environ
 from re import compile as compile_regex
 from typing import final
@@ -11,10 +12,17 @@ from typing import final
 class api(ABC):
     STATUS_KEY = 'status'
     ERROR_KEY = 'errors'
+    SINGLE_ERROR_KEY = 'error'
     ID_KEY = 'id'
     MAIL_KEY = 'sending_mail'
     PASS_VALUE = 'ok'
     FAIL_VALUE = 'error'
+
+    IDNOTFOUND_MESSAGE = 'Der gewünschte Eintrag wurde nicht gefunden.'
+    FILENOTFOUND_MESSAGE = 'Die gewünschte Datei wurde nicht gefunden.'
+
+    MAX_LOGIN_ATTEMPTS = 3
+    MAX_LOGIN_LOCKOUT_SECONDS = 180
 
 @final
 class app(ABC):
@@ -78,6 +86,7 @@ class conf(ABC):
         REQUIRED = 'Erforderlich'
         SCHOOLTYPE = 'Schulformen'
         SPONSORS = 'Foerderer'
+        TIMEZONE = 'Zeitzone'
         UPLOADS = 'Belege'
         URL = 'Web'
         VALID_YEARS = 'GueltigkeitInJahren'
@@ -117,6 +126,7 @@ class conf(ABC):
             keys.APP: '/static/logos/FFS_generic_logo_small.png',
             keys.SPONSORS: (),
         },
+        keys.TIMEZONE: 'Europe/Berlin'
     }
 
     FORM_DEFAULT = {
@@ -209,4 +219,79 @@ class form(ABC):
 
 @final
 class sql(ABC):
+    COLUMNS_ALL = ('*',)
+    COLUMNS_FILES = tuple(form.FILE_PREFIX + key for key in form.QUESTIONS_LABELS)
+
+    FILECOUNT = ' + '.join((f"(IFNULL({key}, '') != '')" for key in COLUMNS_FILES)) + ' as filecount'
+
     INSERT = 'INSERT INTO %(table)s (%(fields)s) VALUES (%(values)s)'
+    UPDATE = 'UPDATE %(table)s SET %(changes)s'
+    SELECT = 'SELECT %(fields)s FROM %(table)s'
+    DELETE = 'DELETE FROM %(table)s'
+    EXISTS = 'SELECT EXISTS (%s)'
+
+    SORT = 'ORDER BY %(sortfield)s'
+    SORT_DESC = 'ORDER BY %(sortfield)s DESC'
+    FILTER_ID = 'WHERE id = %(id)i'
+    FILTER = 'WHERE %(filterby)s = ?'
+    FILTER_ID_MULTIPLE = 'WHERE id IN (%(ids)s)'
+    ANY_FILE = 'WHERE ' + ' OR '.join(column + ' = "%(value)s"' for column in COLUMNS_FILES)
+
+@final
+class users(ABC):
+    TABLENAME = 'users'
+
+    @final
+    class keys(ABC):
+        ID = 'id'
+        LOGIN_STATUS = 'logged_in'
+        NAME = 'username'
+        PASS = 'password'
+        SALT = 'salt'
+
+    DEFAULTUSER = 'admin'
+    DEFAULTPASS = 'admin'
+
+    @final
+    class PERMISSIONS(StrEnum):
+        ADMIN = 'may_manage_accounts'
+        DELETE = 'may_delete_entries'
+
+    LABELS = {
+        'username': 'Benutzername',
+        'password': 'Passwort',
+        'submit': 'Einloggen',
+        'submit_edit': 'Speichern',
+        'admin': 'Darf Benutzeraccounts verwalten',
+        'delete': 'Darf Einträge löschen',
+    }
+
+    ERROR_EMPTY = 'Benutzername und Passwort erforderlich.'
+    ERROR_INVALID = 'Ungültige Anmeldedaten.'
+
+@final
+class viewer(ABC):
+    CRITERIA_SORTED = {
+        'coordinator': 'Fahrrad-Koordinator*in oder Fahrrad-AG',
+        'compass': 'Vorhandenes Konzept „Mobilitäts-Kompass“',
+        'routemap': 'Aktueller Schulradwegplan',
+        'parking': 'Ausreichend gute Radabstellanlagen',
+        'repairs': 'Vorhandene Fahrrad-Reparaturmöglichkeit',
+        'campaign_organizing': 'Jährliche Schulaktion zum Thema Fahrrad',
+        'campaign_participation': 'Teilnahme an einer Fahrrad-Kampagne',
+        'lessons': 'Behandlung nachhaltiger Mobilität mit dem Fahrrad im Unterricht',
+    }
+    FILENAME_PREFIX = 'Beleg '
+    FILENAMES = {
+        'campaign_organizing': 'Schulaktion',
+        'campaign_participation': 'Fahrrad-Kampagne',
+        'compass': 'Mobilitätskompass',
+        'coordinator': 'Koordination',
+        'lessons': 'Unterricht',
+        'parking': 'Radabstellanlagen',
+        'repairs': 'Reparaturmöglichkeit',
+        'routemap': 'Schulradwegplan',
+    }
+    SUMMARY_FILENAME = 'Angaben zur Bewerbung'
+    ARCHIVE_PREFIX = 'Bewerbung '
+    TIMESTAMP_FORMAT = '%d.%m.%Y %H:%M'

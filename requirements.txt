@@ -19,3 +19,11 @@ WTForms[email] ~= 3.2.2
 
 # File type detection
 python-magic ~= 0.4.27
+
+# Timezones
+tzdata == 2026.3
+
+# Auto-expiring caches
+expiring-dict ~= 1.1.2
+	# dependencies
+	sortedcontainers ~= 2.4.0

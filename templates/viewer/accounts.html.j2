@@ -1,0 +1,61 @@
+{% extends 'viewer/base.html.j2' %}
+
+{% block title %}Fahrradfreundliche Schule: Benutzerverwaltung{% endblock %}
+
+{% block nav %}
+			{%- if row_to_edit %}
+			<a href="{{ url_for('pages.list_users') }}#accountform" class="edit">Neuen Benutzeraccount anlegen</a>
+			{%- endif %}
+			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
+			{{- super() }}
+{% endblock %}
+
+{% block content %}
+	<h1>Benutzerverwaltung</h1>
+	<div class="accounts">
+		{%- for row in rows %}
+		<div class="listing">
+			<p class="name">{{ row[userkeys.NAME] }}</p>
+			<p class="permission {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.ADMIN] %}<s>{% endif %}Darf Benutzerkonten verwalten{% if not row[userperms.ADMIN] %}</s>{% endif %}</p>
+			<p class="permission {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.DELETE] %}<s>{% endif %}Darf Einträge löschen{% if not row[userperms.DELETE] %}</s>{% endif %}</p>
+			<nav>
+				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="edit">Bearbeiten</a>
+				{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
+				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
+				{%- endif %}
+			</nav>
+		</div>
+		{%- endfor %}
+	</div>
+
+	<form method="POST" id="accountform">
+		<h2>{% if row_to_edit %}Benutzer <em>{{ row_to_edit[userkeys.NAME] }}</em> bearbeiten{% else %}Einen neuen Benutzeraccount anlegen{% endif %}</h2>
+		{{ form.csrf_token }}
+		{% if row_to_edit %}{{ form.target_id }}{% endif %}
+		<div>
+			{{ form.username.label }}
+			{{ form.username() }}
+		</div>
+		<div>
+			{{ form.password.label }}
+			{{ form.password }}
+		</div>
+		<div>
+			<label for="confirm_password">Passwort bestätigen</label>
+			<input id="confirm_password" type="password" value="{{ form.password.value }}">
+		</div>
+		{%- for permission in form.admin_permission, form.delete_permission %}
+		<div>
+			{{ permission() }}{{ permission.label }}
+		</div>
+		{%- endfor %}
+		{{ form.submit() }}
+		{%- if row_to_edit %}
+		<input type="reset" value="Zurücksetzen">
+		{%- endif %}
+	</form>
+{% endblock %}
+
+{% block scripts -%}
+	{{ super() }}	<script src="{{ url_for(static, filename='js/accounts.js') }}{% if version %}?v={{ version | urlencode }}{% endif %}"></script>
+{%- endblock %}

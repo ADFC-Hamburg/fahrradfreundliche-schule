@@ -62,6 +62,7 @@ if __name__ == '__main__':
 
     # Create database
     SQL_QUERY = render_sql_commands(
+        users=const.users,
         tablename=const.form.FORM_NAME,
         questions=const.form.QUESTIONS_LABELS.keys(),
         inputfields=const.form.INPUTFIELDS_LABELS.keys(),

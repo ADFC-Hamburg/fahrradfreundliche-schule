@@ -33,8 +33,11 @@ def _send(message: EmailMessage):
         
         server.send_message(message)
 
-def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch(), filelist: list[str] = []):
-    """Sends an acknowledgement of a form submission via email."""
+def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch(), filelist: list[str] = [], summary_id: int|None = None):
+    """
+    Sends an acknowledgement of a form submission via email.
+    If summary_id is given, attaches a summary as .txt file.
+    """
     msg = EmailMessage()
     mailconfig = config[const.conf.keys.FORM][const.conf.keys.CONFIRM_MAIL]
 
@@ -53,6 +56,16 @@ def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fet
     if mailconfig[const.conf.keys.CC]:
         msg['CC'] = mailconfig[const.conf.keys.CC]
     msg['Subject'] = const.form.MAIL_SUBJECT
+
+    if summary_id is not None:
+        from . import database
+        summary = database.summarize(database.getapplication(summary_id))
+        msg.add_attachment(
+            summary.encode('utf-8'),
+            maintype='text',
+            subtype='plain',
+            filename=const.viewer.SUMMARY_FILENAME + '.txt'
+        )
 
     _send(msg)
 
