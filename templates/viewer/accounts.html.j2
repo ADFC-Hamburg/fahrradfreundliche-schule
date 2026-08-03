@@ -40,6 +40,10 @@
 			{{ form.password.label }}
 			{{ form.password }}
 		</div>
+		<div>
+			<label for="confirm_password">Passwort bestätigen</label>
+			<input id="confirm_password" type="password" value="{{ form.password.value }}">
+		</div>
 		{%- for permission in form.admin_permission, form.delete_permission %}
 		<div>
 			{{ permission() }}{{ permission.label }}

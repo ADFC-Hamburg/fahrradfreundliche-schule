@@ -3,6 +3,8 @@
 const accountform = document.getElementById('accountform');
 const inputfields = accountform.getElementsByTagName('input');
 const idfield = document.getElementById('target_id');
+const passwordfield = document.getElementById('password');
+const passwordconfirmfield = document.getElementById('confirm_password');
 
 const error_requires_reload = "Beim Auswerten des Formulars ist ein Fehler aufgetreten.\nDie Seite wird nun neu geladen.";
 const message_create_success = "Der Benutzeraccount wurde angelegt."
@@ -26,6 +28,17 @@ function validateText(target) {
 		target.setCustomValidity('Bitte geben Sie eine Email-Adresse ein.');
 	} else {
 		target.setCustomValidity('');
+	}
+}
+
+/**
+ * Überprüft, ob Passwortfeld und Bestätigungsfeld übereinstimmen.
+ */
+function validateConfirmPassword() {
+	if (passwordfield.value != passwordconfirmfield.value) {
+		passwordconfirmfield.setCustomValidity('Stimmt nicht mit dem Passwort überein.');
+	} else {
+		passwordconfirmfield.setCustomValidity('');
 	}
 }
 
@@ -83,6 +96,8 @@ function start() {
 			});
 		}
 	}
+	passwordfield.addEventListener('change', validateConfirmPassword);
+	passwordconfirmfield.addEventListener('change', validateConfirmPassword);
 }
 
 window.addEventListener('pageshow', start);
