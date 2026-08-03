@@ -2,21 +2,22 @@
 
 {% block body %}
     <div class="login">
-    <h1>Fahrradfreundliche Schule</h1>
-    {%- if error %}
-    <p class="error">{{ error }}</p>
-    {%- else %}
-    <p>Für den Zugang zu diesem Bereich ist eine Anmeldung erforderlich.</p>
-    {%- endif %}
+        <h1>Fahrradfreundliche Schule</h1>
+        {%- if error %}
+        <p class="error">{{ error }}</p>
+        {%- else %}
+        <p>Für den Zugang zu diesem Bereich ist eine Anmeldung erforderlich.</p>
+        {%- endif %}
 
-    <form method="POST" novalidate>
-        {{ form.csrf_token }}
-        {%- for field in form.username, form.password %}
-        <div>
-            {{ field.label }}
-            {{ field() }}
-        </div>
-        {%- endfor %}
-        {{ form.submit() }}
-    </form>
+        <form method="POST" novalidate>
+            {{ form.csrf_token }}
+            {%- for field in form.username, form.password %}
+            <div>
+                {{ field.label }}
+                {{ field() }}
+            </div>
+            {%- endfor %}
+            {{ form.submit() }}
+        </form>
+    </div>
 {% endblock %}
