@@ -139,7 +139,7 @@ def list_users():
 def submit_application():
     settings = config.fetch()
 
-    questioncount = len(settings[const.conf.keys.FORM][const.conf.keys.QUESTIONS][const.conf.keys.LIST])
+    questioncount = sum(bool(question) for question in settings[const.conf.keys.FORM][const.conf.keys.QUESTIONS].values())
     maxsize_file = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS][const.conf.keys.FILESIZE]
     request.max_content_length = max(maxsize_file * questioncount, 1) * 1024 * 1024
 

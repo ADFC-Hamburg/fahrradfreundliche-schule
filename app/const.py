@@ -72,7 +72,6 @@ class conf(ABC):
         LINE1 = 'Zeile1'
         LINE2 = 'Zeile2'
         LINE3 = 'Zeile3'
-        LIST = 'Liste'
         LOCATION = 'Standort'
         LOGO = 'Logos'
         MAIL = 'Email'
@@ -92,7 +91,17 @@ class conf(ABC):
         VALID_YEARS = 'GueltigkeitInJahren'
         WEBSITE = 'Webseite'
         ZIPCODE = 'Postleitzahl'
-        
+
+    questionkeys = {
+            'coordinator': 'KoordinationOderAG',
+            'compass': 'Mobilitaetskompass',
+            'routemap': 'Schulradwegplan',
+            'parking': 'Radabstellanlagen',
+            'repairs': 'Reparaturmoeglichkeit',
+            'campaign_organizing': 'OrganisiertSchulaktion',
+            'campaign_participation': 'TeilnahmeAnAktion',
+            'lessons': 'ThemaImUnterricht',
+    }
 
     CONTACT_DEFAULT = {
         keys.NAME: 'Allgemeiner Deutscher Fahrrad-Club e. V.',
@@ -135,16 +144,7 @@ class conf(ABC):
             keys.CITY: '',
         },
         keys.QUESTIONS: {
-            keys.LIST: (
-                'coordinator',
-                'compass',
-                'routemap',
-                'parking',
-                'repairs',
-                'campaign_organizing',
-                'campaign_participation',
-                'lessons',
-            ),
+            key: True for key in questionkeys.values()
         },
         keys.UPLOADS: {
             keys.REQUIRED: True,

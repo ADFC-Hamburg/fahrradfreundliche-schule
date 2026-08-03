@@ -319,7 +319,7 @@ class ApplicationForm(FlaskForm):
             if not self.city.data:
                 self.city.data = formconfig[keys.DEFAULT][keys.CITY]
             for key, question in self.get_yesnofields().items():
-                if key not in formconfig[keys.QUESTIONS][keys.LIST]:
+                if not formconfig[keys.QUESTIONS][const.conf.questionkeys[key]]:
                     # Do not verify unused fields
                     question.flags.skip_validation = True
                     question.validate_choice = False
@@ -364,9 +364,9 @@ class ApplicationForm(FlaskForm):
         """Return ordered input fields for questionnaire
         and corresponding input fields for file uploads."""
         if self.config:
-            order = self.config[keys.QUESTIONS][keys.LIST]
+            order = (field for field, confkey in const.conf.questionkeys.items() if self.config[keys.QUESTIONS][confkey])
         else:
-            order = const.form.QUESTIONS_LABELS.keys()
+            order = (field for field, confkey in const.conf.questionkeys.items() if const.conf.FORM_DEFAULT[keys.QUESTIONS][confkey])
         return tuple(self.questions[key] for key in order)
     
     def get_fields(self) -> tuple[Field, ...]:
