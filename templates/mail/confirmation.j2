@@ -9,6 +9,13 @@ Vielen Dank! Ihre Selbstevaluation
 {%- endif %} für die Auszeichnung
 Fahrradfreundliche Schule ist bei uns eingetroffen.
 
+{% if filelist -%}
+Folgende Nachweise haben wir von Ihnen erhalten:
+{%- for file in filelist %}
+	{{ file }}
+{%- endfor %}
+
+{% endif -%}
 Wir werden die erhaltenen Unterlagen baldmöglichst prüfen und uns 
 gegebenenfalls melden, falls es Rückfragen geben sollte.
 Wenn alle Nachweise OK sind und Ihre Schule die Kriterien erfüllt, 

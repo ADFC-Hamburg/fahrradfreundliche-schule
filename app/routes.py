@@ -57,10 +57,12 @@ def submit_application():
                         for field in webform.get_inputfields()}
         question_values = {}
         question_filenames = {}
+        original_filenames = []
         for key, question in webform.get_yesnofields().items():
             question_values[key] = question.data
         for key, filefield in webform.get_filefields().items():
             if filefield.data:
+                original_filenames.append(filefield.data.filename)
                 # Save uploaded file; use filename as value
                 filename = uploads.add(
                     filefield.data,
@@ -88,6 +90,7 @@ def submit_application():
                     'recipient': webform.email.data,
                     'config': settings,
                     'data': input_values,
+                    'filelist': original_filenames,
                 },
             ).start()
 

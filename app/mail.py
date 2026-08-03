@@ -33,7 +33,7 @@ def _send(message: EmailMessage):
         
         server.send_message(message)
 
-def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch()):
+def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch(), filelist: list[str] = []):
     """Sends an acknowledgement of a form submission via email."""
     msg = EmailMessage()
     mailconfig = config[const.conf.keys.FORM][const.conf.keys.CONFIRM_MAIL]
@@ -44,6 +44,7 @@ def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fet
         keys = const.conf.keys,
         cert = config[const.conf.keys.CERT],
         contact = config[const.conf.keys.CONTACT],
+        filelist = filelist,
     )
 
     msg.set_content(content)
