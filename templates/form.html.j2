@@ -1,5 +1,9 @@
 {% extends 'base.html.j2' %}
 
+{% block head %}
+{{- super() }}	<link rel="stylesheet" href="{{ url_for(static, filename='css/form.css') }}">
+{% endblock %}
+
 {% block body %}
 {%- if custom[keys.LOGO][keys.APP] %}
 	<header>
@@ -44,10 +48,12 @@
 {%- endif %}
 {%- if custom[keys.LOGO][keys.SPONSORS] %}
 
-		<h2>Gefördert von:</h2>
-		<div>{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
-			<img src="{{ logo }}" />{% endfor %}
-		</div>
+		<footer>
+			<h2>Gefördert von:</h2>
+			<div class="logos">{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
+				<img src="{{ logo }}" />{% endfor %}
+			</div>
+		</footer>
 {%- endif %}
 	</main>
 
@@ -59,7 +65,7 @@
 
 		<div id="personaldata">
 {%- for field in form.get_inputfields() %}
-			<p>{{ field.label }} {{ field() }}</p>
+			<p id={{ field.short_name }}container>{{ field.label }} {{ field() }}</p>
 {%- endfor %}
 		</div>
 
@@ -68,7 +74,9 @@
 			<div>
 				{{ field.label }}
 				{{ field() }}
-				{{ upload() }}
+				<div class="upload">
+					{{ upload() }}
+				</div>
 			</div>
 {%- endfor %}
 		</div>
@@ -77,26 +85,26 @@
 		<div id="compliance">
 {%- if form.privacy_consent %}
 			<h2>Datenschutz</h2>
-			{{ form.privacy_consent }}<label for="{{ form.privacy_consent.id }}"> Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
+			<label>{{ form.privacy_consent }}Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
 {%- endif %}
 {%- if form.storage_consent %}
-			<h2>E-Mail-Versand</h2>
-			{{ form.storage_consent }}<label for="{{ form.storage_consent.id }}"> Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
+			<label>{{ form.storage_consent }}Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
 {%- endif %}
 		</div>
 {%- endif %}
 
-		<input type="submit" value="Submit">
+		<input type="submit" value="Bewerbung einsenden">
 	</form>
 
 	<footer>
 		<nav>
 {%- if contact[keys.URL][keys.LEGAL] %}
-			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Legal Notice</a>
+			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Impressum</a>
 {%- endif %}
 {%- if contact[keys.URL][keys.PRIVACY] %}
-			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Privacy Policy</a>
+			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutz</a>
 {%- endif %}
+			<div>{{ appname }}{% if version %} {{ version }}{% endif%}</div>
 		</nav>
 	</footer>
 
