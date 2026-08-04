@@ -1,17 +1,17 @@
 {% extends 'base.html.j2' %}
 
 {% block body %}
-    <header>
-        <nav>
+	<header>
+		<nav>
 {%- block nav %}
-            {%- if session.get(userkeys.LOGIN_STATUS) %}
-            <a href="{{ url_for('pages.logout') }}" class="return">Ausloggen ({{ session[userkeys.NAME] }})</a>
-            {%- endif %}
+			{%- if session.get(userkeys.LOGIN_STATUS) %}
+			<a href="{{ url_for('pages.logout') }}" class="return">Ausloggen ({{ session[userkeys.NAME] }})</a>
+			{%- endif %}
 {%- endblock %}
-        </nav>
-    </header>
+		</nav>
+	</header>
 {% block content %}{% endblock %}
 {%- block scripts %}
-    <script src="{{ url_for(static, filename='js/viewer_api_calls.js') }}{% if version %}?v={{ version | urlencode }}{% endif%}"></script>
+	<script src="{{ url_for(static, filename='js/viewer_api_calls.js') }}{% if version %}?v={{ version | urlencode }}{% endif%}"></script>
 {% endblock -%}
 {% endblock %}
