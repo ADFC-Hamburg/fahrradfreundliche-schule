@@ -163,7 +163,7 @@ def validateuser(username: str, password: str) -> sqlite3.Row | None:
         cursor.execute(sql_query, (username,))
         conn.commit()
         row = cursor.fetchone()
-    
+
     if not row:
         return None
     if not row[const.users.keys.SALT] and row[const.users.keys.PASS] == password:
@@ -248,7 +248,7 @@ def edituser(id: int, **kwargs) -> bool:
 
     if not values:
         return
-    
+
     query_inserts = {
         'table': const.users.TABLENAME,
         'changes': ', '.join((

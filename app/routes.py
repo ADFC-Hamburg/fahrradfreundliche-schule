@@ -51,7 +51,7 @@ def login():
                 protection.log_failed_login(request.remote_addr)
         else:
             error = const.users.ERROR_EMPTY
-    
+
     return render_template(
         'viewer/login.html.j2', **_CONTEXT,
         error = error,
