@@ -1,5 +1,9 @@
 {% extends 'base.html.j2' %}
 
+{% block head %}
+{{- super() }}	<link rel="stylesheet" href="{{ url_for(static, filename='css/viewer.css') }}">
+{% endblock %}
+
 {% block body %}
     <header>
         <nav>

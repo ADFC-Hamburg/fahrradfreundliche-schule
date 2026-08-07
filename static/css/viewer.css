@@ -9,8 +9,20 @@
 }
 
 body {
+	margin:				0;
 	background-color:	white;
 	font-family:		sans-serif;
+}
+
+body > header {
+	padding:			.5rem;
+}
+
+body > header nav {
+	display:			flex;
+	flex-wrap:			wrap;
+	justify-content:	right;
+	gap:				.4rem;
 }
 
 body > main {
@@ -45,6 +57,7 @@ input[type='text']:focus {
 	box-shadow:			0 0 0 1pt var(--adfc-blue);
 }
 
+nav > a,
 input[type='submit'] {
 	width:				fit-content;
 	padding:			.5em 1em;
@@ -52,14 +65,19 @@ input[type='submit'] {
 	border-radius:		4pt;
 	background-color:	var(--adfc-blue);
 
+	font-size:			small;
 	font-weight:		bold;
+	font-style:			normal;
+	text-decoration:	none;
 	color:				white;
 }
 
+nav > a:hover,
 input[type="submit"]:hover {
 	text-shadow:		0 0 .5pt;
 }
 
+nav > a:active,
 input[type="submit"]:active {
 	box-shadow:			0 .125em .25em black inset;
 }
