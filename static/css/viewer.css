@@ -1,0 +1,119 @@
+/* ––– Common attributes and document body –––*/
+
+:root {
+	--adfc-blue:		#004b7c;
+}
+
+* {
+	box-sizing:			border-box;
+}
+
+body {
+	background-color:	white;
+	font-family:		sans-serif;
+}
+
+body > main {
+	padding:			2rem;
+}
+
+h1 {
+	margin:				0 0 .7em;
+}
+
+/* –––– Common input field and button formatting –––– */
+
+input {
+	background-color:	transparent;
+	border-style:		solid;
+	border-color:		black;
+	border-width:		1pt;
+	border-radius:		0;
+	outline:			0;
+}
+
+input[type='password'],
+input[type='text'] {
+	padding:			.5em;
+	font-size:			medium;
+	width:				100%;
+}
+
+input[type='password']:focus,
+input[type='text']:focus {
+	border-color:		var(--adfc-blue);
+	box-shadow:			0 0 0 1pt var(--adfc-blue);
+}
+
+input[type='submit'] {
+	width:				fit-content;
+	padding:			.5em 1em;
+	border:				none;
+	border-radius:		4pt;
+	background-color:	var(--adfc-blue);
+
+	font-weight:		bold;
+	color:				white;
+}
+
+input[type="submit"]:hover {
+	text-shadow:		0 0 .5pt;
+}
+
+input[type="submit"]:active {
+	box-shadow:			0 .125em .25em black inset;
+}
+
+form .buttons {
+	margin:				1rem auto 0;
+}
+
+/* –––– LOGIN –––– */
+
+.login {
+	position:			absolute;
+	left:				0;
+	right:				0;
+	top:				0;
+	bottom:				0;
+
+	max-width:			40rem;
+	height:				fit-content;
+	margin:				auto;
+
+	text-align:			center;
+}
+
+.login > img {
+	display:			block;
+	margin: 			auto;
+	width:				100%;
+	max-height:			20rem;
+	object-fit:			contain;
+	margin:				0 0 1.5em;
+}
+
+.login .error {
+	color:				darkred;
+	font-style:			italic;
+}
+
+.login form {
+	width:				fit-content;
+	min-width:			20rem;
+	margin:				3rem auto 0;
+
+	display:			flex;
+	flex-direction: 	column;
+	row-gap:			.7em;
+
+	text-align:			left;
+}
+
+.login form > * {
+	display:			block;
+}
+
+.login label:first-child {
+	font-size: smaller;
+}
