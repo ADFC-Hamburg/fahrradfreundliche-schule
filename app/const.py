@@ -122,7 +122,7 @@ class conf(ABC):
     }
 
     CERT_DEFAULT = {
-        keys.VALID_YEARS: 0,
+        keys.VALID_YEARS: 3,
         keys.ENDDATE: '',
         keys.QUALIFICATION: {
             keys.LOCATION: '',
