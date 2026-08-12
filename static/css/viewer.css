@@ -2,6 +2,7 @@
 
 :root {
 	--adfc-blue:		#004b7c;
+	--adfc-orange:		#ee7f00;
 	--shadow:			1pt 1pt 3pt black;
 }
 
@@ -120,7 +121,13 @@ input[type='text']:focus {
 	box-shadow:			0 0 0 1pt var(--adfc-blue);
 }
 
+input[type='radio'],
+input[type='checkbox'] {
+	accent-color:	var(--adfc-blue);
+}
+
 nav > a,
+input[type='reset'],
 input[type='submit'] {
 	position:			relative;
 	width:				fit-content;
@@ -159,11 +166,13 @@ input[type='submit'] {
 }
 
 nav > a:hover,
+input[type='reset']:hover,
 input[type="submit"]:hover {
 	text-shadow:		0 0 .5pt;
 }
 
 nav > a:active,
+input[type='reset']:hover,
 input[type="submit"]:active {
 	box-shadow:			0 .125em .25em black inset;
 }
@@ -354,3 +363,115 @@ form .buttons {
 	margin:				0;
 }
 
+/* ---- ACCOUNTS ---- */
+
+main.accounts {
+	display:			flex;
+	flex-direction:		column;
+	align-items:		stretch;
+	gap:				2em;
+
+	max-width:			100rem;
+	margin:				0 auto;
+}
+
+main.accounts > div {
+	padding:			1em;
+	box-shadow:			var(--shadow);
+}
+
+main.accounts h1, main.accounts h2 {
+	width:				100%;
+	text-align:			center;
+}
+
+main.accounts ul {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	gap:				1rem;
+	justify-content:	center;
+
+	margin:				0 auto .5em;
+	padding:			0;
+
+	list-style-type:	none;
+}
+
+main.accounts li {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	justify-content:	right;
+	gap:				.5em;
+
+	width:				100%;
+	max-width:			18rem;
+	padding:			.75em;
+	box-shadow:			inset var(--shadow);
+}
+
+main.accounts li > p {
+	flex-grow:			1;
+	margin:				0;
+}
+
+main.accounts li nav {
+	width:				100%;
+	flex-grow:			1;
+	margin-top:			auto;
+}
+
+main.accounts .permission {
+	display:			flex;
+	flex-direction:		row;
+	gap:				.25em;
+}
+
+main.accounts .permission p {
+	height:				1.5em;
+	width:				1.5em;
+	margin:				0;
+	padding:			.25em;
+	border-radius:		.25em;
+
+	background-color:	gray;
+
+	user-select:		none;
+	-webkit-user-select:none;
+}
+
+main.accounts .permission p.pass {
+	background-color:	var(--adfc-orange)
+}
+
+main.accounts .permission p.mayadmin {
+	content:			url("../icons/accounts.svg");
+}
+
+main.accounts .permission p.maydelete {
+	content:			url("../icons/delete.svg");
+}
+
+main.accounts form .fields {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	justify-content:	center;
+	column-gap:			2em;
+
+	max-width:			60rem;
+	margin:				0 auto;
+}
+
+main.accounts form .fields p {
+	margin:				0 0 0.75em;
+}
+
+main.accounts form .fields .checkbox p {
+	margin:				0 0 0.25em;
+}
+
+main.accounts form .buttons {
+	width:				fit-content;
+}

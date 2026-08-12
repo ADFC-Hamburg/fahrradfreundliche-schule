@@ -11,49 +11,65 @@
 {% endblock %}
 
 {% block content %}
-	<h1>Benutzerverwaltung</h1>
-	<div class="accounts">
-		{%- for row in rows %}
-		<div class="listing">
-			<p class="name">{{ row[userkeys.NAME] }}</p>
-			<p class="permission {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.ADMIN] %}<s>{% endif %}Darf Benutzerkonten verwalten{% if not row[userperms.ADMIN] %}</s>{% endif %}</p>
-			<p class="permission {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.DELETE] %}<s>{% endif %}Darf Einträge löschen{% if not row[userperms.DELETE] %}</s>{% endif %}</p>
-			<nav>
-				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="icon edit">Bearbeiten</a>
-				{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
-				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="icon delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
-				{%- endif %}
-			</nav>
+	<main class="accounts">
+		<div>
+			<h1>Benutzerverwaltung</h1>
+			<ul>
+				{%- for row in rows %}
+				<li>
+					<p class="name">{{ row[userkeys.NAME] }}</p>
+					<div class="permission">
+						<p class="mayadmin {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}">Ist {% if row[userperms.ADMIN] %}nicht {% endif %}berechtigt, Benutzerkonten verwalten</p>
+						<p class="maydelete {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}">Ist {% if row[userperms.DELETE] %}nicht {% endif %}berechtigt, Einträge zu löschen</p>
+					</div>
+					<nav>
+						<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="icon edit">Bearbeiten</a>
+						{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
+						<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="icon delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
+						{%- endif %}
+					</nav>
+				</li>
+				{%- endfor %}
+			</ul>
 		</div>
-		{%- endfor %}
-	</div>
 
-	<form method="POST" id="accountform">
-		<h2>{% if row_to_edit %}Benutzer <em>{{ row_to_edit[userkeys.NAME] }}</em> bearbeiten{% else %}Einen neuen Benutzeraccount anlegen{% endif %}</h2>
-		{{ form.csrf_token }}
-		{% if row_to_edit %}{{ form.target_id }}{% endif %}
 		<div>
-			{{ form.username.label }}
-			{{ form.username() }}
+			<h2>{% if row_to_edit %}Benutzer <em>{{ row_to_edit[userkeys.NAME] }}</em> bearbeiten{% else %}Einen neuen Benutzeraccount anlegen{% endif %}</h2>
+			<form method="POST" id="accountform">
+				{{ form.csrf_token }}
+				{% if row_to_edit %}{{ form.target_id }}{% endif %}
+				<div class="fields">
+					<div class="text">
+						<p>
+							{{ form.username.label }}
+							{{ form.username() }}
+						</p>
+						<p>
+							{{ form.password.label }}
+							{{ form.password }}
+						</p>
+						<p>
+							<label for="confirm_password">Passwort bestätigen</label>
+							<input id="confirm_password" type="password" value="{{ form.password.value }}">
+						</p>
+					</div>
+					<div class="checkbox">
+						{%- for permission in form.admin_permission, form.delete_permission %}
+						<p>
+							{{ permission() }}{{ permission.label }}
+						</p>
+						{%- endfor %}
+					</div>
+				</div>
+				<div class="buttons">
+					{{ form.submit() }}
+					{%- if row_to_edit %}
+					<input type="reset" value="Zurücksetzen">
+					{%- endif %}
+				</div>
+			</form>
 		</div>
-		<div>
-			{{ form.password.label }}
-			{{ form.password }}
-		</div>
-		<div>
-			<label for="confirm_password">Passwort bestätigen</label>
-			<input id="confirm_password" type="password" value="{{ form.password.value }}">
-		</div>
-		{%- for permission in form.admin_permission, form.delete_permission %}
-		<div>
-			{{ permission() }}{{ permission.label }}
-		</div>
-		{%- endfor %}
-		{{ form.submit() }}
-		{%- if row_to_edit %}
-		<input type="reset" value="Zurücksetzen">
-		{%- endif %}
-	</form>
+	</main>
 {% endblock %}
 
 {% block scripts -%}
