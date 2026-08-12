@@ -122,6 +122,7 @@ input[type='text']:focus {
 
 nav > a,
 input[type='submit'] {
+	position:			relative;
 	width:				fit-content;
 	padding:			.5em 1em;
 	border:				none;
@@ -137,6 +138,24 @@ input[type='submit'] {
 
 	-webkit-user-select:none;
 	user-select:		none;
+
+	&.icon {
+		padding-left:		2em;
+
+		&::before {
+			content:			"";
+			position:			absolute;
+			height:				100%;
+			top:				0;
+			left:				.5em;
+			width:				1.25em;
+			background-color:	currentcolor;
+
+			mask-repeat:		no-repeat;
+			mask-position:		center;
+			mask-size:			1.25em 100%;
+		}
+	}
 }
 
 nav > a:hover,
@@ -151,6 +170,34 @@ input[type="submit"]:active {
 
 form .buttons {
 	margin:				1rem auto 0;
+}
+
+.icon.accounts::before {
+	mask-image:			url("../icons/accounts.svg");
+}
+
+.icon.delete::before {
+	mask-image:			url("../icons/delete.svg");
+}
+
+.icon.download::before {
+	mask-image:			url("../icons/download.svg");
+}
+
+.icon.edit::before {
+	mask-image:			url("../icons/edit.svg");
+}
+
+.icon.logout::before {
+	mask-image:			url("../icons/logout.svg");
+}
+
+.icon.return::before {
+	mask-image:			url("../icons/return.svg");
+}
+
+.icon.show::before {
+	mask-image:			url("../icons/show.svg");
 }
 
 /* –––– LOGIN –––– */

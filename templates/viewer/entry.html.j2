@@ -3,11 +3,11 @@
 {% block title %}Fahrradfreundliche Schule: Bewerbung {% if 'ymnasium' in row['school'] %}des{%- else %}der{%- endif %} {{ row['school'] }}{% endblock %}
 
 {% block nav %}
-			<a href="{{ url_for('pages.download_archive', id=row['id']) }}" class="download">Herunterladen</a>
+			<a href="{{ url_for('pages.download_archive', id=row['id']) }}" class="icon download">Herunterladen</a>
 			{%- if session.get(userperms.DELETE) %}
-			<a href="{{ url_for('pages.delete_application', id=row['id'])}}" class="delete" data-description="diese Bewerbung" data-returnhref="{{ url_for('pages.list_applications') }}">Löschen</a>
+			<a href="{{ url_for('pages.delete_application', id=row['id'])}}" class="icon delete" data-description="diese Bewerbung" data-returnhref="{{ url_for('pages.list_applications') }}">Löschen</a>
 			{%- endif %}
-			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
+			<a href="{{ url_for('pages.list_applications') }}" class="icon return">Zurück zur Übersicht</a>
 			{{- super() }}
 {%- endblock %}
 
@@ -49,7 +49,7 @@
 					<p>{{ description }}</p>
 					{%- if row[file_prefix + key] %}
 					<nav>
-						<a href="{{ url_for('pages.download_file', id=row['id'], field=key) }}" class="download">Beleg herunterladen</a>
+						<a href="{{ url_for('pages.download_file', id=row['id'], field=key) }}" class="icon download">Beleg herunterladen</a>
 					</nav>
 					{%- endif %}
 				</li>

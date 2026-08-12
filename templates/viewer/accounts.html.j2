@@ -4,9 +4,9 @@
 
 {% block nav %}
 			{%- if row_to_edit %}
-			<a href="{{ url_for('pages.list_users') }}#accountform" class="edit">Neuen Benutzeraccount anlegen</a>
+			<a href="{{ url_for('pages.list_users') }}#accountform" class="icon edit">Neuen Benutzeraccount anlegen</a>
 			{%- endif %}
-			<a href="{{ url_for('pages.list_applications') }}" class="return">Zurück zur Übersicht</a>
+			<a href="{{ url_for('pages.list_applications') }}" class="icon return">Zurück zur Übersicht</a>
 			{{- super() }}
 {% endblock %}
 
@@ -19,9 +19,9 @@
 			<p class="permission {% if row[userperms.ADMIN] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.ADMIN] %}<s>{% endif %}Darf Benutzerkonten verwalten{% if not row[userperms.ADMIN] %}</s>{% endif %}</p>
 			<p class="permission {% if row[userperms.DELETE] %}pass{% else %}fail{% endif %}"><p>{% if not row[userperms.DELETE] %}<s>{% endif %}Darf Einträge löschen{% if not row[userperms.DELETE] %}</s>{% endif %}</p>
 			<nav>
-				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="edit">Bearbeiten</a>
+				<a href="{{ url_for('pages.list_users', edit=row[userkeys.ID])}}#accountform" class="icon edit">Bearbeiten</a>
 				{%- if row[userkeys.ID] != session.get(userkeys.ID) %}
-				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
+				<a href="{{ url_for('pages.delete_user', id=row[userkeys.ID])}}" class="icon delete" data-description="der Benutzeraccount „{{ row[userkeys.NAME] }}“">Löschen</a>
 				{%- endif %}
 			</nav>
 		</div>
