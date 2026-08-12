@@ -85,15 +85,15 @@ li.unknown {
 }
 
 .entry li.pass::before {
-	mask-image:			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 8 5 5 9-9'/%3E%3C/svg%3E"), linear-gradient(#fff, #fff);
+	mask-image:			url("../icons/check.svg"), linear-gradient(#fff, #fff);
 }
 
 .entry li.fail::before {
-	mask-image:			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14 2 2 14M2 2l12 12'/%3E%3C/svg%3E"), linear-gradient(#fff, #fff);
+	mask-image:			url("../icons/cross.svg"), linear-gradient(#fff, #fff);
 }
 
 .entry li.unknown::before {
-	mask-image:			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='15' r='1'/%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 5c0-3 2-4 4-4s4 1 4 4s-4 2-4 6'/%3E%3C/svg%3E"), linear-gradient(#fff, #fff);
+	mask-image:			url("../icons/unknown.svg"), linear-gradient(#fff, #fff);
 }
 
 /* –––– Common input field and button formatting –––– */
