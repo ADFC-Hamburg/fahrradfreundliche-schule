@@ -1,0 +1,477 @@
+/* ––– Common attributes and document body –––*/
+
+:root {
+	--adfc-blue:		#004b7c;
+	--adfc-orange:		#ee7f00;
+	--shadow:			1pt 1pt 3pt black;
+}
+
+* {
+	box-sizing:			border-box;
+}
+
+body {
+	margin:				0;
+	background-color:	white;
+	font-family:		sans-serif;
+}
+
+body > header {
+	padding:			.5rem;
+}
+
+body > main {
+	padding:			2rem;
+}
+
+/* –––– Common elements –––– */
+
+li > nav,
+body > header nav {
+	display:			flex;
+	flex-wrap:			wrap;
+	justify-content:	right;
+	gap:				.4rem;
+}
+
+h1, h2 {
+	margin:				0 0 .7em;
+}
+
+/* –––– Common classes –––– */
+
+.name {
+	font-size:			large;
+}
+
+li.pass, li.fail, li.unknown {
+	position:			relative;
+	padding:			.75em .75em .75em 2.5em;
+	box-shadow:			inset 0 0 0 .25em var(--border-color);
+	&::before {
+		content:			"";
+		position:			absolute;
+		height:				100%;
+		top:				0;
+		left:				0;
+		width:				2em;
+		background-color:	var(--border-color);
+
+		mask-repeat:		no-repeat;
+		mask-position:		center;
+		mask-composite:		exclude;
+		mask-size:			1.25em 1.25em, 100% 100%;
+	}
+}
+
+li.pass {
+	background-color:	#E6FFF2;
+	--border-color:		#00793a;
+}
+
+li.fail {
+	background-color:	#FFE6E6;
+	--border-color:		#790002;
+
+	-webkit-user-select:none;
+	user-select:		none;
+}
+
+li.unknown {
+	background-color:	#E6E6E6;
+	--border-color:		#3C3C3C;
+
+	-webkit-user-select:none;
+	user-select:		none;
+}
+
+.entry li.pass::before {
+	mask-image:			url("../icons/check.svg"), linear-gradient(#fff, #fff);
+}
+
+.entry li.fail::before {
+	mask-image:			url("../icons/cross.svg"), linear-gradient(#fff, #fff);
+}
+
+.entry li.unknown::before {
+	mask-image:			url("../icons/unknown.svg"), linear-gradient(#fff, #fff);
+}
+
+/* –––– Common input field and button formatting –––– */
+
+input {
+	background-color:	transparent;
+	border-style:		solid;
+	border-color:		black;
+	border-width:		1pt;
+	border-radius:		0;
+	outline:			0;
+}
+
+input[type='password'],
+input[type='text'] {
+	padding:			.5em;
+	font-size:			medium;
+	width:				100%;
+}
+
+input[type='password']:focus,
+input[type='text']:focus {
+	border-color:		var(--adfc-blue);
+	box-shadow:			0 0 0 1pt var(--adfc-blue);
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+	accent-color:	var(--adfc-blue);
+}
+
+nav > a,
+input[type='reset'],
+input[type='submit'] {
+	position:			relative;
+	width:				fit-content;
+	padding:			.5em 1em;
+	border:				none;
+	border-radius:		4pt;
+	background-color:	var(--adfc-blue);
+
+	font-size:			small;
+	font-weight:		bold;
+	font-style:			normal;
+	text-decoration:	none;
+	text-align: 		center;
+	color:				white;
+
+	-webkit-user-select:none;
+	user-select:		none;
+
+	&.icon {
+		padding-left:		2em;
+
+		&::before {
+			content:			"";
+			position:			absolute;
+			height:				100%;
+			top:				0;
+			left:				.5em;
+			width:				1.25em;
+			background-color:	currentcolor;
+
+			mask-repeat:		no-repeat;
+			mask-position:		center;
+			mask-size:			1.25em 100%;
+		}
+	}
+}
+
+nav > a:hover,
+input[type='reset']:hover,
+input[type="submit"]:hover {
+	text-shadow:		0 0 .5pt;
+}
+
+nav > a:active,
+input[type='reset']:hover,
+input[type="submit"]:active {
+	box-shadow:			0 .125em .25em black inset;
+}
+
+form .buttons {
+	margin:				1rem auto 0;
+}
+
+.icon.accounts::before {
+	mask-image:			url("../icons/accounts.svg");
+}
+
+.icon.delete::before {
+	mask-image:			url("../icons/delete.svg");
+}
+
+.icon.download::before {
+	mask-image:			url("../icons/download.svg");
+}
+
+.icon.edit::before {
+	mask-image:			url("../icons/edit.svg");
+}
+
+.icon.logout::before {
+	mask-image:			url("../icons/logout.svg");
+}
+
+.icon.return::before {
+	mask-image:			url("../icons/return.svg");
+}
+
+.icon.show::before {
+	mask-image:			url("../icons/show.svg");
+}
+
+/* –––– LOGIN –––– */
+
+.login {
+	position:			absolute;
+	left:				0;
+	right:				0;
+	top:				0;
+	bottom:				0;
+
+	max-width:			40rem;
+	height:				fit-content;
+	margin:				auto;
+
+	text-align:			center;
+}
+
+.login > img {
+	display:			block;
+	margin: 			auto;
+	width:				100%;
+	max-height:			20rem;
+	object-fit:			contain;
+	margin:				0 0 1.5em;
+}
+
+.login .error {
+	color:				darkred;
+	font-style:			italic;
+}
+
+.login form {
+	width:				fit-content;
+	min-width:			20rem;
+	margin:				3rem auto 0;
+
+	display:			flex;
+	flex-direction: 	column;
+	row-gap:			.7em;
+
+	text-align:			left;
+}
+
+.login form > * {
+	display:			block;
+}
+
+.login label:first-child {
+	font-size: smaller;
+}
+
+/* –––– SCHOOL LIST –––– */
+
+.schoollist ul {
+	width:				100%;
+	max-width: 			45rem;
+	margin:				0 auto;
+	padding:			0;
+	box-shadow:			var(--shadow);
+
+	list-style-type:	none;
+}
+
+.schoollist li {
+	padding:			1rem;
+	border-bottom:		1pt solid grey;
+}
+
+.schoollist li p {
+	margin:				0;
+}
+
+.schoollist li .timestamp {
+	font-family:		monospace;
+	float:				right;
+	margin-left:		1em;
+}
+
+.schoollist li nav {
+	margin:				0;
+	padding-top:		.75rem;
+}
+
+/* –––– ENTRY SUMMARY –––– */
+
+.entry {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	justify-content:	space-between;
+	align-items:		flex-start;
+	gap:				2em;
+}
+
+.entry > * {
+	flex:				1 0 30rem;
+	box-shadow:			var(--shadow);
+}
+
+.entry .data {
+	padding:			1em;
+
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	gap:				1rem;
+}
+
+.entry .data > div {
+	flex:				1 0 20rem;
+}
+
+.entry dl {
+	margin:				0;
+}
+
+.entry dt {
+	font-size:			smaller;
+}
+
+.entry dd {
+	font-size:			large;
+	margin-left:		2rem;
+}
+
+.entry .criteria {
+	padding:			1em;
+}
+
+.entry .criteria ul {
+	margin:				0;
+	padding:			0;
+	list-style-type:	none;
+}
+
+.entry .criteria li {
+	margin:				0;
+	min-height:			2em;
+	border:				1pt solid black;
+
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			nowrap;
+	justify-content:	space-between;
+	align-items:		center;
+}
+
+.entry li:not(:last-child) {
+	border-bottom:		none;
+}
+
+.entry li p {
+	margin:				0;
+}
+
+/* ---- ACCOUNTS ---- */
+
+main.accounts {
+	display:			flex;
+	flex-direction:		column;
+	align-items:		stretch;
+	gap:				2em;
+
+	max-width:			100rem;
+	margin:				0 auto;
+}
+
+main.accounts > div {
+	padding:			1em;
+	box-shadow:			var(--shadow);
+}
+
+main.accounts h1, main.accounts h2 {
+	width:				100%;
+	text-align:			center;
+}
+
+main.accounts ul {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	gap:				1rem;
+	justify-content:	center;
+
+	margin:				0 auto .5em;
+	padding:			0;
+
+	list-style-type:	none;
+}
+
+main.accounts li {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	justify-content:	right;
+	gap:				.5em;
+
+	width:				100%;
+	max-width:			18rem;
+	padding:			.75em;
+	box-shadow:			inset var(--shadow);
+}
+
+main.accounts li > p {
+	flex-grow:			1;
+	margin:				0;
+}
+
+main.accounts li nav {
+	width:				100%;
+	flex-grow:			1;
+	margin-top:			auto;
+}
+
+main.accounts .permission {
+	display:			flex;
+	flex-direction:		row;
+	gap:				.25em;
+}
+
+main.accounts .permission p {
+	height:				1.5em;
+	width:				1.5em;
+	margin:				0;
+	padding:			.25em;
+	border-radius:		.25em;
+
+	background-color:	gray;
+
+	user-select:		none;
+	-webkit-user-select:none;
+}
+
+main.accounts .permission p.pass {
+	background-color:	var(--adfc-orange)
+}
+
+main.accounts .permission p.mayadmin {
+	content:			url("../icons/accounts.svg");
+}
+
+main.accounts .permission p.maydelete {
+	content:			url("../icons/delete.svg");
+}
+
+main.accounts form .fields {
+	display:			flex;
+	flex-direction:		row;
+	flex-wrap:			wrap;
+	justify-content:	center;
+	column-gap:			2em;
+
+	max-width:			60rem;
+	margin:				0 auto;
+}
+
+main.accounts form .fields p {
+	margin:				0 0 0.75em;
+}
+
+main.accounts form .fields .checkbox p {
+	margin:				0 0 0.25em;
+}
+
+main.accounts form .buttons {
+	width:				fit-content;
+}

@@ -1,11 +1,15 @@
 {% extends 'base.html.j2' %}
 
+{% block head %}
+{{- super() }}	<link rel="stylesheet" href="{{ url_for(static, filename='css/viewer.css') }}">
+{% endblock %}
+
 {% block body %}
 	<header>
 		<nav>
 {%- block nav %}
 			{%- if session.get(userkeys.LOGIN_STATUS) %}
-			<a href="{{ url_for('pages.logout') }}" class="return">Ausloggen ({{ session[userkeys.NAME] }})</a>
+			<a href="{{ url_for('pages.logout') }}" class="icon logout">Ausloggen ({{ session[userkeys.NAME] }})</a>
 			{%- endif %}
 {%- endblock %}
 		</nav>

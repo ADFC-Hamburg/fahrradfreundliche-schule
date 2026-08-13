@@ -41,6 +41,7 @@ def login():
     error = None
 
     loginform = forms.LoginForm()
+    settings = config.fetch()
 
     if request.method == 'POST':
         if loginform.validate_on_submit():
@@ -60,6 +61,7 @@ def login():
         'viewer/login.html.j2', **_CONTEXT,
         error = error,
         form = loginform,
+        settings = settings,
     )
 
 @pages.route('/logout')

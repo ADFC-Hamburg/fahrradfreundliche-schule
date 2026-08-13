@@ -1,8 +1,16 @@
 {% extends 'base.html.j2' %}
 
+{% block head %}
+{{- super() }}	<link rel="stylesheet" href="{{ url_for(static, filename='css/viewer.css') }}">
+{% endblock %}
+
 {% block body %}
-	<div class="login">
+	<main class="login">
+		{%- if settings[keys.WEBSITE][keys.LOGO][keys.APP] %}
+		<img src="{{ settings[keys.WEBSITE][keys.LOGO][keys.APP] }}" alt="Fahrradfreundliche Schule"/>
+		{%- else %}
 		<h1>Fahrradfreundliche Schule</h1>
+		{%- endif %}
 		{%- if error %}
 		<p class="error">{{ error }}</p>
 		{%- else %}
@@ -17,7 +25,9 @@
 				{{ field() }}
 			</div>
 			{%- endfor %}
-			{{ form.submit() }}
+			<div class="buttons">
+				{{ form.submit() }}
+			</div>
 		</form>
-	</div>
+	</main>
 {% endblock %}
