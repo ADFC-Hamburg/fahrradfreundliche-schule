@@ -30,7 +30,7 @@ def _send(message: EmailMessage):
 
         if USERNAME or PASSWORD:
             server.login(USERNAME, PASSWORD)
-        
+
         server.send_message(message)
 
 def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch(), filelist: list[str] = [], summary_id: int|None = None):

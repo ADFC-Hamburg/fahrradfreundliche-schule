@@ -41,7 +41,7 @@ class MediatypeAllowed():
     def __init__(self, mediatypes:Iterable[str, ...], message=None):
         self.message = message
         self.allowed_types = mediatypes
-    
+
     def __call__(self, form, field):
         from magic import from_buffer as magic_from_buffer
         from werkzeug.datastructures import FileStorage
@@ -51,7 +51,7 @@ class MediatypeAllowed():
             all(isinstance(x, FileStorage) and x for x in field_data) and field_data
         ):
             return
-        
+
         for f in field_data:
             previous_position = f.stream.tell()
             mediatype = magic_from_buffer(f.read(), mime=True)
@@ -368,7 +368,7 @@ class ApplicationForm(FlaskForm):
         else:
             order = (field for field, confkey in const.conf.questionkeys.items() if const.conf.FORM_DEFAULT[keys.QUESTIONS][confkey])
         return tuple(self.questions[key] for key in order)
-    
+
     def get_fields(self) -> tuple[Field, ...]:
         """Return all fields in this form."""
         return(

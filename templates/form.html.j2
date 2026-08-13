@@ -5,19 +5,21 @@
 {% endblock %}
 
 {% block body %}
-{%- if custom[keys.LOGO][keys.APP] %}
+	{% if custom[keys.LOGO][keys.APP] -%}
 	<header>
 		<img src="{{ custom[keys.LOGO][keys.APP] }}" />
 	</header>
-{% endif %}
+
+	{% endif -%}
 	<main>
 		<h1>Formular zur Teilnahme am Auszeichnungsverfahren zur Fahrradfreundlichen Schule</h1>
-{% if cert[keys.ENDDATE] %}
+
+		{% if cert[keys.ENDDATE] -%}
 		<h2>Bewerbungen für den aktuellen Auszeichnungszeitraum bitte einreichen bis zum: {{ cert[keys.ENDDATE] }}</h2>
-{%- endif %}
+		{% endif -%}
 		<p>
 			Für die Auszeichnung zur <strong>„Fahrradfreundlichen Schule“</strong> {% if contact[keys.NAME] %}durch den {% if contact[keys.URL][keys.HOMEPAGE] %}<a href="{{ contact[keys.URL][keys.HOMEPAGE] }}">{{ contact[keys.NAME] }}</a>{% else %}<em>{{ contact[keys.NAME] }}</em>{% endif %}{% endif %}
-			können sich {% if cert[keys.QUALIFICATION][keys.SCHOOLTYPE] %}{{ cert[keys.QUALIFICATION][keys.SCHOOLTYPE] }}{% else %}Schulen aller Schulformen{% endif %}{% if cert[keys.QUALIFICATION][keys.LOCATION] %} aus {{ cert[keys.QUALIFICATION][keys.LOCATION] }}{% endif %} bewerben.
+			können sich {{ cert[keys.QUALIFICATION][keys.SCHOOLTYPE]|default('Schulen aller Schulformen') }}{% if cert[keys.QUALIFICATION][keys.LOCATION] %} aus {{ cert[keys.QUALIFICATION][keys.LOCATION] }}{% endif %} bewerben.
 			Um am Auszeichnungsverfahren teilnehmen zu können, werden im nachfolgenden Formular verschiedene Kriterien abgefragt, die von den Schulen durch Fotos, Berichte etc. nachgewiesen werden müssen.
 		</p>
 		<p>
@@ -33,44 +35,48 @@
 			Um die Auszeichnung zu erhalten, müssen nachvollziehbare Nachweise für alle Kriterien eingereicht werden.{% if contact[keys.URL][keys.EXAMPLE] %}
 			Beispiele und ausführliche Beschreibungen zur Form dafür finden Sie <a href="{{ contact[keys.URL][keys.EXAMPLE] }}">hier</a> auf unserer Projektseite.{% endif %}
 		</p>
-{%- if contact[keys.MAIL] or contact[keys.PHONE] %}
+		{%- if contact[keys.MAIL] or contact[keys.PHONE] %}
 		<p>
 			Sollten Sie bei einigen Kriterien Fragen haben oder Unterstützung benötigen, nehmen Sie gerne Kontakt mit uns auf:
-			{% if contact[keys.MAIL] and contact[keys.PHONE] %}entweder{% else %}Sie erreichen uns{% endif %}{% if contact[keys.MAIL] %} per Mail an <a href="mailto:{{ contact[keys.MAIL] }}?subject=Fahrradfreundliche%20Schule">{{ contact[keys.MAIL] }}</a>{% if contact[keys.PHONE] %} oder{% endif %}{% endif %}{% if contact[keys.PHONE] %} telefonisch unter <a href="tel:{{ contact[keys.PHONE] | select("in","0123456789+") | list | join() }}">{{ contact[keys.PHONE] }}</a>{% endif %}.
+			{% if contact[keys.MAIL] and contact[keys.PHONE] %}entweder{% else %}Sie erreichen uns{% endif %}
+			{%- if contact[keys.MAIL] %} per Mail an <a href="mailto:{{ contact[keys.MAIL] }}?subject=Fahrradfreundliche%20Schule">{{ contact[keys.MAIL] }}</a>{% if contact[keys.PHONE] %} oder{% endif %}{% endif %}
+			{%- if contact[keys.PHONE] %} telefonisch unter <a href="tel:{{ contact[keys.PHONE] | select("in","0123456789+") | list | join() }}">{{ contact[keys.PHONE] }}</a>{% endif %}.
 		</p>
-{%- endif %}
-{%- if cert[keys.VALID_YEARS] %}
+		{%- endif %}
 
+		{% if cert[keys.VALID_YEARS] -%}
 		<h2>Dauer der Auszeichnungsgültigkeit</h2>
 		<p>
 			Nach {{ cert[keys.VALID_YEARS] }} Jahren kann eine Rezertifizierung erfolgen, wenn die Kriterien weiterhin erfüllt werden.
 		</p>
-{%- endif %}
-{%- if custom[keys.LOGO][keys.SPONSORS] %}
 
+		{% endif -%}
+		{% if custom[keys.LOGO][keys.SPONSORS] -%}
 		<footer>
 			<h2>Gefördert von:</h2>
-			<div class="logos">{% for logo in custom[keys.LOGO][keys.SPONSORS] %}
-				<img src="{{ logo }}" />{% endfor %}
+			<div class="logos">
+				{%- for logo in custom[keys.LOGO][keys.SPONSORS] %}
+				<img src="{{ logo }}" />
+				{%- endfor %}
 			</div>
 		</footer>
-{%- endif %}
+		{%- endif %}
 	</main>
 
 	<form id="application">
 		<header>
-			Bitte füllen Sie das Formular vollständig aus und laden Sie{% if not uploads[keys.REQUIRED] %}, wenn vorhanden,{% endif%} Belege{% if uploads[keys.MEDIATYPE] %} als {{ form.format_mediatypes_from_config(form.config) }}{% endif %} hoch.
+			Bitte füllen Sie das Formular vollständig aus und laden Sie{% if not uploads[keys.REQUIRED] %}, wenn vorhanden,{% endif %} Belege{% if uploads[keys.MEDIATYPE] %} als {{ form.format_mediatypes_from_config(form.config) }}{% endif %} hoch.
 		</header>
 		{{ form.csrf_token }}
 
 		<div id="personaldata">
-{%- for field in form.get_inputfields() %}
+			{%- for field in form.get_inputfields() %}
 			<p id={{ field.short_name }}container>{{ field.label }} {{ field() }}</p>
-{%- endfor %}
+			{%- endfor %}
 		</div>
 
 		<div id="questions">
-{%- for field, upload in form.get_questionfields() %}
+			{%- for field, upload in form.get_questionfields() %}
 			<div>
 				{{ field.label }}
 				{{ field() }}
@@ -78,33 +84,42 @@
 					{{ upload() }}
 				</div>
 			</div>
-{%- endfor %}
+			{%- endfor %}
 		</div>
-{%- if form.privacy_consent or form.storage_consent %}
 
+		{% if form.privacy_consent or form.storage_consent -%}
 		<div id="compliance">
-{%- if form.privacy_consent %}
 			<h2>Datenschutz</h2>
-			<label>{{ form.privacy_consent }}Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.</label>
-{%- endif %}
-{%- if form.storage_consent %}
-			<label>{{ form.storage_consent }}Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden. Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</label>
-{%- endif %}
-		</div>
-{%- endif %}
+			{%- if form.privacy_consent %}
+			<label>
+				{{ form.privacy_consent }}
+				Ich {% if contact[keys.URL][keys.PRIVACY] %}nehme die <a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutzerklärung</a> zur Kenntnis
+				und {% endif %}willige in die elektronische Datenverarbeitung {% if contact[keys.URL][keys.PRIVACY] %}gemäß Datenschutzerklärung {% endif %}ein.
+			</label>
+			{%- endif %}
 
+			{%- if form.storage_consent %}
+			<label>
+				{{ form.storage_consent }}
+				Mit Absenden des Formulars willige ich ein, dass meine Daten für eventuelle Rückfragen elektronisch gespeichert und verarbeitet werden.
+				Wir geben die Daten nicht an Dritte weiter. Diese Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.
+			</label>
+			{%- endif %}
+		</div>
+
+		{% endif -%}
 		<input type="submit" value="Bewerbung einsenden">
 	</form>
 
 	<footer>
 		<nav>
-{%- if contact[keys.URL][keys.LEGAL] %}
+			{%- if contact[keys.URL][keys.LEGAL] %}
 			<a href="{{ contact[keys.URL][keys.LEGAL] }}">Impressum</a>
-{%- endif %}
-{%- if contact[keys.URL][keys.PRIVACY] %}
+			{%- endif %}
+			{%- if contact[keys.URL][keys.PRIVACY] %}
 			<a href="{{ contact[keys.URL][keys.PRIVACY] }}">Datenschutz</a>
-{%- endif %}
-			<div>{{ appname }}{% if version %} {{ version }}{% endif%}</div>
+			{%- endif %}
+			<div>{{ appname }}{% if version %} {{ version }}{% endif %}</div>
 		</nav>
 	</footer>
 
