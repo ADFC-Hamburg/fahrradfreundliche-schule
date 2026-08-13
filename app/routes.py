@@ -10,9 +10,11 @@ from flask import abort, Blueprint, jsonify, render_template, redirect, request,
 
 from . import config, const, database, uploads, forms, paths, protection
 
+
 # Constants
 _BLUEPRINT_NAME = 'pages'
 _STATIC_ENDPOINT = _BLUEPRINT_NAME + '.static'
+
 
 # Routes
 pages = Blueprint(_BLUEPRINT_NAME, __name__,
@@ -31,6 +33,8 @@ _CONTEXT = {
     'version': const.app.VERSION
 }
 
+
+#region Login/logout routes
 @pages.route('/login', methods=['GET', 'POST'])
 @protection.block_repeated_attempts
 def login():
@@ -62,6 +66,7 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('pages.login'))
+#endregion
 
 @pages.route('/index')
 @pages.route('/')
@@ -79,6 +84,7 @@ def index():
         uploads = settings[const.conf.keys.FORM][const.conf.keys.UPLOADS]
     )
 
+#region Viewer routes
 @pages.route('/viewer')
 @protection.login_required
 def list_applications():
@@ -134,7 +140,9 @@ def list_users():
         row_to_edit = row_to_edit,
         form = form,
     )
+#endregion
 
+#region Application API
 @pages.route('/api/submit', methods=['POST'])
 def submit_application():
     settings = config.fetch()
@@ -280,7 +288,9 @@ def download_archive(id: int):
         as_attachment=True,
         download_name=archivename,
     )
+#endregion
 
+#region User account API
 @pages.route('/api/users/add', methods=['POST'])
 @protection.login_required
 @protection.admin_required
@@ -354,3 +364,4 @@ def delete_user(id: int):
             const.api.STATUS_KEY: const.api.FAIL_VALUE,
             const.api.SINGLE_ERROR_KEY: const.api.IDNOTFOUND_MESSAGE,
         }), 404
+#endregion
