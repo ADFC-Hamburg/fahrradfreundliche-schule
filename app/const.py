@@ -132,7 +132,7 @@ class conf(ABC):
 
     WEBSITE_DEFAULT = {
         keys.LOGO: {
-            keys.APP: '/static/logos/FFS_generic_logo_small.png',
+            keys.APP: '/static/img/FFS_generic_logo_small.png',
             keys.SPONSORS: (),
         },
         keys.TIMEZONE: 'Europe/Berlin'
