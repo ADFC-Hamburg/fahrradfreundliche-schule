@@ -33,21 +33,18 @@ def _send(message: EmailMessage):
 
         server.send_message(message)
 
-def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fetch(), filelist: list[str] = [], summary_id: int|None = None):
+def send_confirmation(recipient: str, config: dict = config.fetch()):
     """
     Sends an acknowledgement of a form submission via email.
-    If summary_id is given, attaches a summary as .txt file.
     """
     msg = EmailMessage()
     mailconfig = config[const.conf.keys.FORM][const.conf.keys.CONFIRM_MAIL]
 
     template = _JINJA_ENV.get_template('confirmation.j2')
     content = template.render(
-        data = data,
         keys = const.conf.keys,
         cert = config[const.conf.keys.CERT],
         contact = config[const.conf.keys.CONTACT],
-        filelist = filelist,
     )
 
     msg.set_content(content)
@@ -56,16 +53,6 @@ def send_confirmation(recipient: str, data: dict = {}, config: dict = config.fet
     if mailconfig[const.conf.keys.CC]:
         msg['CC'] = mailconfig[const.conf.keys.CC]
     msg['Subject'] = const.form.MAIL_SUBJECT
-
-    if summary_id is not None:
-        from . import database
-        summary = database.summarize(database.getapplication(summary_id))
-        msg.add_attachment(
-            summary.encode('utf-8'),
-            maintype='text',
-            subtype='plain',
-            filename=const.viewer.SUMMARY_FILENAME + '.txt'
-        )
 
     _send(msg)
 

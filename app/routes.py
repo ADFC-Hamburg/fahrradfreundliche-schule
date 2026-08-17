@@ -192,9 +192,6 @@ def submit_application():
                 kwargs={
                     'recipient': webform.email.data,
                     'config': settings,
-                    'data': input_values,
-                    'filelist': original_filenames,
-                    'summary_id': new_id,
                 },
             ).start()
 

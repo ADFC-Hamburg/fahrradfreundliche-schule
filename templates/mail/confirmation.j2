@@ -1,21 +1,6 @@
-{% if data.get('firstname') or data.get('lastname') -%}
-Hallo {{ data.get('firstname', '') }} {{ data.get('lastname', '') }}
-
-{% endif -%}
-Vielen Dank! Ihre Selbstevaluation
-{%- if data.get('school') -%}
-{%- if 'ymnasium' in data.get('school') %} des {%- else %} der {%- endif %} {{ data.get('school') }}
-{%- else %} Ihrer Schule
-{%- endif %} für die Auszeichnung
+Vielen Dank! Ihre Selbstevaluation für die Auszeichnung
 Fahrradfreundliche Schule ist bei uns eingetroffen.
 
-{% if filelist -%}
-Folgende Nachweise haben wir von Ihnen erhalten:
-{%- for file in filelist %}
-	{{ file }}
-{%- endfor %}
-
-{% endif -%}
 Wir werden die erhaltenen Unterlagen baldmöglichst prüfen und uns 
 melden, falls es Rückfragen gibt. Wenn alle Nachweise in Ordnung sind
 und Ihre Schule die Kriterien erfüllt, dürfen Sie damit rechnen,
