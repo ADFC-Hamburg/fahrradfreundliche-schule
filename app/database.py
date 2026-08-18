@@ -238,7 +238,7 @@ def edituser(id: int, **kwargs) -> bool:
     if kwargs.get(const.users.keys.PASS):
         salt = _random_salt()
         values[str(const.users.keys.PASS)] = _hash_password(
-            kwargs.get(const.users.keys.NAME),
+            kwargs.get(const.users.keys.PASS),
             salt
         )
         values[str(const.users.keys.SALT)] = salt
