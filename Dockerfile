@@ -15,8 +15,8 @@ RUN apk add --no-cache libmagic
 
 # Update pip and install Python dependencies
 ENV PIP_ROOT_USER_ACTION=ignore
-COPY ./requirements.txt /abrechnungsformular/requirements.txt
-RUN pip3 install --upgrade pip && pip3 install --no-cache-dir --upgrade -r /abrechnungsformular/requirements.txt
+COPY ./requirements.txt "${workdir}/requirements.txt"
+RUN pip3 install --upgrade pip && pip3 install --no-cache-dir --upgrade -r "${workdir}/requirements.txt"
 
 # Setup non-root user to run the app (security best practice)
 ARG UID=10001
