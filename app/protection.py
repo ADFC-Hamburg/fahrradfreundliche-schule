@@ -9,16 +9,23 @@ from flask import abort, redirect, request, session, url_for
 from . import const, database
 #endregion
 
-#region Global variables 
+#region Global variables
 _failed_logins: ExpiringDict[str, int] = ExpiringDict(const.api.MAX_LOGIN_LOCKOUT_SECONDS)
+_submissions_count: ExpiringDict[str, int] = ExpiringDict(const.api.MAX_SUBMISSIONS_LOCKOUT_SECONDS)
 #endregion
 
 #region Functions
 def is_ip_blocked(ip: str) -> bool:
-    return ip in _failed_logins and _failed_logins[ip] >= const.api.MAX_LOGIN_ATTEMPTS
+    return(
+        ip in _failed_logins and _failed_logins[ip] >= const.api.MAX_LOGIN_ATTEMPTS
+        or ip in _submissions_count and _submissions_count[ip] >= const.api.MAX_SUBMISSIONS
+    )
 
 def log_failed_login(ip: str):
     _failed_logins[ip] = _failed_logins.get(ip, 0) + 1
+
+def log_submission(ip: str):
+    _submissions_count[ip] = _submissions_count.get(ip, 0) + 1
 
 def login_user(username: str, password: str) -> bool:
     """Login user with credentials given.

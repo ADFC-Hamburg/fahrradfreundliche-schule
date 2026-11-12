@@ -146,6 +146,7 @@ def list_users():
 
 #region Application API
 @pages.route('/api/submit', methods=['POST'])
+@protection.block_repeated_attempts
 def submit_application():
     settings = config.fetch()
 
@@ -180,6 +181,9 @@ def submit_application():
             **question_values,
             **question_filenames,
         )
+
+        # Block IP if it spams submissions
+        protection.log_submission(request.remote_addr)
 
         # Send confirmation mail
         from  threading import Thread
