@@ -1,27 +1,27 @@
 # This file is used by pip to install required python packages
 
 # Main packages
-gunicorn ~= 26.0.0
+gunicorn ~= 27.0.0
 Flask ~= 3.1.3
 Jinja2 ~= 3.1.6
 
 # Main package dependencies
 blinker ~= 1.9.0
-click ~= 8.4.2
+click ~= 8.5.1
 itsdangerous ~= 2.2.0
-MarkupSafe ~= 3.0.3
-Werkzeug ~= 3.1.8
-packaging ~= 26.2
+MarkupSafe ~= 3.0.4
+Werkzeug ~= 3.1.9
+packaging ~= 26.3
 
 # Form creation and validation
 Flask-WTF ~= 1.3.0
-WTForms[email] ~= 3.2.2
+WTForms[email] ~= 3.3.2
 
 # File type detection
 python-magic ~= 0.4.27
 
 # Timezones
-tzdata == 2026.3
+tzdata == 2026.6
 
 # Auto-expiring caches
 expiring-dict ~= 1.1.2
