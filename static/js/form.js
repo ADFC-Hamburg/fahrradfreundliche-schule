@@ -4,6 +4,7 @@ const applicationform = document.querySelector("#application")
 
 const error_server = "Bei der Kommunikation mit dem Server ist ein Fehler aufgetreten."
 const error_requires_reload = "Beim Auswerten des Formulars ist ein Fehler aufgetreten.\nBitte laden Sie diese Seite neu."
+const error_too_many_requests = "Von Ihrer IP-Adresse sind zu viele Anfragen eingegangen. Bitte versuchen Sie es später erneut."
 const message_success = "Ihr Antrag ist bei uns eingegangen."
 const message_mail = "Wir senden Ihnen eine Empfangsbestätigung per Email."
 
@@ -16,7 +17,7 @@ const message_mail = "Wir senden Ihnen eine Empfangsbestätigung per Email."
  * 
  * @param {Element} form 
  * @param {string} url 
- * @returns {Promise.<Object,undefined>}
+ * @returns {Promise.<Object,Error>}
  */
 async function sendData(form, url) {
 	const formData = new FormData(form);
@@ -28,7 +29,7 @@ async function sendData(form, url) {
 		return data;
 	} catch (error) {
 		console.error("Failed to fetch data:", error.message);
-		return;
+		return error;
 	}
 }
 
@@ -40,11 +41,23 @@ async function sendData(form, url) {
  */
 async function submitApplication() {
 	const result = await sendData(applicationform, '/api/submit');
+
 	if (!result) {
 		window.alert(error_server);
 		return;
 	}
+	// Handle returned Javascript errors
+	if (!Object.hasOwn(result, 'status')) {
+		if (result.message == 'Response status: 429') {
+			window.alert(error_too_many_requests);
+		} else {
+			window.alert(error_server);
+		}
+		return;
+	}
+
 	if (result.status.toLowerCase() === 'ok') {
+		// Show confirmation of a successful submission
 		let message = message_success;
 		if (result.sending_mail == true) {
 			message = message + '\n' + message_mail;
